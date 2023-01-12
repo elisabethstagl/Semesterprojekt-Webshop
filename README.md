@@ -1,1 +1,1 @@
-# Semesterprojekt-Webshop-FE
+# Semesterprojekt-Webshop
