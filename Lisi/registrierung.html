@@ -1,27 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>guapo. | Registrierung</title>
     <link rel="stylesheet" href="css/stylesheet.css" />
-
-</head>
-<body>
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
+  </head>
+  <body>
     <h1 id="accountErstellen">Account erstellen</h1>
 
     <form>
-        <label for="vname">Vorname</label><br>
-        <input type="text" name="vname" id="vname"><br>
-        <label for="nname">Nachname</label><br>
-        <input type="text" name="nname" id="nname"><br>
-        <label for="email">E-Mail</label><br>
-        <input type="email" name="mail" id="mail"><br>
-        <label for="passwort">Passwort</label><br>
-        <input type="password" name="passwort" id="passwort"><br>
-        <input type="submit" value="Erstellen">
+      <label for="anrede">Anrede</label><br>
+      <input type="radio" name="anrede" id="anrede" />
+      <label for="herr">Herr</label>
+      <input type="radio" name="anrede" id="anrede">
+      <label for="frau">Frau</label><br>
 
+      <label for="vname">Vorname</label><br />
+      <input type="text" name="vname" id="vname" /><br />
+
+      <label for="nname">Nachname</label><br />
+      <input type="text" name="nname" id="nname" /><br />
+
+      <label for="adresse">Adresse</label><br />
+      <input type="text" name="adresse" id="adresse" /><br />
+
+      <label for="hausnr">Hausnummer</label><br />
+      <input type="text" name="hausnr" id="hausnr" /><br />
+
+      <label for="ort">Ort</label><br />
+      <input type="text" name="ort" id="ort" /><br />
+
+      <label for="plz">PLZ</label><br />
+      <input type="text" name="plz" id="plz" /> <br />
+
+      <label for="email">E-Mail</label><br />
+      <input type="email" name="mail" id="mail" /><br />
+
+      <label for="benutzer">Benutzername</label><br />
+      <input type="text" name="benutzer" id="benutzer" /><br />
+
+      <label for="passwort">Passwort</label><br />
+      <input type="password" name="passwort" id="passwort" /><br />
+
+      <input type="submit" value="Erstellen" />
     </form>
-</body>
+    <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>-->
+  </body>
 </html>

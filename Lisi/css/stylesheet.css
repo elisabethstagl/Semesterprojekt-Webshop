@@ -9,6 +9,10 @@ body {
     color: cornsilk;
 }
 
+#logo {
+    
+}
+
 h1,
 h2,
 h3,
@@ -16,7 +20,13 @@ p, label{
     color: cornsilk;
 }
 
-footer {
+
+
+.footer {
     text-align: center;
-    color: cornsilk;
+    color: cornsSilk;
   }
+
+.footerGuapo {
+    opacity: 60%;
+}
