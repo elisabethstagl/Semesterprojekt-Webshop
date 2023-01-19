@@ -1,32 +1,53 @@
+* {
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+}
+
 body {
     background-color: #e89b6bc5;
 }
 
 #guapoLogo {
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
-        sans-serif;
     text-align: left;
     color: cornsilk;
-}
 
-#logo {
-    
 }
 
 h1,
 h2,
 h3,
-p, label{
+p,
+label {
     color: cornsilk;
+    
 }
-
-
 
 .footer {
     text-align: center;
     color: cornsSilk;
-  }
+}
 
 .footerGuapo {
     opacity: 60%;
+}
+
+
+#logoUser {
+    position: absolute;
+    top: 30px;
+    right: 60px;
+}
+
+#clementine {
+    position: absolute;
+    top: 8px;
+    left: 110px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+#login {
+    text-align: center;
 }
