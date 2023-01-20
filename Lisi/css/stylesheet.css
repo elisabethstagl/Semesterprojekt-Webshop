@@ -1,53 +1,25 @@
 * {
     font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
         sans-serif;
-}
-
-body {
-    background-color: #e89b6bc5;
-}
-
-#guapoLogo {
-    text-align: left;
-    color: cornsilk;
-
-}
-
-h1,
-h2,
-h3,
-p,
-label {
-    color: cornsilk;
-    
-}
-
-.footer {
-    text-align: center;
-    color: cornsSilk;
-}
-
-.footerGuapo {
-    opacity: 60%;
-}
-
-
-#logoUser {
-    position: absolute;
-    top: 30px;
-    right: 60px;
-}
-
-#clementine {
-    position: absolute;
-    top: 8px;
-    left: 110px;
+        color: cornsilk;
 }
 
 * {
     box-sizing: border-box;
 }
 
-#login {
+body {
+ background-color: #e89b6bc5;
+}
+
+.footer {
     text-align: center;
+}
+
+.footerGuapo {
+    opacity: 60%;
+}
+
+.registrierungLabel{
+    color: rgba(126, 79, 24, 0.514);
 }
