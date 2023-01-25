@@ -29,6 +29,10 @@ a:hover {
     color: rgb(184, 107, 82);
 }
 
+option {
+    color: rgb(184, 107, 82);
+}
+
 html {
     overflow: scroll;
     overflow-x: hidden;
@@ -41,3 +45,4 @@ html {
 ::-webkit-scrollbar-thumb {
     background: hsla(0, 6%, 78%, 0.751);
 } */
+
