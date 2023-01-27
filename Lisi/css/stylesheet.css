@@ -27,54 +27,32 @@ option {
     color: rgb(184, 107, 82);
 }
 
-.small-img-group {
-    display: flex;
-    justify-content: space-between;
-}
-
-.small-img-col {
-    flex-basis: 24%;
-    cursor:pointer;
-}
-
-.single-product select {
-    display: block;
-    padding: 5px 10px;
-}
-
-.single-product input {
-    width: 50px;
-    height: 40px;
-    padding-right: 5px;
-    padding-left: 8px;
-    font-size: 16x;
-    margin-right: 10px;
-    color: rgb(184, 107, 82) ;
-}
-
-
 html {
     overflow: scroll;
     overflow-x: hidden;
 }
+
 ::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
 }
+
 /* Optional: show position indicator in red
 ::-webkit-scrollbar-thumb {
     background: hsla(0, 6%, 78%, 0.751);
 } */
 
-body{
+body {
     position: relative;
-    display:grid;
+    display: grid;
     grid-template-rows: auto 1fr auto;
-    min-height:100vh;
+    min-height: 100vh;
     background-color: #e89b6bc5;
 }
 
-.footer-bs{
+.footer-bs {
     position: absolute;
     width: 100%;
     min-height: 320px;
@@ -82,9 +60,13 @@ body{
     left: 0;
 }
 
-#navbar {
+/* #navbar {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    z-index: 999;
-  }
+    z-index: 999;  macht navbar sticky, aber navbar ist durchsichtig!
+} */
+
+.accordion-item {
+    border-color:  rgba(135, 74, 54, 0.79);
+}
