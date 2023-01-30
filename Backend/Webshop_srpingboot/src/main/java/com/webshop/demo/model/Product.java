@@ -1,10 +1,29 @@
 package com.webshop.demo.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity(name = "Product")
 public class Product {
+
+    @Id //gibt Primärschlüssel an
+    @GeneratedValue //id wird automatisch von DB generiert
+    @Column(name = "id")
     private long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "price")
     private double price;
+
+    @Column(name = "description")
     private String description;
+
+
+    // CONSTRUCTOR
 
     public Product(String name, double price, String description) {
         this.name = name;
@@ -14,6 +33,10 @@ public class Product {
 
     public Product() {
     }
+
+
+    // GETTERS & SETTERS
+
 
     public String getName() {
         return this.name;
