@@ -22,6 +22,16 @@ public class Product {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "quantity")
+    private int quantity;
+
+    @Column(name = "size")
+    private char size;
+
+    @Column(name = "category")
+    private String category;
+
+
 
     // CONSTRUCTOR
 
@@ -61,5 +71,39 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+
+    public char getSize() {
+        return this.size;
+    }
+
+    public void setSize(char size) {
+        this.size = size;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 
 }
