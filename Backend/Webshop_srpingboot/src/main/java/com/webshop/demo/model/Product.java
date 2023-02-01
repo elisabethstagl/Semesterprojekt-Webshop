@@ -15,7 +15,7 @@ public class Product {
     @Id //gibt Primärschlüssel an
     @GeneratedValue //id wird automatisch von DB generiert
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @NotBlank
     @Column(name = "product_name")
@@ -23,18 +23,18 @@ public class Product {
 
     @NotBlank
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     @Column(name = "description")
     private String description;
 
     @NotBlank
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     @NotBlank
     @Column(name = "size")
-    private char size;
+    private Character size;
 
     @NotBlank
     @Column(name = "category")
