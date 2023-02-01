@@ -1,10 +1,8 @@
 package com.webshop.demo.controller;
 
-import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,45 +10,58 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.webshop.demo.model.Product;
-import com.webshop.demo.repository.ProductRepository;
+import com.webshop.demo.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
     
-    @Autowired
-    private ProductRepository productRepos;
+    private ProductService productService;
 
-    @GetMapping
-    public List<Product> findAllProducts(){
-        return productRepos.findAll();
+    public ProductController(ProductService productService){
+        this.productService = productService;
     }
 
-    @GetMapping("/{type}")
-    public List<Product> findAllProductsByType(@PathVariable String type) {
-        return productRepos.findByType(type);
+    // READ
+
+    @GetMapping()
+    public List<Product> readAll(){
+        return productService.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        product = productRepos.save(product);
-        return ResponseEntity.created(URI.create("http://localhost:8080/products")).body(product);
+    @GetMapping("/{id}")
+    public Product read(@PathVariable Long id) {
+        return productService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
     
+    // CREATE
 
-    @PutMapping("{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product){
-        product.setId(id);
-        return productRepos.save(product);
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product create(@RequestBody Product product) {
+        return productService.save(product);
     }
+
+
+    // UPDATE 
+
+    @PutMapping("/{id}")
+    public Product update(@PathVariable Long id, @RequestBody Product product) {
+        return productService.update(id, product);
+    }
+
+
+    // DELETE 
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        productRepos.deleteById(id);
+    public Product delete(@PathVariable Long id) {
+        return null;
     }
-    
 
 }

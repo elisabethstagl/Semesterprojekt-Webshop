@@ -1,5 +1,8 @@
 package com.webshop.demo.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,29 +11,34 @@ import jakarta.persistence.Id;
 @Entity(name = "Product")
 public class Product {
 
+    @Positive
     @Id //gibt Primärschlüssel an
     @GeneratedValue //id wird automatisch von DB generiert
     @Column(name = "id")
     private long id;
 
+    @NotBlank
     @Column(name = "name")
     private String name;
 
+    @NotBlank
     @Column(name = "price")
     private double price;
 
     @Column(name = "description")
     private String description;
 
+    @NotBlank
     @Column(name = "quantity")
     private int quantity;
 
+    @NotBlank
     @Column(name = "size")
     private char size;
 
+    @NotBlank
     @Column(name = "category")
     private String category;
-
 
 
     // CONSTRUCTOR

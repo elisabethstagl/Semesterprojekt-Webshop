@@ -1,10 +1,8 @@
 package com.webshop.demo.controller;
 
-import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,38 +10,56 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.webshop.demo.model.User;
-import com.webshop.demo.repository.UserRepository;
+import com.webshop.demo.service.UserService;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepos;
+    private UserService userService;
 
-    @GetMapping
-    public List<User> findAllUser() {
-        return userRepos.findAll();
+    public UserController(UserService userService){
+        this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        user = userRepos.save(user);
-        return ResponseEntity.created(URI.create("http://localhost:8080/users")).body(user);
+    // READ
+
+    @GetMapping()
+    public List<User> readAll(){
+        return userService.findAll();
     }
+
+    @GetMapping("/{id}")
+    public User read(@PathVariable Long id) {
+        return userService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+    
+    // CREATE
+
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@RequestBody User user) {
+        return userService.save(user);
+    }
+
+
+    // UPDATE 
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-        return userRepos.save(user);
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        return userService.update(id, user);
     }
+
+    // DELETE 
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userRepos.deleteById(id);
+    public User delete(@PathVariable Long id){
+    return null;
     }
-
 }
