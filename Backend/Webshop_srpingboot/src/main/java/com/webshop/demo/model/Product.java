@@ -18,7 +18,7 @@ public class Product {
     private long id;
 
     @NotBlank
-    @Column(name = "name")
+    @Column(name = "product_name")
     private String name;
 
     @NotBlank
@@ -43,11 +43,16 @@ public class Product {
 
     // CONSTRUCTOR
 
-    public Product(String name, double price, String description) {
+
+    public Product(String name, double price, String description, int quantity, char size, String category) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.quantity = quantity;
+        this.size = size;
+        this.category = category;
     }
+    
 
     public Product() {
     }
