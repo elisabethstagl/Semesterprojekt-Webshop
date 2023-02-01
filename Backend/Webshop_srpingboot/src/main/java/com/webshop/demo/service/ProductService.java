@@ -30,8 +30,9 @@ public class ProductService {
     }
 
     public Product update(Long id, Product updatedProduct) {
-        Product product = productRepos.findById(id) //abändern - funktioniert nicht, braucht get() oder .Else 
+        Product product = productRepos.findById(id).orElse(null);
 
+        if(product != null){
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
         product.setDescription(updatedProduct.getDescription());
@@ -40,8 +41,9 @@ public class ProductService {
         product.setSize(updatedProduct.getSize());
 
         return productRepos.save(product);
+    } else {
+        return null;
     }
 
-
-
+}
 }

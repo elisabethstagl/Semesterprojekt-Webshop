@@ -1,5 +1,8 @@
 package com.webshop.demo.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,26 +11,33 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
 
+    @Positive
     @Id
     @GeneratedValue
     @Column(name = "id")
     private Long id;
 
+    @NotBlank
     @Column(name = "username")
     private String username;
 
+    @NotBlank
     @Column(name = "password")
     private String password;
 
+    @NotBlank
     @Column(name = "firstName")
     private String firstName;
 
+    @NotBlank
     @Column(name = "lastName")
     private String lastName;
 
+    @NotBlank
     @Column(name = "email", unique = true)
     private String email;
 
+    @NotBlank
     @Column(name = "address")
     private String address;
 
