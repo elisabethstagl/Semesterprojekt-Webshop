@@ -15,26 +15,26 @@ public class Product {
     @Id //gibt Primärschlüssel an
     @GeneratedValue //id wird automatisch von DB generiert
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @NotBlank
-    @Column(name = "name")
+    @Column(name = "product_name")
     private String name;
 
     @NotBlank
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     @Column(name = "description")
     private String description;
 
     @NotBlank
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     @NotBlank
     @Column(name = "size")
-    private char size;
+    private Character size;
 
     @NotBlank
     @Column(name = "category")
@@ -43,11 +43,16 @@ public class Product {
 
     // CONSTRUCTOR
 
-    public Product(String name, double price, String description) {
+
+    public Product(String name, double price, String description, int quantity, char size, String category) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.quantity = quantity;
+        this.size = size;
+        this.category = category;
     }
+    
 
     public Product() {
     }
