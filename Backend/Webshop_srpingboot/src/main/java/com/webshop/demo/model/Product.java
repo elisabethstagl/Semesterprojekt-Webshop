@@ -84,10 +84,6 @@ public class Product {
         return this.id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public int getQuantity() {
         return this.quantity;
     }

@@ -18,6 +18,8 @@ public class UserService {
         this.userRepos = userRepos;
     }
 
+    // METHODEN 
+
     public User save(User user) {
         return userRepos.save(user);
     }
@@ -31,9 +33,8 @@ public class UserService {
     }
 
     public User update(Long id, User updatedUser) {
-        User user = userRepos.findById(id).orElse(null); //abändern - funktioniert nicht, braucht get() oder .Else 
+        User user = userRepos.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        if(user != null){
         user.setUsername(updatedUser.getUsername());
         user.setPassword(updatedUser.getPassword());
         user.setLastName(updatedUser.getLastName());
@@ -42,8 +43,5 @@ public class UserService {
         user.setAddress(updatedUser.getAddress());
 
         return userRepos.save(user);
-    }else {
-        return null;
     }
-}
 }
