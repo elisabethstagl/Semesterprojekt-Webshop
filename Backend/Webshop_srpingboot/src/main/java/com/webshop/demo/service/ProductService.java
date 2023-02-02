@@ -17,6 +17,10 @@ public class ProductService {
         this.productRepos = productRepos;
     }
 
+    public void deleteById(Long id) {
+        productRepos.deleteById(id);
+    }
+
     public Product save(Product product) {
         return productRepos.save(product);
     }
