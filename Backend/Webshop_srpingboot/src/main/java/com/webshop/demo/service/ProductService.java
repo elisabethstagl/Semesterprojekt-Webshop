@@ -17,7 +17,13 @@ public class ProductService {
         this.productRepos = productRepos;
     }
 
+    // METHODEN
+
     public Product save(Product product) {
+        String name = product.getName();
+        if (product.getName() == null || name.isBlank()){
+            
+        }
         return productRepos.save(product);
     }
 
@@ -30,9 +36,8 @@ public class ProductService {
     }
 
     public Product update(Long id, Product updatedProduct) {
-        Product product = productRepos.findById(id).orElse(null);
+        Product product = productRepos.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        if(product != null){
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
         product.setDescription(updatedProduct.getDescription());
@@ -41,9 +46,6 @@ public class ProductService {
         product.setSize(updatedProduct.getSize());
 
         return productRepos.save(product);
-    } else {
-        return null;
     }
 
-}
 }
