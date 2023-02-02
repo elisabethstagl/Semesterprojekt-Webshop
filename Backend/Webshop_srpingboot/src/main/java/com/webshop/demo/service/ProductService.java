@@ -16,8 +16,12 @@ public class ProductService {
     public ProductService(ProductRepository productRepos){
         this.productRepos = productRepos;
     }
-
     // METHODEN
+    
+    public void deleteById(Long id) {
+        productRepos.deleteById(id);
+    }
+    
 
     public Product save(Product product) {
         String name = product.getName();
