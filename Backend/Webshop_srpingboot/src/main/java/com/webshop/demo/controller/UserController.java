@@ -23,14 +23,14 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     // READ
 
     @GetMapping()
-    public List<User> readAll(){
+    public List<User> readAll() {
         return userService.findAll();
     }
 
@@ -39,7 +39,7 @@ public class UserController {
         return userService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
-    
+
     // CREATE
 
     @PostMapping()
@@ -48,18 +48,17 @@ public class UserController {
         return userService.save(user);
     }
 
+    // UPDATE
 
-    // UPDATE 
-
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User user) {
         return userService.update(id, user);
     }
 
-    // DELETE 
+    // DELETE
 
     @DeleteMapping("/{id}")
-    public User delete(@PathVariable Long id){
-    return null;
+    public User delete(@PathVariable Long id) {
+        return null;
     }
 }
