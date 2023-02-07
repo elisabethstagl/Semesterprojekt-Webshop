@@ -47,7 +47,7 @@ public class PositionService {
             if (user.isPresent()) {
                 shoppingCart = shoppingCartService.save(new ShoppingCart(user.get()));
             } else {
-                // TODO: throw 403 error, user does not exist
+                // TO DO: throw 403 error, user does not exist
                 throw new RuntimeException("User does not exist");
             }
         }
@@ -55,7 +55,7 @@ public class PositionService {
         Optional<Product> product = productService.findById(productId);
 
         if (product.isEmpty()) {
-            // TODO: throw 400 bad request, product does not exist
+            // TO DO: throw 400 bad request, product does not exist
             throw new RuntimeException("Product does not exist");
         }
 
