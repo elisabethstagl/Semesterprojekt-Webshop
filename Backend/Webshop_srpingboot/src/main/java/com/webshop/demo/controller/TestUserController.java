@@ -20,7 +20,7 @@ import com.webshop.demo.service.TestUserService;
 @RestController
 @RequestMapping("/test")
 public class TestUserController {
-    
+
     private TestUserService testUserService;
 
     public TestUserController(TestUserService testUserService) {
@@ -29,9 +29,15 @@ public class TestUserController {
 
     // CREATE
 
-    @PostMapping()
+    @PostMapping("/form-submit")
     @ResponseStatus(HttpStatus.CREATED)
     public TestUsers create(@RequestBody TestUsers testUser) {
-        return testUserService.save(testUser);
+    return testUserService.save(testUser);
     }
+
+//     @PostMapping("/submit-form")
+//     public ResponseEntity<FormData> submitForm(@RequestBody TestUsers testUsers) {
+//     formRepository.save(testUsers);
+//     return ResponseEntity.ok(testUsers);
+//   }
 }
