@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.webshop.demo.model.ShoppingCart;
 import com.webshop.demo.service.ShoppingCartService;
 
+/*Ein Controller ist eine Schicht in der Anwendungsarchitektur, 
+die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
+Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anfragen verarbeitet werden sollen.
+*/
+
 @RestController
 @RequestMapping("/shoppingCarts")
 public class ShoppingCartController {

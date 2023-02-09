@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.webshop.demo.model.User;
 import com.webshop.demo.repository.UserRepository;
 
+/* Service ist für die Logik und Funktionalität verantwortlich.  */
+
 @Service
 public class UserService {
     

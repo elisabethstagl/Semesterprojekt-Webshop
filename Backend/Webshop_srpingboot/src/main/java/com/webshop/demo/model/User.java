@@ -12,14 +12,14 @@ import jakarta.persistence.Id;
 public class User {
 
     @Positive
-    @Id
-    @GeneratedValue
+    @Id //gibt Primärschlüssel an
+    @GeneratedValue //id wird automatisch von DB generiert
     @Column(name = "id")
     private Long id;
 
-    // @NotBlank
-    // @Column(name = "sex")
-    // private String sex;
+    @NotBlank
+    @Column(name = "sex")
+    private String sex;
 
     @NotBlank
     @Column(name = "firstName")

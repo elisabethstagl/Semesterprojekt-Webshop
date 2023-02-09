@@ -17,6 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.webshop.demo.model.User;
 import com.webshop.demo.service.UserService;
 
+/*Ein Controller ist eine Schicht in der Anwendungsarchitektur, 
+die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
+Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anfragen verarbeitet werden sollen.
+*/
+
 @RestController
 @RequestMapping("/users")
 public class UserController {

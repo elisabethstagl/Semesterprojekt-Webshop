@@ -16,12 +16,16 @@ import jakarta.persistence.OneToMany;
 public class ShoppingCart {
     
 
+     // CONSTRUCTOR
+
     public ShoppingCart(User user) {
         
     }
 
-    @Id
-    @GeneratedValue
+    
+
+    @Id //gibt Primärschlüssel an
+    @GeneratedValue //id wird automatisch von DB generiert
     @Column(name ="id")
     private Long id;
 
