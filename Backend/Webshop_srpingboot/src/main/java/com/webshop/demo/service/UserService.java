@@ -22,7 +22,6 @@ public class UserService {
 
     // METHODEN 
 
-       
     public void deleteById(Long id) {
         userRepos.deleteById(id);
     }
@@ -49,6 +48,9 @@ public class UserService {
         user.setFirstName(updatedUser.getFirstName());
         user.setEmail(updatedUser.getEmail());
         user.setAddress(updatedUser.getAddress());
+        user.setCity(updatedUser.getCity());
+        user.setDoornumber(updatedUser.getDoornumber());
+        user.setPostalCode(updatedUser.getPostalCode());
 
         return userRepos.save(user);
     }

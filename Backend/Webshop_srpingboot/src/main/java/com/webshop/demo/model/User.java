@@ -3,6 +3,8 @@ package com.webshop.demo.model;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,10 +24,12 @@ public class User {
     private String sex;
 
     @NotBlank
+    @Length (max = 200)
     @Column(name = "firstName")
     private String firstName;
 
     @NotBlank
+    @Length (max = 200)
     @Column(name = "lastName")
     private String lastName;
 
