@@ -1,14 +1,13 @@
 package com.webshop.demo.model;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class User {
@@ -24,7 +23,7 @@ public class User {
     private String sex;
 
     @NotBlank
-    @Length (max = 200)
+    @Length (max = 100)
     @Column(name = "firstName")
     private String firstName;
 
@@ -158,6 +157,4 @@ public class User {
     public void setCity(String city) {
         this.city = city;
     }
-
-
 }
