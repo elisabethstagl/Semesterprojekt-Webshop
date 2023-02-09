@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.webshop.demo.model.ShoppingCart;
 import com.webshop.demo.repository.ShoppingCartRepository;
 
+/* Service ist für die Logik und Funktionalität verantwortlich.  */
+
 @Service
 public class ShoppingCartService {
 

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.webshop.demo.model.User;
 import com.webshop.demo.repository.UserRepository;
 
+/* Service ist für die Logik und Funktionalität verantwortlich.  */
+
 @Service
 public class UserService {
     
@@ -19,6 +21,11 @@ public class UserService {
     }
 
     // METHODEN 
+
+    public void deleteById(Long id) {
+        userRepos.deleteById(id);
+    }
+    
 
     public User save(User user) {
         return userRepos.save(user);
@@ -41,6 +48,9 @@ public class UserService {
         user.setFirstName(updatedUser.getFirstName());
         user.setEmail(updatedUser.getEmail());
         user.setAddress(updatedUser.getAddress());
+        user.setCity(updatedUser.getCity());
+        user.setDoornumber(updatedUser.getDoornumber());
+        user.setPostalCode(updatedUser.getPostalCode());
 
         return userRepos.save(user);
     }

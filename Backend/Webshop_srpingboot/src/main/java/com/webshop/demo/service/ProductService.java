@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.webshop.demo.model.Product;
 import com.webshop.demo.repository.ProductRepository;
 
+/* Service ist für die Logik und Funktionalität verantwortlich.  */
+
 @Service
 public class ProductService {
     

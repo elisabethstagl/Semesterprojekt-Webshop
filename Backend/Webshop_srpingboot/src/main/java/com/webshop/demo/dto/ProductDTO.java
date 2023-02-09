@@ -4,6 +4,11 @@ package com.webshop.demo.dto;
 
 // DTO for {@link Product}
 
+/*DTO (Data Transfer Object): Ein DTO ist ein Objekt, das verwendet wird, 
+um Daten zwischen verschiedenen Schichten einer Anwendung zu übertragen.
+Es enthält die Daten, die für eine bestimmte Anfrage oder Antwort benötigt werden, 
+und dient als Container für diese Daten.
+*/
 
 public class ProductDTO {
 

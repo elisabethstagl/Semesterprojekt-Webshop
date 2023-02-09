@@ -7,11 +7,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+/*  Model ist verantwortlich für die Daten.
+*/
+
 @Entity(name = "position")
 public class Position {
     
-    @Id
-    @GeneratedValue
+    @Id //gibt Primärschlüssel an
+    @GeneratedValue //id wird automatisch von DB generiert
     @Column(name = "id")
     private Long id;
 
