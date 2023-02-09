@@ -4,6 +4,12 @@ import com.webshop.demo.model.Position;
 
 // DTO for {@link Position}
 
+/*DTO (Data Transfer Object): Ein DTO ist ein Objekt, das verwendet wird, 
+um Daten zwischen verschiedenen Schichten einer Anwendung zu übertragen.
+Es enthält die Daten, die für eine bestimmte Anfrage oder Antwort benötigt werden, 
+und dient als Container für diese Daten.
+*/
+
 public class PositionDTO {
     
     private Long id;
