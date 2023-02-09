@@ -22,6 +22,12 @@ public class UserService {
 
     // METHODEN 
 
+       
+    public void deleteById(Long id) {
+        userRepos.deleteById(id);
+    }
+    
+
     public User save(User user) {
         return userRepos.save(user);
     }
