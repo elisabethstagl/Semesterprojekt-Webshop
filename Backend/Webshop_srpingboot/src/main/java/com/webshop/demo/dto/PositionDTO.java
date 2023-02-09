@@ -1,6 +1,6 @@
 package com.webshop.demo.dto;
 
-import com.webshop.demo.model.Position;
+// import com.webshop.demo.model.Position;
 
 // DTO for {@link Position}
 

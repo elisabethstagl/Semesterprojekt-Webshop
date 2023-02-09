@@ -1,6 +1,6 @@
 package com.webshop.demo.dto;
 
-import com.webshop.demo.model.Product;
+// import com.webshop.demo.model.Product;
 
 // DTO for {@link Product}
 

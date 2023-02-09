@@ -1,8 +1,7 @@
 package com.webshop.demo.controller;
 
-import javax.validation.constraints.PositiveOrZero;
+// import javax.validation.constraints.PositiveOrZero;
 
-import org.aspectj.weaver.Position;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webshop.demo.dto.PositionDTO;
+import com.webshop.demo.model.Position;
 import com.webshop.demo.service.PositionService;
 
 @RestController

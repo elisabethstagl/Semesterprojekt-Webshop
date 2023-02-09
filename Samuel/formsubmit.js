@@ -3,7 +3,7 @@ document.querySelector("submit").addEventListener("submit", function(event) {
   
     let formData = new FormData(this);
   
-    fetch("/test/form-submit", {
+    fetch("http://localhost:8080/form/submit", {
       method: "POST",
       body: formData
     })
