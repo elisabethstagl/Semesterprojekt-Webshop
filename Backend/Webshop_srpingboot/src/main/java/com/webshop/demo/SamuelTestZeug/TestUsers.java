@@ -1,4 +1,4 @@
-package com.webshop.demo.model;
+package com.webshop.demo.SamuelTestZeug;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;

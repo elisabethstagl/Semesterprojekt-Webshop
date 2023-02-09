@@ -1,4 +1,4 @@
-package com.webshop.demo.controller;
+package com.webshop.demo.SamuelTestZeug;
 
 import org.springframework.web.bind.annotation.RestController;
 

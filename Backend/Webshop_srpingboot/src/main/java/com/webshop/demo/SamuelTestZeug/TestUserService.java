@@ -1,12 +1,9 @@
-package com.webshop.demo.service;
+package com.webshop.demo.SamuelTestZeug;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-
-import com.webshop.demo.model.TestUsers;
-import com.webshop.demo.repository.TestUserRepository;
 
 @Service
 public class TestUserService {

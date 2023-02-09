@@ -15,6 +15,11 @@ import jakarta.persistence.OneToMany;
 @Entity(name = "shoppingCart")
 public class ShoppingCart {
     
+
+    public ShoppingCart(User user) {
+        
+    }
+
     @Id
     @GeneratedValue
     @Column(name ="id")
