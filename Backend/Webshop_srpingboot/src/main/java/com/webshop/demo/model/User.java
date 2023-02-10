@@ -66,7 +66,9 @@ public class User {
     }
 
 
-    public User(String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, String password) {
+
+    public User(String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, String password) {
+        this.sex = sex;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -78,27 +80,21 @@ public class User {
         this.password = password;
     }
     
+    
 
     // GETTERS & SETTERS
+
 
     public Long getId() {
         return this.id;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getSex() {
+        return this.sex;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getFirstName() {
@@ -117,14 +113,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getAddress() {
         return this.address;
     }
@@ -132,7 +120,6 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
-
 
     public String getDoornumber() {
         return this.doornumber;
@@ -157,4 +144,29 @@ public class User {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
 }
