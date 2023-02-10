@@ -1,12 +1,13 @@
 package com.webshop.demo.SamuelTestZeug;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 public class TestUsers {
