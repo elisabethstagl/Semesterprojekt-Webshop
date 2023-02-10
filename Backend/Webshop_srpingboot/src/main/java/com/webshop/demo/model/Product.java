@@ -5,14 +5,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @Entity(name = "Product")
 public class Product {
 
     @Positive
-    @Id //gibt Primärschlüssel an
-    @GeneratedValue //id wird automatisch von DB generiert
+    @Id // gibt Primärschlüssel an
+    @GeneratedValue // id wird automatisch von DB generiert
     @Column(name = "id")
     private Long id;
 
@@ -20,18 +21,19 @@ public class Product {
     @Column(name = "product_name")
     private String name;
 
-    @NotBlank
+    @NotNull
     @Column(name = "price")
     private Double price;
 
+    @NotBlank
     @Column(name = "description")
     private String description;
 
-    @NotBlank
+    @NotNull
     @Column(name = "quantity")
     private Integer quantity;
 
-    @NotBlank
+    @NotNull
     @Column(name = "size")
     private Character size;
 
@@ -39,11 +41,9 @@ public class Product {
     @Column(name = "category")
     private String category;
 
-
     // CONSTRUCTOR
 
-
-    public Product(String name, double price, String description, int quantity, char size, String category) {
+    public Product(String name, double price, String description, int quantity, Character size, String category) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -51,14 +51,11 @@ public class Product {
         this.size = size;
         this.category = category;
     }
-    
 
     public Product() {
     }
 
-
     // GETTERS & SETTERS
-
 
     public String getName() {
         return this.name;
@@ -96,12 +93,11 @@ public class Product {
         this.quantity = quantity;
     }
 
-
-    public char getSize() {
+    public Character getSize() {
         return this.size;
     }
 
-    public void setSize(char size) {
+    public void setSize(Character size) {
         this.size = size;
     }
 
@@ -112,6 +108,5 @@ public class Product {
     public void setCategory(String category) {
         this.category = category;
     }
-
 
 }
