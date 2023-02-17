@@ -1,0 +1,3 @@
+17.02.23
+Schrift größer machen navbar,
+Registrierung-form schöner formatieren (alles in form, conatiner etc.)
