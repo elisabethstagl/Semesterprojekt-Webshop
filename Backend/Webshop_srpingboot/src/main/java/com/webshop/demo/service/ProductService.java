@@ -26,10 +26,6 @@ public class ProductService {
     
 
     public Product save(Product product) {
-        String name = product.getName();
-        if (product.getName() == null || name.isBlank()){
-            
-        }
         return productRepos.save(product);
     }
 

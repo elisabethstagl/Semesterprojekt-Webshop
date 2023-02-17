@@ -3,6 +3,7 @@ package com.webshop.demo.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+// import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.webshop.demo.model.Product;
 import com.webshop.demo.service.ProductService;
+
+import jakarta.validation.Valid;
 
 /*Ein Controller ist eine Schicht in der Anwendungsarchitektur, 
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
@@ -49,7 +52,7 @@ public class ProductController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody Product product) {
+    public Product create(@RequestBody @Valid Product product) {
         return productService.save(product);
     }
 

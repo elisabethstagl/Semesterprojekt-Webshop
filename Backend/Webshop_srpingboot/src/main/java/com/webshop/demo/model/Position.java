@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 /*  Model ist verantwortlich für die Daten.
+    Verbundstabelle. 
 */
 
 @Entity(name = "position")
