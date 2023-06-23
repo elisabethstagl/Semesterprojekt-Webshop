@@ -1,40 +1,33 @@
-document.getElementById("myButton").addEventListener("click", function() {
-    console.log("Haha you clicked");
-  });
+$("#getProductsButton").on("click", function(e) {
+  $.ajax({
+      url: "http://localhost:8080/products",
+      type: "GET",
+      cors: true,
+      success: function(products) { addProductsToPage(products) },
+      error: function(error) { console.error(error) }
+  })
+});
 
+function addProductsToPage(products) {
+  const productsContainer = $("#productsContainer");
+  productsContainer.empty();
 
+  for (let product of products) {
+      productsContainer.append(createProduct(product));
+  }
+}
 
-// $("#getProductsButton").on("click", function(e) {
-//     // $("#productsContainer").append("Hello World!");
-//     $.ajax({
-//         url: "http://localhost:8080/products",
-//         type: "GET",
-//         cors: true,
-//         success: function(products) { addProductsToPage(products) },
-//         error: function(error) { console.error(error) }
-//     })
-// });
+function createProduct(product) {
+  const name = $(`<h1>${product.name}</h1>`);
+  const description = $(`<p>${product.description}</p>`);
+  const image = $(`<img width="400" src="${product.imageUrl}">`);
+  const price = $(`<p>${product.price}</p>`);
 
-// function addProductsToPage(products) {
-//     const productsContainer = $("#productsContainer");
-//     productsContainer.empty();
+  const wrapper = $(`<div class="product"></div>`);
+  wrapper.append(name);
+  wrapper.append(description);
+  wrapper.append(image);
+  wrapper.append(price);
 
-//     for (let product of products) {
-//         productsContainer.append(createProduct(product));
-//     }
-// }
-
-// function createProduct(product) {
-//     const name = $(`<h1>${product.name}</h1>`);
-//     const description = $(`<p>${product.description}</p>`);
-//     const image = $(`<img width="400" src="${product.imageUrl}">`);
-//     const price = $(`<p>${product.price}</p>`);
-
-//     const wrapper = $(`<div class="product"></div>`);
-//     wrapper.append(name);
-//     wrapper.append(description);
-//     wrapper.append(image);
-//     wrapper.append(price);
-
-//     return wrapper;
-// }
+  return wrapper;
+}
