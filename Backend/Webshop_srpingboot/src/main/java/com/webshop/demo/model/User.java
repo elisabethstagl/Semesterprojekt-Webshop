@@ -2,6 +2,8 @@ package com.webshop.demo.model;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,9 +58,13 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @JsonIgnore
     @NotBlank
     @Column(name = "password")
     private String password;
+
+    @Column(name = "role")
+    private String role;
 
     // CONSTRUCTOR
 
@@ -169,4 +175,11 @@ public class User {
         this.password = password;
     }
     
+    public String getRole() {
+        return this.role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
