@@ -47,16 +47,26 @@ public class UserController {
 
     // CREATE
 
-    @PostMapping()
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
-        return userService.save(user);
+        System.out.println("Create method called with user: " + user);  // log the input
+        return userService.createUser(user);
     }
 
     // UPDATE
 
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User user) {
+        return userService.update(id, user);
+    }
+
+    // UPDATE PASSWORD
+
+    @PutMapping("/{id}/updatePassword")
+    public User updatePassword(@PathVariable Long id, @RequestBody String newPassword) {
+        User user = userService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        user.setPassword(newPassword);
         return userService.update(id, user);
     }
 

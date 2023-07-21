@@ -15,8 +15,10 @@ public class JwtProperties {
     private String secret;
 
     public String getSecret(){
+        System.out.println("Getting JWT secret: " + secret); // Remove or replace with a logger in production code
         return secret;
     }
+
 
     public void setSecret(String secret){
         this.secret = secret;

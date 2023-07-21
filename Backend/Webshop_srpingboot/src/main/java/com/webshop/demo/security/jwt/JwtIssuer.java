@@ -23,6 +23,7 @@ public class JwtIssuer {
     }
 
     public String issue(Long userId, String username, List<String> roles){
+        System.out.println("JWT secret in issuer: " + jwtProperties.getSecret()); // Remove or replace with a logger in production code
         return JWT.create()
                 .withSubject(String.valueOf(userId))
                 .withExpiresAt(Instant.now().plus(Duration.of(1, ChronoUnit.DAYS)))
@@ -30,5 +31,6 @@ public class JwtIssuer {
                 .withClaim("roles", roles)
                 .sign(Algorithm.HMAC256(jwtProperties.getSecret()));
     }
-    
+
+
 }
