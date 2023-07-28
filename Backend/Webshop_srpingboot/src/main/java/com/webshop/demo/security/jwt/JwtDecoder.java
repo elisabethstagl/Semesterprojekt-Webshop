@@ -21,10 +21,13 @@ public class JwtDecoder {
     }
 
     public DecodedJWT decode(String token) {
+        String secret = jwtProperties.getSecret();
+        System.out.println("JWT secret in decoder: " + secret); // Remove or replace with a logger in production code
         return JWT
-                .require(Algorithm.HMAC256(jwtProperties.getSecret()))
+                .require(Algorithm.HMAC256(secret))
                 .build()
                 .verify(token);
     }
-    
+
+
 }

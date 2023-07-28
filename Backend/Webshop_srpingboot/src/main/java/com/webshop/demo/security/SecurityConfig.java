@@ -7,15 +7,15 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.webshop.demo.security.filter.JwtAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-/* Insgesamt dient die SecurityConfig-Klasse dazu, die Konfiguration der Spring Security für deine Webshop-Demo-Anwendung 
-zu definieren. Sie legt die Filterkette, den AuthenticationManager, den Passwort-Encoder und die Sicherheitsregeln fest, 
-um die Authentifizierung und Autorisierung in deiner Anwendung zu ermöglichen. */
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -23,55 +23,61 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailService customUserDetailService;
+    private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomUserDetailService customUserDetailService
+            CustomUserDetailService customUserDetailService,
+            PasswordEncoder passwordEncoder
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customUserDetailService = customUserDetailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Add JWT filter to the security chain
-        http
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Disable CORS and CSRF
-        http.cors().and().csrf().disable();
+        // Disable CSRF
+        http.csrf().disable();
+
+        // Enable CORS
+        http.cors();
 
         // Set sessions to stateless
-        http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http
-                .formLogin()
-                .disable();
+        http.formLogin().disable();
 
-        http
-                .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/files").permitAll()
-                        .anyRequest().authenticated()
-                );
+        http.authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers("/users/register").permitAll()
+                .requestMatchers("/users").permitAll()
+                .anyRequest().authenticated()
+        );
 
         return http.build();
 }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(customUserDetailService)
+                .passwordEncoder(passwordEncoder)
+                .and().build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http
-                .getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(customUserDetailService)
-                .passwordEncoder(passwordEncoder())
-                .and().build();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(Arrays.asList("*")); // use setAllowedOriginPatterns instead
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true); // if you need credentials, explicitly set this to true
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
-    
+
+
 }

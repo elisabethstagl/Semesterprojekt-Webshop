@@ -54,11 +54,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private Optional<String> extractTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-
+        System.out.println("Received token: " + token); // Remove or replace with a logger in production code
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             return Optional.of(token.substring("Bearer ".length()));
         }
-
         return Optional.empty();
     }
+
 }
