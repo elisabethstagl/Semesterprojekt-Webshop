@@ -41,15 +41,19 @@ public class Product {
     @Column(name = "category")
     private String category;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     // CONSTRUCTOR
 
-    public Product(String name, double price, String description, int quantity, Character size, String category) {
+    public Product(String name, double price, String description, int quantity, Character size, String category, String imageUrl) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
         this.size = size;
         this.category = category;
+        this.imageUrl = imageUrl;
     }
 
     public Product() {
@@ -108,5 +112,18 @@ public class Product {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    
 
 }
