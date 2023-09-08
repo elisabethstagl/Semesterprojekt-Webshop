@@ -1,104 +1,42 @@
-package com.webshop.demo.model;
+package com.webshop.demo.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-
-@Entity
-public class User {
-
-    @Positive
-    @Id //gibt Primärschlüssel an
-    @GeneratedValue //id wird automatisch von DB generiert
-    @Column(name = "id")
-    private Long id;
+public class RegistrationRequest {
 
     @NotBlank
-    @Column(name = "sex")
     private String sex;
 
     @NotBlank
-    @Length (max = 100)
-    @Column(name = "firstName")
+    @Length(max = 100)
     private String firstName;
 
     @NotBlank
-    @Length (max = 200)
-    @Column(name = "lastName")
+    @Length(max = 200)
     private String lastName;
 
     @NotBlank
-    @Column(name = "address")
     private String address;
 
     @NotBlank
-    @Column(name = "doornumber")
     private String doornumber;
 
     @NotBlank
-    @Column(name = "postalCode")
     private String postalCode;
 
     @NotBlank
-    @Column(name = "city")
     private String city;
 
     @NotBlank
-    @Column(name = "email", unique = true)
     private String email;
 
     @NotBlank
-    @Column(name = "username")
     private String username;
 
     @NotBlank
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING) // Specifies that the 'role' field should be persisted as the String name of the enum value (e.g., 'USER' or 'ADMIN'), rather than an ordinal integer.
-    private UserRole role;
-    
-    public enum UserRole {
-        USER, ADMIN
-    }
-
-    // CONSTRUCTOR
-
-    public User() {
-    }
-
-
-
-    public User(String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, String password, UserRole role) {
-        this.sex = sex;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.doornumber = doornumber;
-        this.postalCode = postalCode;
-        this.city = city;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-    
-    
-
-    // GETTERS & SETTERS
-
-
-    public Long getId() {
-        return this.id;
-    }
 
     public String getSex() {
         return this.sex;
@@ -179,13 +117,23 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public UserRole getRole() {
-        return this.role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
     
+
+    public RegistrationRequest() {
+    }
+
+
+    public RegistrationRequest(String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, String password) {
+        this.sex = sex;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.doornumber = doornumber;
+        this.postalCode = postalCode;
+        this.city = city;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+
 }

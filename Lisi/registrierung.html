@@ -42,7 +42,7 @@
             <label class="form-check-label" for="noGender">Keine</label>
         </div><br>
 
-        <form class="row g-2" novalidate>
+        <form class="row g-2" action="/users/register" method="POST" novalidate>
 
 
             <div class="col-6 form-floating">
@@ -100,9 +100,8 @@
             </div>
 
             <div class="form-floating">
-                <input type="password" name="passwort" id="passwort" class="form-control" placeholder="passwort-eingabe"
-                    required />
-                <label class="registrierungLabel" for="passwort">Passwort wiederholen</label> <br />
+                <input type="password" name="passwortWiederholen" id="passwortWiederholen" class="form-control" placeholder="passwort-eingabe" required />
+                <label class="registrierungLabel" for="passwortWiederholen">Passwort wiederholen</label> <br />
             </div>
 
             <div class="mt-0 mb-3">
@@ -115,13 +114,32 @@
     <script>
         const form = document.querySelector("form");
 
-        form.addEventListener("submit", (e) => {
-            if (!form.checkValidity()) {
-                e.preventDefault();
-            }
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
 
+        if (!form.checkValidity()) {
             form.classList.add("was-validated");
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            url: form.action,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                alert('Successfully registered!');
+                // Redirect or do something else upon successful registration
+            },
+            error: function(err) {
+                alert('Error during registration: ' + err.responseText);
+            }
         });
+    });
+
     </script>
 
 <div id="footer"></div>

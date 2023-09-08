@@ -1,8 +1,13 @@
 package com.webshop.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +19,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.webshop.demo.dto.LoginRequest;
+import com.webshop.demo.dto.RegistrationRequest;
+import com.webshop.demo.dto.TokenResponse;
 import com.webshop.demo.model.User;
+import com.webshop.demo.security.JwtUtil;
 import com.webshop.demo.service.UserService;
+
+
+import jakarta.validation.Valid;
 
 /*Ein Controller ist eine Schicht in der Anwendungsarchitektur, 
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
@@ -26,7 +38,11 @@ Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anf
 @RequestMapping("/users")
 public class UserController {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private UserService userService;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -51,6 +67,21 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
         return userService.save(user);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
+        userService.register(registrationRequest);
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        Optional<String> token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+
+        return token.map(TokenResponse::new)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(401).body(null)); // Unauthorized
     }
 
     // UPDATE
