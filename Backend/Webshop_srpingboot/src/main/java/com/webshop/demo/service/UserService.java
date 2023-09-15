@@ -24,13 +24,15 @@ import com.webshop.demo.model.User.UserRole;
 @Service
 public class UserService {
     
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final JwtUtil JwtUtil; // Inject JwtUtil
 
-    public UserService(UserRepository userRepos){
-        this.userRepository = userRepos;
+    @Autowired
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtil JwtUtil) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.JwtUtil = JwtUtil;
     }
 
     // Add the registration method

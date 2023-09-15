@@ -3,6 +3,7 @@ package com.webshop.demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,11 +21,16 @@ public class SecurityConfig {
         http
             .csrf().disable() // Disable CSRF for simplicity. Reconsider for production!
             .authorizeHttpRequests()
-                .requestMatchers("/users/register", "/users/login").permitAll()  // Allow access to registration and login endpoints
+                .requestMatchers("/users/register", "/users/login", "/users", "/registrierung.html", "/login.html", "/index.html").permitAll()  // Allow access to registration and login endpoints
                 .anyRequest().authenticated()         // All other requests need authentication
             .and()
-            .logout().permitAll();                       // Allow logout for everyone
-
+            .formLogin()
+                .loginPage("/login.html") // Customize your login page if needed
+                .permitAll()
+            .and()
+            .logout()
+                .permitAll();
         return http.build();
     }
+
 }
