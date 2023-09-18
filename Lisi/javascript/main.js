@@ -1,4 +1,4 @@
 
-$("#navbar").load("../Lisi/navbar.html");
+$("#navbar").load("navbar.html");
 
-$("#footer").load("../Lisi/footer.html");
+$("#footer").load("footer.html");

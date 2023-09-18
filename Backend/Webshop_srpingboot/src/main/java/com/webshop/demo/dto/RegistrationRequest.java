@@ -1,7 +1,9 @@
 package com.webshop.demo.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.validation.constraints.NotBlank;
 
 public class RegistrationRequest {
 
@@ -37,6 +39,15 @@ public class RegistrationRequest {
     @NotBlank
     private String password;
 
+    private MultipartFile profilePicture;
+
+    public MultipartFile getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(MultipartFile profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 
     public String getSex() {
         return this.sex;
@@ -117,13 +128,13 @@ public class RegistrationRequest {
     public void setPassword(String password) {
         this.password = password;
     }
-    
 
     public RegistrationRequest() {
     }
 
-
-    public RegistrationRequest(String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, String password) {
+    public RegistrationRequest(String sex, String firstName, String lastName, String address, String doornumber,
+            String postalCode, String city, String email, String username, String password,
+            MultipartFile profilePicture) {
         this.sex = sex;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -134,6 +145,7 @@ public class RegistrationRequest {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.profilePicture = profilePicture;
     }
 
 }

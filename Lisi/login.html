@@ -7,15 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>guapo. | Login</title>
 
-    <link rel="icon" href="images/clementine.png" sizes="16x16 32x32" type="image/png"/>
+    <link rel="icon" href="images/clementine.png" sizes="16x16 32x32" type="image/png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/stylesheet.css" />
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <link href="css/stylesheet.css" type="text/css"/>
 </head>
 
 <body>
@@ -24,24 +25,65 @@
     <div class="container text-center">
 
         <h1 id="login" class="mt-4 mb-4">Login</h1>
-        <form style="max-width: 480px; margin: auto">
-            <input type="text" class="form-control" placeholder="Benutzername" aria-label="benutzername" /><br />
-            <input type="password" class="form-control" placeholder="Passwort" aria-label="passwort" /><br />
+        <form id="loginForm" style="max-width: 480px; margin: auto">
+            <input type="text" class="form-control" id="username" name="username" required /><br />
+            <input type="password" class="form-control" id="password" name="password" required /><br />
 
             <div>
-                <button class="btn btn-primary w-100 mb-2">Anmelden</button>
+                <button type="button" class="btn btn-primary w-100 mb-2" onclick="performLogin()">Anmelden</button>
             </div>
             <a href="registrierung.html">Neu bei uns? Hier registrieren!</a>
         </form>
 
     </div>
+    <div id="loginError"></div>
 
-
-    
     <div id="footer"></div>
 
+    <script>
+        function performLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
 
-<script src="./javascript/main.js"></script>
+            // Client-side validation (add more checks as needed)
+            if (!username || !password) {
+                alert("Please enter both username and password.");
+                return;
+            }
+
+            fetch("http://localhost:8080/users/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error("Authentication failed");
+                    }
+                })
+                .then(data => {
+                    // Store the JWT token securely, e.g., in a cookie or local storage
+                    // For simplicity, we store it in local storage in this example
+                    localStorage.setItem("jwtToken", data.token);
+
+                    // Redirect the user to the main application or dashboard page
+                    window.location.href = '/Lisi/index.html';
+                })
+                .catch(error => {
+                    console.error("Error during login:", error);
+
+                    // Display a user-friendly error message on the form
+                    const errorElement = document.getElementById("loginError");
+                    errorElement.textContent = "Login failed. Please check your credentials.";
+                });
+        }
+
+    </script>
+    <script src="javascript/main.js"></script>
 </body>
 
 </html>

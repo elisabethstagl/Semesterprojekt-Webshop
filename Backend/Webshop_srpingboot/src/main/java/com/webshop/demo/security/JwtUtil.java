@@ -24,6 +24,7 @@ public class JwtUtil {
             .withSubject(user.getUsername())
             .withIssuedAt(issuedAt)
             .withExpiresAt(expiresAt)
+            .withClaim("role", user.getRole().toString())
             .sign(Algorithm.HMAC512(secret)); // Use the secret key read from configuration
     }
 }

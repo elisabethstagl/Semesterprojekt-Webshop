@@ -1,29 +1,24 @@
 package com.webshop.demo.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import com.webshop.demo.repository.UserRepository;
 import com.webshop.demo.security.JwtUtil;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.webshop.demo.dto.RegistrationRequest;
 import com.webshop.demo.model.User;
 import com.webshop.demo.model.User.UserRole;
 
-
-
-
 /* Service ist für die Logik und Funktionalität verantwortlich.  */
 
 @Service
 public class UserService {
-    
+
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtil JwtUtil; // Inject JwtUtil
@@ -36,7 +31,7 @@ public class UserService {
     }
 
     // Add the registration method
-    public User register(RegistrationRequest registrationRequest) {
+    public User register(RegistrationRequest registrationRequest, MultipartFile profilePicture) {
         if (userRepository.existsByUsername(registrationRequest.getUsername())) {
             throw new RuntimeException("Username already exists.");
         }
@@ -58,6 +53,15 @@ public class UserService {
         newUser.setPassword(hashedPassword);
         newUser.setRole(UserRole.USER); // default role
 
+        // Handle profile picture upload
+        try {
+            if (profilePicture != null && !profilePicture.isEmpty()) {
+                newUser.setProfilePicture(profilePicture.getBytes());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error uploading profile picture.");
+        }
+
         return userRepository.save(newUser);
     }
 
@@ -76,23 +80,21 @@ public class UserService {
         return Optional.empty();
     }
 
-
-    // METHODEN 
+    // METHODEN
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
-    
 
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    public Optional<User> findById(Long id){
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
