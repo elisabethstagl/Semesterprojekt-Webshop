@@ -1,5 +1,4 @@
 package com.webshop.demo.service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +36,19 @@ public class ProductService {
         return productRepos.findAll();
     }
 
+    public List<Product> findAllByCategory(String category) {
+        List<Product> filteredProducts = productRepos.findAllByCategory(category);
+        //  = new ArrayList<>();
+        // List<Product> allProducts = findAll();
+
+        // for(Product product : allProducts) {
+        //     if(product.getCategory().equals(category)){
+        //         filteredProducts.add(product);
+        //     }
+        // }
+        return filteredProducts;
+    }
+
     public Product update(Long id, Product updatedProduct) {
         Product product = productRepos.findById(id).orElseThrow(EntityNotFoundException::new);
 
@@ -45,7 +57,7 @@ public class ProductService {
         product.setDescription(updatedProduct.getDescription());
         product.setCategory(updatedProduct.getCategory());
         product.setQuantity(updatedProduct.getQuantity());
-        product.setSize(updatedProduct.getSize());
+        product.setImageURL(updatedProduct.getImageURL());
 
         return productRepos.save(product);
     }

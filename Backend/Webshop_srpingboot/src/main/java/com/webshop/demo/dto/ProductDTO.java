@@ -17,8 +17,8 @@ public class ProductDTO {
     private Double price;
     private String description;
     private Integer quantity;
-    private Character size;
     private String category;
+    private String imageURL;
 
 
     // GETTERS & SETTERS    
@@ -64,20 +64,20 @@ public class ProductDTO {
         this.quantity = quantity;
     }
 
-    public Character getSize() {
-        return this.size;
-    }
-
-    public void setSize(Character size) {
-        this.size = size;
-    }
-
     public String getCategory() {
         return this.category;
     }
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getImageURL(String imageURL) {
+        return this.imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
 }
