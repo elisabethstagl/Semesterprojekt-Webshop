@@ -45,7 +45,7 @@ body {
     position: relative;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    min-height: 100vh;
+    min-height: auto;
     background-color: #e89b6bc5;
 }
 
