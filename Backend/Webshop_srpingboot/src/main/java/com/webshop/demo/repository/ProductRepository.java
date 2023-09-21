@@ -1,5 +1,7 @@
 package com.webshop.demo.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,6 @@ ohne dass dafür das gesamte Model oder der Service überarbeitet werden müssen
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     
+public List<Product> findAllByCategory(String category);
 
 }

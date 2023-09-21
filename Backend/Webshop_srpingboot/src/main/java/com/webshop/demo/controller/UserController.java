@@ -3,6 +3,7 @@ package com.webshop.demo.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import com.webshop.demo.service.UserService;
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
 Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anfragen verarbeitet werden sollen.
 */
-
+@CrossOrigin
 @RestController
 @RequestMapping("/users")
 public class UserController {
