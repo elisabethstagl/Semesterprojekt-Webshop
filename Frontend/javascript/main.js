@@ -1,5 +1,4 @@
 
-$("#navbar").load("../Frontend/navbar.html");
+$("#navbar").load("../Frontend/navbar.html .navbar");
 
-$("#footer").load("../Frontend/footer.html");
-
+$("#footer").load("../Frontend/footer.html #footerLoad");

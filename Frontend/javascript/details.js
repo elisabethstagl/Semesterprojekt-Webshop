@@ -39,7 +39,7 @@ function createProductRow(product) {
     const title = $(`<h1>${product.name}</h1>`);
     const description = $(`<p>${product.description}</p>`);
     const price = $(`<h2>${product.price}€</h2>`);
-    const warenkorbButton = $(`<button type="button" class="btn btn-light" style="color: rgb(184, 107, 82); margin-top: 20px; margin-bottom: 40px;">In den Warenkorb</button></a>`);
+    const warenkorbButton = $(`<button type="button" class="btn btn-light" style="color: rgb(184, 107, 82); margin-top: 20px; margin-bottom: 40px;">In den Warenkorb</button></button>`);
 
     // Füge die HTML-Elemente zur Zeile hinzu
     imageCol.append(image);

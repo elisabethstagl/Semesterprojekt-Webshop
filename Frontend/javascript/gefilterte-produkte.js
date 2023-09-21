@@ -34,7 +34,7 @@ function displayProducts(products) {
 // Funktion zum Erstellen einer Produktkarte
 function createProductCard(product) {
     // Erstelle die HTML-Struktur für eine Produktkarte
-    const card = $('<div class="card mb-5 mx-auto" style="max-width: 740px; background-color:transparent;"></div>');
+    const card = $('<div class="card card-products mb-5 mx-auto" style="max-width: 740px; background-color:transparent;"></div>');
     const row = $('<div class="row g-0"></div>');
     const imageCol = $('<div class="col-md-4"></div>');
     const image = $(`<img src="${product.imageURL}" alt="${product.name}" class="img-fluid rounded-start rounded-end card-image">`);
