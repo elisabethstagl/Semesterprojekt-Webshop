@@ -54,6 +54,7 @@ function createUserCard(user) {
         cardBody.append(sex);
         cardBody.append(address);
         cardBody.append(email);
+        cardBody.append(role);
         // Fügen Sie weitere Informationen hinzu, wie oben beschrieben.
     
         cardInner.append(cardBody);
