@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,6 +34,7 @@ import jakarta.validation.Valid;
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
 Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anfragen verarbeitet werden sollen.
 */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 @CrossOrigin
 @RestController
 @RequestMapping("/users")
@@ -52,9 +54,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User read(@PathVariable Long id) {
-        return userService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public ResponseEntity<User> read(@PathVariable Long id) {
+        Optional<User> userOptional = userService.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // CREATE
