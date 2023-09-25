@@ -46,16 +46,22 @@ body {
     padding-bottom: 10px;
     padding-left: 20px;
     padding-right: 20px;
+    box-shadow: none;
+    outline: none;
 }
 
 .btn-primary{
     background-color: cornsilk;
     color:rgb(184, 107, 82);
+    box-shadow: none;
+    outline: none;
 }
 
-.btn:hover {
+.btn:hover, .btn:focus, .btn:active {
     background-color:rgb(184, 107, 82);
     color: cornsilk !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .accordion-item {
@@ -111,4 +117,14 @@ body {
 
 .navbar i {
     font-size: 20px;
+}
+
+.modal-header, .modal-footer, .modal-body, .modal-content{
+    background-color:#e9aa83;
+    border: none;
+    outline: none;
+}
+
+.modal-content{
+    padding: 15px;
 }
