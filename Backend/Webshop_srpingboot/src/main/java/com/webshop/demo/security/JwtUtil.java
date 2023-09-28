@@ -11,8 +11,8 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}") // Read secret from application.properties or application.yml
-    private String secret; // Remove the "static" keyword
+    @Value("${jwt.secret}") 
+    private String secret; 
 
     private static final long EXPIRATION_TIME = 15 * 60 * 1000; // 15 minutes in milliseconds
 
@@ -25,6 +25,6 @@ public class JwtUtil {
             .withIssuedAt(issuedAt)
             .withExpiresAt(expiresAt)
             .withClaim("role", user.getRole().toString())
-            .sign(Algorithm.HMAC512(secret)); // Use the secret key read from configuration
+            .sign(Algorithm.HMAC512(secret)); 
     }
 }
