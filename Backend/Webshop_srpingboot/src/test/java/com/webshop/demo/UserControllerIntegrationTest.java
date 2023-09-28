@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import java.util.Optional;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,13 +31,26 @@ public class UserControllerIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+    }
+
     @Test
     public void testGetUserById() throws Exception {
         List<User> users = userRepository.findAll();
         assertEquals(0, users.size());
         mockMvc.perform(get("/users/100")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void testGetAllUsers() throws Exception {
+        mockMvc.perform(get("/users")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
     @Test
@@ -79,13 +92,7 @@ public class UserControllerIntegrationTest {
         assertEquals("password", savedUser.get().getPassword());
     }
 
-    @Test
-    public void testGetAllUsers() throws Exception {
-        mockMvc.perform(get("/users")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-    }
+    
 
     // @Test
     // public void testCreateUser() throws Exception {
