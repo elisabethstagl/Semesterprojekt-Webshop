@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>guapo. | Login</title>
+
+    <link rel="icon" href="images/clementine.png" sizes="16x16 32x32" type="image/png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/stylesheet.css" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <div class="container content text-center mb-4">
+
+        <h1 id="login" class="mt-4 mb-4">Login</h1>
+        <form id="loginForm" style="max-width: 480px; margin: auto">
+            <input type="text" class="form-control" id="username" name="username" required /><br />
+            <input type="password" class="form-control" id="password" name="password" required /><br />
+
+            <div>
+                <button type="button" class="btn btn-primary mb-4" onclick="performLogin()">Anmelden</button>
+            </div>
+            <a href="registrierung.html">Neu bei uns? Hier registrieren!</a>
+        </form>
+    </div>
+
+    <!-- Bootstrap Modal for displaying errors -->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="errorModalLabel">Fehler beim Login</h5>
+        </div>
+        <div class="modal-body">
+            <p id="loginErrorMessage">Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+    <!-- Footer content and scripts -->
+    <div id="footer"></div>
+
+    <script>
+        // JavaScript code for performing login and displaying error modal
+        function performLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Client-side validation (add more checks as needed)
+            if (!username || !password) {
+                alert("Bitte geben Sie Benutzername und Passwort ein.");
+                return;
+            }
+
+            fetch("http://localhost:8080/users/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error("Authentifizierung fehlgeschlagen");
+                    }
+                })
+                .then(data => {
+                    // Speichern des JWT-Tokens sicher, z.B. in einem Cookie oder Local Storage
+                    // In diesem Beispiel speichern wir es aus Vereinfachungsgründen im Local Storage
+                    localStorage.setItem("jwtToken", data.token);
+
+                    // Weiterleitung des Benutzers zur Hauptanwendungs- oder Dashboard-Seite
+                    window.location.href = '/Frontend/index.html';
+                })
+                .catch(error => {
+                    console.error("Fehler beim Login:", error);
+
+                    // Anzeigen der Fehlermeldung im Modal
+                    const errorModal = document.getElementById("errorModal");
+                    const errorMessage = document.getElementById("loginErrorMessage");
+                    errorMessage.textContent = "Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.";
+                    $(errorModal).modal('show');
+                });
+        }
+    </script>
+    <script src="javascript/main.js"></script>
+</body>
+
+</html>

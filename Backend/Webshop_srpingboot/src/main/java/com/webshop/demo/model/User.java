@@ -4,17 +4,22 @@ import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 @Entity
+@Table(name = "\"user\"")
 public class User {
 
     @Positive
-    @Id //gibt Primärschlüssel an
-    @GeneratedValue //id wird automatisch von DB generiert
+    @Id // gibt Primärschlüssel an
+    @GeneratedValue // id wird automatisch von DB generiert
     @Column(name = "id")
     private Long id;
 
@@ -23,12 +28,12 @@ public class User {
     private String sex;
 
     @NotBlank
-    @Length (max = 100)
+    @Length(max = 100)
     @Column(name = "firstName")
     private String firstName;
 
     @NotBlank
-    @Length (max = 200)
+    @Length(max = 200)
     @Column(name = "lastName")
     private String lastName;
 
@@ -60,14 +65,26 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING) // Specifies that the 'role' field should be persisted as the String name of the
+                                 // enum value (e.g., 'USER' or 'ADMIN'), rather than an ordinal integer.
+    private UserRole role;
+
+    public enum UserRole {
+        USER, ADMIN
+    }
+
+    @Lob
+    @Column(name = "profile_picture", length = 100000)
+    private byte[] profilePicture;
+
     // CONSTRUCTOR
 
     public User() {
     }
 
-
-
-    public User(String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, String password) {
+    public User(String sex, String firstName, String lastName, String address, String doornumber, String postalCode,
+            String city, String email, String username, String password, UserRole role, byte[] profilePicture) {
         this.sex = sex;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -78,12 +95,11 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.role = role;
+        this.profilePicture = profilePicture;
     }
-    
-    
 
     // GETTERS & SETTERS
-
 
     public Long getId() {
         return this.id;
@@ -168,5 +184,21 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+    public UserRole getRole() {
+        return this.role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public byte[] getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(byte[] profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
 }

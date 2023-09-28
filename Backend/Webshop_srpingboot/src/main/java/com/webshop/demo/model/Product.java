@@ -33,27 +33,24 @@ public class Product {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @NotNull
-    @Column(name = "size")
-    private Character size;
-
     @NotBlank
     @Column(name = "category")
     private String category;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @NotBlank
+    @Column (name = "imageURL")
+    private String imageURL;
+
 
     // CONSTRUCTOR
 
-    public Product(String name, double price, String description, int quantity, Character size, String category, String imageUrl) {
+    public Product(String name, double price, String description, int quantity, String category, String imageURL) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
-        this.size = size;
         this.category = category;
-        this.imageUrl = imageUrl;
+        this.imageURL = imageURL;
     }
 
     public Product() {
@@ -97,14 +94,6 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public Character getSize() {
-        return this.size;
-    }
-
-    public void setSize(Character size) {
-        this.size = size;
-    }
-
     public String getCategory() {
         return this.category;
     }
@@ -113,17 +102,11 @@ public class Product {
         this.category = category;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getImageURL() {
+        return this.imageURL;
     }
 
-    public String getImageUrl() {
-        return this.imageUrl;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-    
-
 }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>guapo. | Registrierung</title>
+
+    <link rel="icon" href="images/clementine.png" sizes="16x16 32x32" type="image/png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/stylesheet.css" />
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <div class="container">
+        <h1>Registration</h1>
+        <form id="registrationForm" action="/register" method="POST" novalidate>
+            <!-- CSRF token (if using Spring Security) -->
+            <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> -->
+
+            <!-- Anrede (Sex) selection -->
+            <div class="mb-3">
+                <label for="sex" class="form-label">Anrede:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="sex" id="anrede-herr" value="male" required>
+                    <label class="form-check-label" for="anrede-herr">Herr</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="sex" id="anrede-frau" value="female" required>
+                    <label class="form-check-label" for="anrede-frau">Frau</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="sex" id="anrede-keine" value="none" required>
+                    <label class="form-check-label" for="anrede-keine">Keine</label>
+                </div>
+            </div>
+
+            <!-- First Name -->
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Vorname:</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required>
+            </div>
+
+            <!-- Last Name -->
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Nachname:</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required>
+            </div>
+
+            <!-- Address -->
+            <div class="mb-3">
+                <label for="address" class="form-label">Adresse:</label>
+                <input type="text" class="form-control" id="address" name="address" required>
+            </div>
+
+            <!-- Door Number -->
+            <div class="mb-3">
+                <label for="doornumber" class="form-label">Hausnummer:</label>
+                <input type="text" class="form-control" id="doornumber" name="doornumber" required>
+            </div>
+
+            <!-- Postal Code -->
+            <div class="mb-3">
+                <label for="postalCode" class="form-label">PLZ:</label>
+                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+            </div>
+
+            <!-- City -->
+            <div class="mb-3">
+                <label for="city" class="form-label">Stadt:</label>
+                <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">E-Mail:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Benutzername:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Passwort:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+
+            <!-- Password Confirmation -->
+            <!-- <div class="mb-3">
+                <label for="passwordConfirmation" class="form-label">Passwort wiederholen:</label>
+                <input type="password" class="form-control" id="passwordConfirmation" name="passwordConfirmation" required>
+            </div> -->
+
+            <!-- Submit Button -->
+            <div class="mb-3">
+                <label for="profilePicture" class="form-label">Profilbild:</label>
+                <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Registrieren</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const registrationForm = document.getElementById("registrationForm");
+            registrationForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(registrationForm);
+
+                fetch("http://localhost:8080/users/register", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.status >= 200 && response.status < 300) {
+                            alert("Registration successful!");
+                            // Redirect or perform any other actions upon successful registration
+                            window.location.href = '/Frontend/login.html';
+                        } else {
+                            alert("Error during registration. Status: " + response.status);
+                        }
+                    })
+
+            });
+        });
+    </script>
+
+
+    <div id="footer"></div>
+    <script src="javascript/main.js"></script>
+</body>
+
+</html>
