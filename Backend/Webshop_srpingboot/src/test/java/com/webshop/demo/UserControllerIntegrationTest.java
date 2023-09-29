@@ -50,7 +50,6 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-                // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
     @Test
@@ -83,10 +82,7 @@ public class UserControllerIntegrationTest {
         String user = result.getResponse().getContentAsString();
         assertEquals(newUserJson, user);
 
-        // Optionally, you can perform additional checks here to verify the created
-        // user.
-        // For example, you can retrieve the user from the database and assert its
-        // attributes.
+        
         Optional<User> savedUser = userRepository.findByUsername("johndoe");
         assertTrue(savedUser.isPresent());
         assertEquals("password", savedUser.get().getPassword());

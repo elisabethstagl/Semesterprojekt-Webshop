@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.webshop.demo.dto.CurrentUserDTO;
 import com.webshop.demo.dto.LoginRequest;
 import com.webshop.demo.dto.RegistrationRequest;
 import com.webshop.demo.dto.TokenResponse;
@@ -32,8 +36,7 @@ import jakarta.validation.Valid;
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
 Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anfragen verarbeitet werden sollen.
 */
-@ResponseStatus(HttpStatus.NOT_FOUND)
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -45,10 +48,39 @@ public class UserController {
     }
 
     // READ
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @GetMapping("/current-user")
+    public CurrentUserDTO getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        // The principal should be your user object, or its user details representation
+        Object principal = auth.getPrincipal();
+        
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            User user = userService.findByUsername(userDetails.getUsername());
+            if(user != null){
+                CurrentUserDTO currentUser = new CurrentUserDTO();
+                currentUser.setId(user.getId());
+                currentUser.setUsername(user.getUsername());
+                currentUser.setRole(userDetails.getAuthorities().stream()
+                                    .findFirst().orElseThrow(() -> new RuntimeException("No roles found for user."))
+                                    .getAuthority());
+                return currentUser;
+            } else {
+                throw new RuntimeException("Current user not found in database.");
+            }
+        }
+        
+        // If principal is not an instance of UserDetails, throw an exception.
+        throw new RuntimeException("Unable to get current user details.");
+    }
+
+
+    // @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping()
-    public List<User> readAll() {
-        return userService.findAll();
+    public ResponseEntity<List<User>> readAll() {
+        List<User> users = userService.findAll();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
@@ -70,7 +102,7 @@ public class UserController {
         return userService.save(user);
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    // @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(
             @Valid RegistrationRequest registrationRequest,
@@ -83,7 +115,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    // @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Optional<String> token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
