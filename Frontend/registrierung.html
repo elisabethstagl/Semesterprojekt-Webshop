@@ -132,10 +132,18 @@
                             alert("Registration successful!");
                             // Redirect or perform any other actions upon successful registration
                             window.location.href = '/Frontend/login.html';
+                        } else if (response.status === 400) {
+                            // Handle a 400 Bad Request status (file size exceeded)
+                            response.text().then(errorMessage => {
+                                alert(errorMessage);
+                            });
                         } else {
                             alert("Error during registration. Status: " + response.status);
                         }
                     })
+                    .catch(error => {
+                        console.error("Error during registration:", error);
+                    });
 
             });
         });

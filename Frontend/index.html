@@ -31,11 +31,14 @@
         // Function to update the UI based on login status
         function updateUI() {
             const logoutContainer = document.getElementById("logoutContainer");
+            const loggedInMessage = document.getElementById("loggedInMessage");
+            const loggedInMessagetrue = document.getElementById("loggedInMessagetrue");
+
             if (isLoggedIn()) {
                 // User is logged in, so show the logout button container
                 logoutContainer.style.display = "block";
-                isLoggedInMessage.style.display = "none";
-                isLoggedInMessagetrue.style.display = "show";
+                loggedInMessage.style.display = "none";
+                loggedInMessagetrue.style.display = "block"; // Corrected the value from "show" to "block"
             } else {
                 // User is not logged in, so hide the logout button container
                 logoutContainer.style.display = "none";

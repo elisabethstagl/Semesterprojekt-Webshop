@@ -20,7 +20,7 @@ import com.webshop.demo.service.AdminServiceImpl;
 import com.webshop.demo.service.UserService;
 
 @RestController
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin")
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 public class AdminController {

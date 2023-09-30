@@ -58,7 +58,7 @@
 
 <script>
     function getAuthHeaders() {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('jwtToken');
         if (!token) {
             alert('Not authenticated!');
             window.location.href = 'login.html'; // Redirect to login or other appropriate page
@@ -78,6 +78,7 @@
 
     // First, fetch the current user details
     fetch("http://localhost:8080/users/current-user", {
+        method: "GET",
         headers: getAuthHeaders()
     })
     .then(handleResponse)

@@ -36,7 +36,7 @@ import jakarta.validation.Valid;
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
 Es empfängt Anfragen von der Benutzeroberfläche und entscheidet, wie diese Anfragen verarbeitet werden sollen.
 */
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -48,13 +48,14 @@ public class UserController {
     }
 
     // READ
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping("/current-user")
     public CurrentUserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+        System.out.println("Entering getCurrentUser()");
         // The principal should be your user object, or its user details representation
         Object principal = auth.getPrincipal();
-        
+        System.out.println("Principal Type: " + principal.getClass().getName());
         if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) principal;
             User user = userService.findByUsername(userDetails.getUsername());
@@ -65,12 +66,14 @@ public class UserController {
                 currentUser.setRole(userDetails.getAuthorities().stream()
                                     .findFirst().orElseThrow(() -> new RuntimeException("No roles found for user."))
                                     .getAuthority());
+                System.out.println("User found in getCurrentUser()");
                 return currentUser;
             } else {
+                System.out.println("Error: No user found in getCurrentUser()");
                 throw new RuntimeException("Current user not found in database.");
             }
         }
-        
+        System.out.println("Invoked getCurrentUser()");
         // If principal is not an instance of UserDetails, throw an exception.
         throw new RuntimeException("Unable to get current user details.");
     }
@@ -119,10 +122,11 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Optional<String> token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
-
+        System.out.println("Hello");
         return token.map(TokenResponse::new)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(401).body(null)); // Unauthorized
+                
     }
 
     // UPDATE

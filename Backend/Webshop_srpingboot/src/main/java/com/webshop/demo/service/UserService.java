@@ -1,6 +1,8 @@
 package com.webshop.demo.service;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import com.webshop.demo.repository.UserRepository;
@@ -9,7 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.webshop.demo.dto.RegistrationRequest;
 import com.webshop.demo.model.User;
 import com.webshop.demo.model.User.UserRole;
@@ -17,12 +26,13 @@ import com.webshop.demo.model.User.UserRole;
 /* Service ist für die Logik und Funktionalität verantwortlich.  */
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtil JwtUtil; // Inject JwtUtil
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtil JwtUtil) {
         this.passwordEncoder = passwordEncoder;
@@ -116,5 +126,37 @@ public class UserService {
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            // Convert UserRole to a GrantedAuthority
+            GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toString());
+
+            // Create a collection of authorities (roles)
+            Collection<GrantedAuthority> authorities = Collections.singleton(authority);
+
+            // Create a UserDetails object with user details and roles
+            UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword()) // Use the hashed password from your database
+                .authorities(authorities)
+                .build();
+
+            // Log successful user retrieval
+            logger.info("User found with username: {}", username);
+
+            return userDetails;
+        } else {
+            // Log unsuccessful user retrieval
+            logger.error("User not found with username: {}", username);
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
     }
 }
