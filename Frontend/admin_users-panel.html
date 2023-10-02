@@ -97,7 +97,7 @@
         users.forEach(user => {
             const row = tableBody.insertRow();
             row.insertCell().textContent = user.id;
-            // ... (populate other cells similarly) ...
+            row.insertCell().textContent = user.sex;
 
             // Once data is populated, display the content
             document.getElementById('admin-content').style.display = 'block';
