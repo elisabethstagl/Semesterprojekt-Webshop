@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -37,76 +38,81 @@ public class Product {
     @Column(name = "category")
     private String category;
 
-    @NotBlank
-    @Column (name = "imageURL")
-    private String imageURL;
+    @Lob
+    @Column(name = "product_img", length = 100000)
+    private byte[] product_img;
 
 
-    // CONSTRUCTOR
+    // Konstruktor
+    public Product() {
+    }
 
-    public Product(String name, double price, String description, int quantity, String category, String imageURL) {
+    public Product(String name, Double price, String description, Integer quantity, String category, byte[] product_img) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
         this.category = category;
-        this.imageURL = imageURL;
+        this.product_img = product_img;
     }
 
-    public Product() {
+    // Getter und Setter
+
+    public Long getId() {
+        return id;
     }
 
-    // GETTERS & SETTERS
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public byte[] getProduct_img() {
+        return product_img;
+    }
+
+    public void setProduct_img(byte[] product_img) {
+        this.product_img = product_img;
+    }
 
     public String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String productName) {
+        this.name = productName;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return this.price;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPrice(Double productPrice) {
+        this.price = productPrice;
     }
 
     public String getDescription() {
         return this.description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String productDescription) {
+        this.description = productDescription;
     }
 
-    public long getId() {
-        return this.id;
-    }
-
-    public int getQuantity() {
+    public Integer getQuantity() {
         return this.quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQuantity(Integer productQuantity) {
+        this.quantity = productQuantity;
     }
 
     public String getCategory() {
         return this.category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(String productCategory) {
+        this.category = productCategory;
     }
 
-    public String getImageURL() {
-        return this.imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
+    
 }

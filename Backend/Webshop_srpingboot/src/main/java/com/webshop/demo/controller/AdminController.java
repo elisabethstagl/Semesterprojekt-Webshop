@@ -1,5 +1,6 @@
 package com.webshop.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.webshop.demo.dto.ProductDTO;
 import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.Product;
 import com.webshop.demo.model.User;
@@ -50,8 +54,8 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/users/{id}")
     @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO updatedUserDTO) {
         try {
             User user = userService.update(id, updatedUserDTO);
@@ -61,7 +65,6 @@ public class AdminController {
         }
     }
 
-
     // Endpoint to get user details by ID
     @GetMapping("/users/{userId}")
     public User read(@PathVariable Long id) {
@@ -70,14 +73,13 @@ public class AdminController {
     }
 
     // Endpoint to delete a user by ID
-    @DeleteMapping("/users/{userId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
     }
 
-    // Add more admin-specific endpoints and methods here
-
-    //Endpoint to promote a user to admin
+    // Endpoint to promote a user to admin
     @PostMapping("/users/{userId}/promote")
     public ResponseEntity<String> promoteToAdmin(@PathVariable Long userId) {
         boolean promoted = adminServiceImpl.promoteUserToAdmin(userId);
@@ -88,6 +90,8 @@ public class AdminController {
         }
     }
 
+    // ---------------------------------------------PRODUCTS---------------------------------------------
+
     // Endpoint to list all products
     @GetMapping("/products")
     @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -96,18 +100,26 @@ public class AdminController {
     }
 
     // Endpoint to delete a product by ID
-    @DeleteMapping("/products/{productsId}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable Long id) {
-        userService.deleteById(id);
+        productService.deleteById(id);
     }
 
     // update product
-    @PutMapping("/products/{productId}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return productService.update(id, product);
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @PutMapping("/products/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id,
+    @RequestBody ProductDTO updatedProductDTO) {
+        try {
+            Product product = productService.update(id, updatedProductDTO);
+            return new ResponseEntity<>(product, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    //create new product
+    // create new product
     @PostMapping("/products")
     @ResponseStatus(HttpStatus.CREATED)
     public Product create(@RequestBody @Valid Product product) {

@@ -79,7 +79,12 @@ function createUserCard(user) {
 
   deleteButton.on("click", (e) => {
     e.stopPropagation(); // Prevents the card from toggling when the button is clicked
-    console.log("Delete button clicked for user:", user.id);
+    const confirmed = confirm(
+      `Are you sure you want to delete user: ${user.username}?`
+    );
+    if (confirmed) {
+      deleteUser(user.id);
+    }
   });
 
   cardBody.append(
@@ -98,6 +103,31 @@ function createUserCard(user) {
   card.append(cardInner);
 
   return card;
+}
+
+function deleteUser(userId) {
+  fetch(`http://localhost:8080/admin/users/${userId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  })
+    .then(handleResponse)
+    .then(() => {
+      console.log("User deleted:", userId);
+      
+      // Remove the user card from the DOM
+      $(`#collapse${userId}`).parent().parent().remove();
+    })
+    .catch((error) => {
+      console.error("Error:", error.message);
+      alert("Error deleting user!");
+    });
+}
+
+function handleResponse(response) {
+  if (!response.ok) {
+    throw new Error("Network response was not ok: " + response.statusText);
+  }
+  return response.text().then(text => text ? JSON.parse(text) : {});
 }
 
 $("#saveChanges").on("click", () => {
@@ -126,26 +156,46 @@ $("#saveChanges").on("click", () => {
   })
     .then(handleResponse)
     .then((updatedUser) => {
-        console.log("User updated:", updatedUser);
-        
-        // Find the existing user card using its collapse element
-        const userCard = $(`#collapse${updatedUser.id}`).parent();
-        
-        // Update the fields inside the card with the new data
-        userCard.find('.card-title').text(`Username: ${updatedUser.username}`);
-        userCard.find('.card-text:contains("Email:")').text(`Email: ${updatedUser.email}`);
-        userCard.find('.card-text:contains("Role:")').text(`Role: ${updatedUser.role}`);
-        userCard.find('.card-text:contains("Sex:")').text(`Sex: ${updatedUser.sex}`);
-        userCard.find('.card-text:contains("First Name:")').text(`First Name: ${updatedUser.firstName}`);
-        userCard.find('.card-text:contains("Last Name:")').text(`Last Name: ${updatedUser.lastName}`);
-        userCard.find('.card-text:contains("Adress:")').text(`Adress: ${updatedUser.address}`);
-        userCard.find('.card-text:contains("Door Number:")').text(`Door Number: ${updatedUser.doornumber}`);
-        userCard.find('.card-text:contains("Postal Code:")').text(`Postal Code: ${updatedUser.postalCode}`);
-        userCard.find('.card-text:contains("City:")').text(`City: ${updatedUser.city}`);
+      console.log("User updated:", updatedUser);
 
-        // Hide the modal
-        const editModal = bootstrap.Modal.getInstance(document.getElementById("editUserModal"));
-        editModal.hide();
+      // Find the existing user card using its collapse element
+      const userCard = $(`#collapse${updatedUser.id}`).parent();
+
+      // Update the fields inside the card with the new data
+      userCard.find(".card-title").text(`Username: ${updatedUser.username}`);
+      userCard
+        .find('.card-text:contains("Email:")')
+        .text(`Email: ${updatedUser.email}`);
+      userCard
+        .find('.card-text:contains("Role:")')
+        .text(`Role: ${updatedUser.role}`);
+      userCard
+        .find('.card-text:contains("Sex:")')
+        .text(`Sex: ${updatedUser.sex}`);
+      userCard
+        .find('.card-text:contains("First Name:")')
+        .text(`First Name: ${updatedUser.firstName}`);
+      userCard
+        .find('.card-text:contains("Last Name:")')
+        .text(`Last Name: ${updatedUser.lastName}`);
+      userCard
+        .find('.card-text:contains("Adress:")')
+        .text(`Adress: ${updatedUser.address}`);
+      userCard
+        .find('.card-text:contains("Door Number:")')
+        .text(`Door Number: ${updatedUser.doornumber}`);
+      userCard
+        .find('.card-text:contains("Postal Code:")')
+        .text(`Postal Code: ${updatedUser.postalCode}`);
+      userCard
+        .find('.card-text:contains("City:")')
+        .text(`City: ${updatedUser.city}`);
+
+      // Hide the modal
+      const editModal = bootstrap.Modal.getInstance(
+        document.getElementById("editUserModal")
+      );
+      editModal.hide();
     })
 
     .catch((error) => {

@@ -109,7 +109,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User update(Long id, UserDTO updatedUserDTO) {
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
 
         user.setUsername(updatedUserDTO.getUsername());
         // Do not update the password directly from DTO. Usually, you'd hash and salt it, and/or use a dedicated method for password changes.
