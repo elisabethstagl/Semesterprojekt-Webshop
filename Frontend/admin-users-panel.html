@@ -23,10 +23,8 @@
 
     <div class="container content">
         <h2 id="admin-header" style="display: none;">Admin Panel - User List</h2>
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="userCardContainer" style="display:none;">   <!-- Initially hidden until validated -->              
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4" id="userCardContainer" style="display:none;">   <!-- Initially hidden until validated -->              
     </div>
-
-    <div class="container">
         <div id="error-message" style="display:none;"> <!-- Error message area -->
             <h4>Access Denied!</h4>
             <p> You do not have permission to view this content.</p>
@@ -58,7 +56,7 @@
 
         // Function to create a user card
         function createUserCard(user) {
-        const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>');
+        const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mt-3"></div>');
         const cardInner = $('<div class="card mx-auto mb-5" style="background-color:transparent;"></div>');
         const cardHeader = $(`<div class="card-header" data-bs-toggle="collapse" href="#collapse${user.id}" role="button" aria-expanded="false"></div>`);
         
@@ -69,17 +67,17 @@
         cardHeader.append(username, email, role);
         
         const cardBody = $('<div class="card-body collapse" id="collapse' + user.id + '"></div>');
-        const id = $(`<p class="card-text">Email: ${user.id}</p>`);
+        const id = $(`<p class="card-text">ID: ${user.id}</p>`);
         const sex = $(`<p class="card-text">Geschlecht: ${user.sex}</p>`);
-        const firstName = $(`<p class="card-text">Name: ${user.firstName} </p>`);
-        const lastName = $(`<p class="card-text">Name: ${user.lastName}</p>`);
+        const firstName = $(`<p class="card-text">First Name: ${user.firstName} </p>`);
+        const lastName = $(`<p class="card-text">Last Name: ${user.lastName}</p>`);
         const address = $(`<p class="card-text">Adresse: ${user.address}</p>`);
         const doornumber = $(`<p class="card-text">Door Number: ${user.doornumber}</p>`);
         const postalCode = $(`<p class="card-text">Postal Code: ${user.postalCode}</p>`);
         const city = $(`<p class="card-text">City: ${user.city}</p>`);
 
-        const editButton = $('<button class="btn btn-primary">Edit</button>');
-        const deleteButton = $('<button class="btn btn-danger">Delete</button>');
+        const editButton = $('<button class="btn btn-primary me-3">Edit</button>');
+        const deleteButton = $('<button class="btn btn-primary">Delete</button>');
 
         editButton.on('click', (e) => {
             e.stopPropagation();  // Prevents the card from toggling when the button is clicked
