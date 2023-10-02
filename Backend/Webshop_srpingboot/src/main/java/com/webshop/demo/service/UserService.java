@@ -19,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.webshop.demo.dto.RegistrationRequest;
+import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.User;
 import com.webshop.demo.model.User.UserRole;
 
@@ -107,18 +108,20 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public User update(Long id, User updatedUser) {
+    public User update(Long id, UserDTO updatedUserDTO) {
         User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        user.setUsername(updatedUser.getUsername());
-        user.setPassword(updatedUser.getPassword());
-        user.setLastName(updatedUser.getLastName());
-        user.setFirstName(updatedUser.getFirstName());
-        user.setEmail(updatedUser.getEmail());
-        user.setAddress(updatedUser.getAddress());
-        user.setCity(updatedUser.getCity());
-        user.setDoornumber(updatedUser.getDoornumber());
-        user.setPostalCode(updatedUser.getPostalCode());
+        user.setUsername(updatedUserDTO.getUsername());
+        // Do not update the password directly from DTO. Usually, you'd hash and salt it, and/or use a dedicated method for password changes.
+        user.setLastName(updatedUserDTO.getLastName());
+        user.setFirstName(updatedUserDTO.getFirstName());
+        user.setEmail(updatedUserDTO.getEmail());
+        user.setAddress(updatedUserDTO.getAddress());
+        user.setCity(updatedUserDTO.getCity());
+        user.setDoornumber(updatedUserDTO.getDoornumber());
+        user.setPostalCode(updatedUserDTO.getPostalCode());
+        
+        // Other fields...
 
         return userRepository.save(user);
     }

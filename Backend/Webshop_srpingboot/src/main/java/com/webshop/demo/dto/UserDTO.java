@@ -1,9 +1,6 @@
 package com.webshop.demo.dto;
 
 public class UserDTO {
-
-    private Long id;
-
     
     private String sex;
 
@@ -35,8 +32,7 @@ public class UserDTO {
     }
     
 
-    public UserDTO(Long id, String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, UserRole role) {
-        this.id = id;
+    public UserDTO(String sex, String firstName, String lastName, String address, String doornumber, String postalCode, String city, String email, String username, UserRole role) {
         this.sex = sex;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -47,15 +43,6 @@ public class UserDTO {
         this.email = email;
         this.username = username;
         this.role = role;
-    }
-
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getSex() {

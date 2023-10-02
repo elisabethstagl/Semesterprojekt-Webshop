@@ -16,11 +16,20 @@
         integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/stylesheet.css" />
 </head>
-
+<style>
+input {
+     background-color:transparent;
+}
+</style>
 <body>
 
     <div id="navbar"></div>
-
+    <div class="container">
+        <div id="error-message" style="display:none;"> <!-- Error message area -->
+            <h4>Access Denied!</h4>
+            <p> You do not have permission to view this content.</p>
+        </div>
+    </div>
     <div class="container content">
         <h2 id="admin-header" style="display: none;">Admin Panel - User List</h2>
         <!-- User Edit Modal -->
@@ -33,7 +42,7 @@
                     </div>
                     <div class="modal-body">
                         <input type="text" id="editUsername" placeholder="Username">
-                        <input type="password" id="editPassword" placeholder="Password">
+                        <!-- <input type="password" id="editPassword" placeholder="Password"> -->
                         <input type="text" id="editFirstName" placeholder="First Name">
                         <input type="text" id="editLastName" placeholder="Last Name">
                         <input type="email" id="editEmail" placeholder="Email">
@@ -54,123 +63,10 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="userCardContainer" style="display:none;">
             <!-- Initially hidden until validated -->
         </div>
-
-        <div class="container">
-            <div id="error-message" style="display:none;"> <!-- Error message area -->
-                <h4>Access Denied!</h4>
-                <p> You do not have permission to view this content.</p>
-            </div>
-        </div>
     </div>
+    
 
     <div id="footer"></div>
-
-
-    <script>
-        function getAuthHeaders() {
-            const token = localStorage.getItem('jwtToken');
-            if (!token) {
-                alert('Not authenticated!');
-                window.location.href = 'login.html'; // Redirect to login or other appropriate page
-                return {};
-            }
-            return {
-                'Authorization': 'Bearer ' + token
-            };
-        }
-
-        function handleResponse(response) {
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
-            return response.json();
-        }
-
-        // Function to create a user card
-        function createUserCard(user) {
-            const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>');
-            const cardInner = $('<div class="card mx-auto mb-5" style="background-color:transparent;"></div>');
-            const cardHeader = $(`<div class="card-header" data-bs-toggle="collapse" href="#collapse${user.id}" role="button" aria-expanded="false"></div>`);
-
-            const username = $(`<h5 class="card-title">Username: ${user.username}</h5>`);
-            const email = $(`<p class="card-text">Email: ${user.email}</p>`);
-            const role = $(`<p class="card-text">Role: ${user.role}</p>`);
-
-            cardHeader.append(username, email, role);
-
-            const cardBody = $('<div class="card-body collapse" id="collapse' + user.id + '"></div>');
-            const id = $(`<p class="card-text">Email: ${user.id}</p>`);
-            const sex = $(`<p class="card-text">Geschlecht: ${user.sex}</p>`);
-            const firstName = $(`<p class="card-text">Name: ${user.firstName} </p>`);
-            const lastName = $(`<p class="card-text">Name: ${user.lastName}</p>`);
-            const address = $(`<p class="card-text">Adresse: ${user.address}</p>`);
-            const doornumber = $(`<p class="card-text">Door Number: ${user.doornumber}</p>`);
-            const postalCode = $(`<p class="card-text">Postal Code: ${user.postalCode}</p>`);
-            const city = $(`<p class="card-text">City: ${user.city}</p>`);
-
-            const editButton = $('<button class="btn btn-primary">Edit</button>');
-            const deleteButton = $('<button class="btn btn-danger">Delete</button>');
-
-            editButton.on('click', (e) => {
-                e.stopPropagation();  // Prevents the card from toggling when the button is clicked
-                console.log('Edit button clicked for user:', user.id);
-                $('#editUsername').val(user.username);
-                $('#editPassword').val(user.password);
-                $('#editFirstName').val(user.firstName);
-                $('#editLastName').val(user.lastName);
-                $('#editEmail').val(user.email);
-                $('#editAddress').val(user.address);
-                $('#editCity').val(user.city);
-                $('#editDoornumber').val(user.doornumber);
-                $('#editPostalCode').val(user.postalCode);
-                
-            });
-
-            deleteButton.on('click', (e) => {
-                e.stopPropagation();  // Prevents the card from toggling when the button is clicked
-                console.log('Delete button clicked for user:', user.id);
-            });
-
-            cardBody.append(id, sex, firstName, lastName, address, doornumber, postalCode, city, editButton, deleteButton);
-            cardInner.append(cardHeader, cardBody);
-            card.append(cardInner);
-
-            return card;
-        }
-
-        // First, fetch the current user details
-        fetch("http://localhost:8080/users/current-user", {
-            method: "GET",
-            headers: getAuthHeaders()
-        })
-            .then(handleResponse)
-            .then(currentUser => {
-                if (currentUser.role === "ROLE_ADMIN") {
-                    return fetch("http://localhost:8080/admin/users", {
-                        headers: getAuthHeaders()
-                    });
-                } else {
-                    throw new Error('User is not an admin');
-                }
-            })
-            .then(handleResponse)
-            .then(users => {
-                const userCardContainer = $('#userCardContainer'); // Add a container in your HTML where user cards will be displayed
-                users.forEach(user => {
-                    const userCard = createUserCard(user);
-                    userCardContainer.append(userCard);
-
-
-                    // Once data is populated, display the content
-                    document.getElementById('userCardContainer').style.display = 'flex';
-                    document.getElementById('admin-header').style.display = 'block';
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error.message);
-                document.getElementById('error-message').style.display = 'block';
-            });
-    </script>
     <script src="./javascript/admin-user-panel.js"></script>
     <script src="./javascript/main.js"></script>
 

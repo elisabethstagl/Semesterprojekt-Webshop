@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.User;
 import com.webshop.demo.service.AdminServiceImpl;
 import com.webshop.demo.service.UserService;
@@ -41,15 +42,17 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    @PutMapping("/users/{id}")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO updatedUserDTO) {
         try {
-            User user = userService.update(id, updatedUser);
+            User user = userService.update(id, updatedUserDTO);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     // Endpoint to get user details by ID
     @GetMapping("/users/{userId}")
