@@ -17,19 +17,19 @@ function handleResponse(response) {
     return response.json();
 }
 
-// Function to create a user card
-function createProductCard(user) {
-    const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mt-3"></div>');
+// Function to create a product card
+function createProductCard(product) {
+    const card = $('<div class="col-lg-4 col-md-6 col-sm-6 mt-3"></div>');
     const cardInner = $('<div class="card mx-auto mb-2" style="background-color:transparent;"></div>');
     const cardBody = $('<div class="card-body"></div>');
     
     const id = $(`<p class="card-text">ID: ${product.id}</p>`);
-    const productName = $(`<p class="card-text">Geschlecht: ${product.name}</p>`);
-    const price = $(`<p class="card-text">First Name: ${product.price} </p>`);
-    const description = $(`<p class="card-text">Last Name: ${product.description}</p>`);
-    const quantity = $(`<p class="card-text">Adresse: ${product.quantity}</p>`);
-    const category = $(`<p class="card-text">Door Number: ${product.category}</p>`);
-    const imageURL = $(`<p class="card-text">Postal Code: ${product.imageURL}</p>`);
+    const productName = $(`<p class="card-text">Produktname: ${product.name}</p>`);
+    const price = $(`<p class="card-text">Preis: ${product.price} </p>`);
+    const description = $(`<p class="card-text">Beschreibung: ${product.description}</p>`);
+    const quantity = $(`<p class="card-text">Menge: ${product.quantity}</p>`);
+    const category = $(`<p class="card-text">Kategorie: ${product.category}</p>`);
+    const imageURL = $(`<p class="card-text">Bild-URL: ${product.imageURL}</p>`);
 
 const editButton = $('<button class="btn btn-primary me-3">Edit</button>');
 const deleteButton = $('<button class="btn btn-primary">Delete</button>');
@@ -44,7 +44,17 @@ deleteButton.on('click', (e) => {
     console.log('Delete button clicked for product:', product.id);
 });
 
-cardBody.append(id, productName, price, description, quantity, category, imageURL);
+// Function to display the modal when the button is clicked
+$('#new-product-button').on('click', function () {
+    $('#addProductModal').modal('show');
+});
+
+// closes modal
+$('#modal-close-button').on('click', function () {
+    $('#addProductModal').modal('hide');
+});
+
+cardBody.append(id, productName, price, description, quantity, category, imageURL, editButton, deleteButton);
 cardInner.append(cardBody);
 card.append(cardInner);
 
@@ -59,7 +69,7 @@ fetch("http://localhost:8080/users/current-user", {
     .then(handleResponse)
     .then(currentUser => {
         if (currentUser.role === "ROLE_ADMIN") {
-            return fetch("http://localhost:8080/products", {
+            return fetch("http://localhost:8080/admin/products", {
                 headers: getAuthHeaders()
             });
         } else {
@@ -85,3 +95,5 @@ fetch("http://localhost:8080/users/current-user", {
         console.error('Error:', error.message);
         document.getElementById('error-message').style.display = 'block';
     });
+
+    
