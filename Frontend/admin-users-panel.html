@@ -22,9 +22,8 @@
     <div id="navbar"></div>
 
     <div class="container content">
+        <h2 id="admin-header" style="display: none;">Admin Panel - User List</h2>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="userCardContainer" style="display:none;">   <!-- Initially hidden until validated -->              
-
-        <h2>Admin Panel - User List</h2>
     </div>
 
     <div class="container">
@@ -59,46 +58,45 @@
 
         // Function to create a user card
         function createUserCard(user) {
-            const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>');
-            const cardInner = $('<div class="card mx-auto mb-5"></div>');
-            const cardBody = $('<div class="card-body"></div>');
+        const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>');
+        const cardInner = $('<div class="card mx-auto mb-5" style="background-color:transparent;"></div>');
+        const cardHeader = $(`<div class="card-header" data-bs-toggle="collapse" href="#collapse${user.id}" role="button" aria-expanded="false"></div>`);
+        
+        const username = $(`<h5 class="card-title">Username: ${user.username}</h5>`);
+        const email = $(`<p class="card-text">Email: ${user.email}</p>`);
+        const role = $(`<p class="card-text">Role: ${user.role}</p>`);
 
-            const username = $(`<h5 class="card-title">Username: ${user.username}</h5>`);
-            const id = $(`<p class="card-text">Email: ${user.id}</p>`);
-            const sex = $(`<p class="card-text">Geschlecht: ${user.sex}</p>`);
-            const firstName = $(`<p class="card-text">Name: ${user.firstName} </p>`);
-            const lastName = $(`<p class="card-text">Name: ${user.lastName}</p>`);
-            const address = $(`<p class="card-text">Adresse: ${user.address}</p>`);
-            const doornumber = $(`<p class="card-text">Email: ${user.doornumber}</p>`);
-            const postalCode = $(`<p class="card-text">Email: ${user.postalCode}</p>`);
-            const city = $(`<p class="card-text">Email: ${user.city}</p>`);
-            const email = $(`<p class="card-text">Email: ${user.email}</p>`);
-            const role = $(`<p class="card-text">Role: ${user.role}</p>`);
+        cardHeader.append(username, email, role);
+        
+        const cardBody = $('<div class="card-body collapse" id="collapse' + user.id + '"></div>');
+        const id = $(`<p class="card-text">Email: ${user.id}</p>`);
+        const sex = $(`<p class="card-text">Geschlecht: ${user.sex}</p>`);
+        const firstName = $(`<p class="card-text">Name: ${user.firstName} </p>`);
+        const lastName = $(`<p class="card-text">Name: ${user.lastName}</p>`);
+        const address = $(`<p class="card-text">Adresse: ${user.address}</p>`);
+        const doornumber = $(`<p class="card-text">Door Number: ${user.doornumber}</p>`);
+        const postalCode = $(`<p class="card-text">Postal Code: ${user.postalCode}</p>`);
+        const city = $(`<p class="card-text">City: ${user.city}</p>`);
 
-            const editButton = $('<button class="btn btn-primary">Edit</button>');
-            const deleteButton = $('<button class="btn btn-primary">Delete</button>');
+        const editButton = $('<button class="btn btn-primary">Edit</button>');
+        const deleteButton = $('<button class="btn btn-danger">Delete</button>');
 
-            // Event listener for the Edit button
-            editButton.on('click', () => {
-                // Add your logic to handle editing a user here
-                // You can open a modal or navigate to an edit page
-                console.log('Edit button clicked for user:', user.id);
-            });
+        editButton.on('click', (e) => {
+            e.stopPropagation();  // Prevents the card from toggling when the button is clicked
+            console.log('Edit button clicked for user:', user.id);
+        });
 
-            // Event listener for the Delete button
-            deleteButton.on('click', () => {
-                // Add your logic to handle deleting a user here
-                // You can show a confirmation dialog and then make an API call to delete the user
-                console.log('Delete button clicked for user:', user.id);
-            });
+        deleteButton.on('click', (e) => {
+            e.stopPropagation();  // Prevents the card from toggling when the button is clicked
+            console.log('Delete button clicked for user:', user.id);
+        });
 
-            // Append elements to card
-            cardBody.append(username, id, sex, firstName, lastName, address, doornumber, postalCode, city, email, role, editButton, deleteButton);
-            cardInner.append(cardBody);
-            card.append(cardInner);
+        cardBody.append(id, sex, firstName, lastName, address, doornumber, postalCode, city, editButton, deleteButton);
+        cardInner.append(cardHeader, cardBody);
+        card.append(cardInner);
 
-            return card;
-        }
+        return card;
+    }
 
         // First, fetch the current user details
         fetch("http://localhost:8080/users/current-user", {
@@ -124,7 +122,8 @@
 
 
                     // Once data is populated, display the content
-                    document.getElementById('userCardContainer').style.display = 'block';
+                    document.getElementById('userCardContainer').style.display = 'flex';
+                    document.getElementById('admin-header').style.display = 'block';
                 });
             })
             .catch(error => {
