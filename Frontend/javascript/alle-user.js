@@ -30,8 +30,6 @@ function displayUsers(users) {
 }
 
 // Funktion zum Erstellen einer Produktkarte
-// Funktion zum Erstellen einer vertikalen Produktkarte
-// Funktion zum Erstellen einer vertikalen Produktkarte
 function createUserCard(user) {
         // Erstelle die HTML-Struktur für eine Benutzerkarte
         const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>'); // 4 Karten auf Desktops, 3 auf Tablets, 2 auf Handys
@@ -45,7 +43,7 @@ function createUserCard(user) {
         const address = $(`<p class="card-text">Adresse: ${user.address} ${user.doornumber}, ${user.postalCode} ${user.city}</p>`);
         const email = $(`<p class="card-text">Email: ${user.email}</p>`);
         const role = $(`<p class="card-text">Email: ${user.role}</p>`);
-        const profilePicture = $(`<p class="card-text">Email: ${user.profilePicture}</p>`);
+        // const profilePicture = $(`<p class="card-text">Email: ${user.profilePicture}</p>`);
         // Fügen Sie hier weitere Benutzerinformationen hinzu, wie Sie möchten.
     
         // Füge die HTML-Elemente zur Benutzerkarte hinzu

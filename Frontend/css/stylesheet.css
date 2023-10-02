@@ -128,3 +128,12 @@ body {
 .modal-content{
     padding: 15px;
 }
+
+thead {
+    background-color: rgb(184, 107, 82);
+}
+
+table {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}

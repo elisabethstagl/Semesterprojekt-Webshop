@@ -22,7 +22,6 @@ import com.webshop.demo.service.UserService;
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class AdminController {
 
     @Autowired
@@ -34,6 +33,7 @@ public class AdminController {
     // Endpoint to list all registered users
     // Endpoint to list all registered users
     @GetMapping("/users")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     public ResponseEntity<List<User>> listUsers() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);

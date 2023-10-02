@@ -79,7 +79,7 @@ public class UserController {
     }
 
 
-    // @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping()
     public ResponseEntity<List<User>> readAll() {
         List<User> users = userService.findAll();
@@ -105,7 +105,7 @@ public class UserController {
         return userService.save(user);
     }
 
-    // @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(
             @Valid RegistrationRequest registrationRequest,
@@ -118,7 +118,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Optional<String> token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());

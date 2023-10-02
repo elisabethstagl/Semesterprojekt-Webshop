@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Users</title>
+    <link rel="icon" href="images/clementine.png" sizes="16x16 32x32" type="image/png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/stylesheet.css" />
+</head>
+
+<body>
+
+    <div id="navbar"></div>
+
+    <div class="container content">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="userCardContainer" style="display:none;">   <!-- Initially hidden until validated -->              
+
+        <h2>Admin Panel - User List</h2>
+    </div>
+
+    <div class="container">
+        <div id="error-message" style="display:none;"> <!-- Error message area -->
+            <h4>Access Denied!</h4>
+            <p> You do not have permission to view this content.</p>
+        </div>
+    </div>
+
+
+    <div id="footer"></div>
+
+    <script>
+        function getAuthHeaders() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                alert('Not authenticated!');
+                window.location.href = 'login.html'; // Redirect to login or other appropriate page
+                return {};
+            }
+            return {
+                'Authorization': 'Bearer ' + token
+            };
+        }
+
+        function handleResponse(response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        }
+
+        // Function to create a user card
+        function createUserCard(user) {
+            const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>');
+            const cardInner = $('<div class="card mx-auto mb-5"></div>');
+            const cardBody = $('<div class="card-body"></div>');
+
+            const username = $(`<h5 class="card-title">Username: ${user.username}</h5>`);
+            const id = $(`<p class="card-text">Email: ${user.id}</p>`);
+            const sex = $(`<p class="card-text">Geschlecht: ${user.sex}</p>`);
+            const firstName = $(`<p class="card-text">Name: ${user.firstName} </p>`);
+            const lastName = $(`<p class="card-text">Name: ${user.lastName}</p>`);
+            const address = $(`<p class="card-text">Adresse: ${user.address}</p>`);
+            const doornumber = $(`<p class="card-text">Email: ${user.doornumber}</p>`);
+            const postalCode = $(`<p class="card-text">Email: ${user.postalCode}</p>`);
+            const city = $(`<p class="card-text">Email: ${user.city}</p>`);
+            const email = $(`<p class="card-text">Email: ${user.email}</p>`);
+            const role = $(`<p class="card-text">Role: ${user.role}</p>`);
+
+            const editButton = $('<button class="btn btn-primary">Edit</button>');
+            const deleteButton = $('<button class="btn btn-primary">Delete</button>');
+
+            // Event listener for the Edit button
+            editButton.on('click', () => {
+                // Add your logic to handle editing a user here
+                // You can open a modal or navigate to an edit page
+                console.log('Edit button clicked for user:', user.id);
+            });
+
+            // Event listener for the Delete button
+            deleteButton.on('click', () => {
+                // Add your logic to handle deleting a user here
+                // You can show a confirmation dialog and then make an API call to delete the user
+                console.log('Delete button clicked for user:', user.id);
+            });
+
+            // Append elements to card
+            cardBody.append(username, id, sex, firstName, lastName, address, doornumber, postalCode, city, email, role, editButton, deleteButton);
+            cardInner.append(cardBody);
+            card.append(cardInner);
+
+            return card;
+        }
+
+        // First, fetch the current user details
+        fetch("http://localhost:8080/users/current-user", {
+            method: "GET",
+            headers: getAuthHeaders()
+        })
+            .then(handleResponse)
+            .then(currentUser => {
+                if (currentUser.role === "ROLE_ADMIN") {
+                    return fetch("http://localhost:8080/admin/users", {
+                        headers: getAuthHeaders()
+                    });
+                } else {
+                    throw new Error('User is not an admin');
+                }
+            })
+            .then(handleResponse)
+            .then(users => {
+                const userCardContainer = $('#userCardContainer'); // Add a container in your HTML where user cards will be displayed
+                users.forEach(user => {
+                    const userCard = createUserCard(user);
+                    userCardContainer.append(userCard);
+
+
+                    // Once data is populated, display the content
+                    document.getElementById('userCardContainer').style.display = 'block';
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                document.getElementById('error-message').style.display = 'block';
+            });
+    </script>
+    <script src="./javascript/main.js"></script>
+
+</body>
+
+</html>
