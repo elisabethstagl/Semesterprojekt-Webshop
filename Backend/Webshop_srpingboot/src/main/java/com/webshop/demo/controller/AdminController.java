@@ -49,6 +49,16 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        try {
+            User user = userService.update(id, updatedUser);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // Endpoint to get user details by ID
     @GetMapping("/users/{userId}")
     public User read(@PathVariable Long id) {
