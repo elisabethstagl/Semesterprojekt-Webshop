@@ -33,6 +33,10 @@
                 <button type="button" class="btn btn-primary mb-4" onclick="performLogin()">Anmelden</button>
             </div>
             <a href="registrierung.html">Neu bei uns? Hier registrieren!</a>
+            <p id="loggedInMessage">Not logged in</p>
+            <div id="logoutContainer">
+                <button type="button" class="btn btn-light mt-3" onclick="logout()">Logout</button>
+            </div>
         </form>
     </div>
 
@@ -104,6 +108,8 @@ aria-hidden="true">
         }
     </script>
     <script src="javascript/main.js"></script>
+    <script src="./javascript/login-logout.js"></script>
+
 </body>
 
 </html>
