@@ -19,6 +19,10 @@ a:hover  {
     color: cornsilk;
 }
 
+a:active, a:focus{
+    color:rgb(184, 107, 82);
+}
+
 html {
     overflow: scroll;
     overflow-x: hidden;
@@ -40,7 +44,7 @@ body {
     background-color: #e9aa83;
 }
 
-.btn{
+.btn, button, .btn-primary{
     border-style: none;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -48,9 +52,6 @@ body {
     padding-right: 20px;
     box-shadow: none;
     outline: none;
-}
-
-.btn-primary{
     background-color: cornsilk;
     color:rgb(184, 107, 82);
     box-shadow: none;
@@ -93,14 +94,13 @@ body {
     font-size: 16px;
 }
 
-.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link.active, .navbar i:hover, .navbar i.active {
+.navbar-dark .navbar-nav .nav-link:hover,.navbar-dark .navbar-nav .nav-link.active, .navbar i:hover, .navbar i.active {
     color: rgb(184, 107, 82);
 }
 
 /*Mobile*/
 
 @media screen and (max-width: 768px) {
-    
     .navbar-dark .navbar-toggler, .navbar-toggler:focus,
     .navbar-toggler:active{
         border-style: none;
@@ -129,6 +129,11 @@ body {
     padding: 15px;
 }
 
+
 option{
     color: rgb(184, 107, 82);
+}
+=======
+#logoutContainer {
+    display: none;
 }

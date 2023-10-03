@@ -23,8 +23,8 @@
     <div id="navbar"></div>
 
     <div class="container">
-        <h1>Registration</h1>
-        <form id="registrationForm" action="/register" method="POST" novalidate>
+        <h1>Registrierung</h1>
+        <form class="row g-2" id="registrationForm" action="/register" method="POST" novalidate>
             <!-- CSRF token (if using Spring Security) -->
             <!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> -->
 
@@ -46,57 +46,59 @@
             </div>
 
             <!-- First Name -->
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Vorname:</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" required>
+            <div class="col-6 form-floating mb-3">
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="firstName" required>
+                <label class="registrierungLabel" for="firstName">Vorname</label>
             </div>
 
             <!-- Last Name -->
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Nachname:</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" required>
+            <div class="col-6 form-floating mb-3">
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="lastName" required>
+                <label class="registrierungLabel" for="lastName">Nachname</label>
             </div>
 
             <!-- Address -->
-            <div class="mb-3">
-                <label for="address" class="form-label">Adresse:</label>
-                <input type="text" class="form-control" id="address" name="address" required>
+            <div class="col-5 form-floating mb-3">
+                <input type="text" class="form-control" id="address" name="address" placeholder="address" required>
+                <label class="registrierungLabel" for="address">Adresse</label>
             </div>
 
             <!-- Door Number -->
-            <div class="mb-3">
-                <label for="doornumber" class="form-label">Hausnummer:</label>
-                <input type="text" class="form-control" id="doornumber" name="doornumber" required>
+            <div class="col-2 form-floating mb-3">
+                <input type="text" class="form-control" id="doornumber" name="doornumber" placeholder="doornumber" required>
+                <label class="registrierungLabel" for="doornumber">Nr.</label>
             </div>
 
+
             <!-- Postal Code -->
-            <div class="mb-3">
-                <label for="postalCode" class="form-label">PLZ:</label>
-                <input type="text" class="form-control" id="postalCode" name="postalCode" required>
+            <div class="col-2 form-floating mb-3">
+                <input type="text" class="form-control" id="postalCode" name="postalCode" placeholder="postalCode" required>
+                <label class="registrierungLabel" for="postalCode">PLZ</label>
             </div>
 
             <!-- City -->
-            <div class="mb-3">
-                <label for="city" class="form-label">Stadt:</label>
-                <input type="text" class="form-control" id="city" name="city" required>
+            <div class="col-3 form-floating mb-3">
+                <input type="text" class="form-control" id="city" name="city" placeholder="city" required>
+                <label class="registrierungLabel" for="city">Stadt</label>
             </div>
 
             <!-- Email -->
-            <div class="mb-3">
-                <label for="email" class="form-label">E-Mail:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="email" required>
+                <label class="registrierungLabel" for="email">E-Mail</label>
             </div>
 
             <!-- Username -->
-            <div class="mb-3">
-                <label for="username" class="form-label">Benutzername:</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+            <div class="form-floating mb-3">
+                <input type="username" class="form-control" id="username" name="username" placeholder="username" required>
+                <label class="registrierungLabel" for="username">Benutzername</label>
             </div>
 
+
             <!-- Password -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Passwort:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
+                <label class="registrierungLabel" for="password">Passwort</label>
             </div>
 
             <!-- Password Confirmation -->
@@ -107,7 +109,7 @@
 
             <!-- Submit Button -->
             <div class="mb-3">
-                <label for="profilePicture" class="form-label">Profilbild:</label>
+                <label for="profilePicture" class="form-label">Profilbild</label>
                 <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
             </div>
             <div class="mb-3">
