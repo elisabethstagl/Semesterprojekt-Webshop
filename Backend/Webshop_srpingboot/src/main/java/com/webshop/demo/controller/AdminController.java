@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webshop.demo.dto.ProductDTO;
 import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.Product;
@@ -106,18 +107,20 @@ public class AdminController {
         productService.deleteById(id);
     }
 
-    // update product
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @PutMapping("/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
-    @RequestBody ProductDTO updatedProductDTO) {
+            @RequestPart("updatedProductDTO") String updatedProductDTOJson,
+            @RequestPart(required = false) MultipartFile product_img) {
         try {
+            ProductDTO updatedProductDTO = new ObjectMapper().readValue(updatedProductDTOJson, ProductDTO.class); 
             Product product = productService.update(id, updatedProductDTO);
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     // create new product
     @PostMapping("/products")

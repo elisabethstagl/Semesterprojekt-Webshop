@@ -38,22 +38,26 @@ public class Product {
     @Column(name = "category")
     private String category;
 
-    @Lob
-    @Column(name = "product_img", length = 100000)
-    private byte[] product_img;
+    @NotBlank
+    @Column(name = "imageURL")
+    private String imageURL;
+
+    // @Lob
+    // @Column(name = "product_img", length = 100000)
+    // private byte[] product_img;
 
 
     // Konstruktor
     public Product() {
     }
 
-    public Product(String name, Double price, String description, Integer quantity, String category, byte[] product_img) {
+    public Product(String name, Double price, String description, Integer quantity, String category, String imageURL) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.quantity = quantity;
         this.category = category;
-        this.product_img = product_img;
+        this.imageURL = imageURL;
     }
 
     // Getter und Setter
@@ -66,13 +70,21 @@ public class Product {
         this.id = id;
     }
 
-    public byte[] getProduct_img() {
-        return product_img;
+    // public byte[] getProduct_img() {
+    //     return product_img;
+    // }
+
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setProduct_img(byte[] product_img) {
-        this.product_img = product_img;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
+
+    // public void setProduct_img(byte[] product_img) {
+    //     this.product_img = product_img;
+    // }
 
     public String getName() {
         return this.name;

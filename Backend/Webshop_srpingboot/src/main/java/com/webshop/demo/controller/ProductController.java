@@ -76,10 +76,10 @@ public class ProductController {
 
     // UPDATE 
 
-    @PutMapping("/{id}")
-    public Product update(@PathVariable Long id, @RequestBody Product product) {
-        return productService.update(id, product);
-    }
+    // @PutMapping("/{id}")
+    // public Product update(@PathVariable Long id, @RequestBody Product product) {
+    //     return productService.update(id, product);
+    // }
 
 
     // DELETE 

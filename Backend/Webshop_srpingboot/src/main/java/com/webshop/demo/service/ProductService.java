@@ -57,7 +57,7 @@ public class ProductService {
         product.setDescription(updatedProductDTO.getDescription());
         product.setQuantity(updatedProductDTO.getQuantity());
         product.setCategory(updatedProductDTO.getCategory());
-        // product.setProduct_img(updatedProductDTO.getProduct_img());
+        product.setImageURL(updatedProductDTO.getimageURL());
         return productRepos.save(product);
     }
 

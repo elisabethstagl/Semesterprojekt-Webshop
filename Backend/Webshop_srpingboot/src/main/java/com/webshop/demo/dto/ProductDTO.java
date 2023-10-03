@@ -18,7 +18,8 @@ public class ProductDTO {
     private String description;
     private Integer quantity;
     private String category;
-    private byte[] product_img;
+    private String imageURL;
+    // private byte[] product_img;
 
     // GETTERS & SETTERS    
 
@@ -71,12 +72,20 @@ public class ProductDTO {
         this.category = category;
     }
 
-    public byte[] getImage() {
-        return this.product_img;
+    // public byte[] getProduct_img() {
+    //     return this.product_img;
+    // }
+
+    // public void setProduct_img(byte[] product_img) {
+    //     this.product_img = product_img;
+    // }
+
+    public String getimageURL() {
+        return this.imageURL;
     }
 
-    public void setProduct_img(byte[] product_img) {
-        this.product_img = product_img;
+    public void setimageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
 }

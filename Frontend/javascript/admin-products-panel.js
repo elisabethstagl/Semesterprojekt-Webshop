@@ -35,90 +35,90 @@ function createProductCard(product) {
   );
   const quantity = $(`<p class="card-text">Menge: ${product.quantity}</p>`);
   const category = $(`<p class="card-text">Kategorie: ${product.category}</p>`);
-  const imgElement = $("<img class='card-img-top' alt='Product Image'>");
-  imgElement.attr("src", "data:image/jpeg;base64," + product.product_img);
-  cardInner.prepend(imgElement); // Display it at the top of your product card.
-
+  const imgElement = $(`<img src="${product.imageURL}">`); 
   const editButton = $('<button class="btn btn-primary me-3">Edit</button>');
   const deleteButton = $('<button class="btn btn-primary">Delete</button>');
 
-  editButton.on("click", (e) => {
-    e.stopPropagation();
 
-    // Populate the modal fields with current product details
-    $("#productName").val(product.name);
-    $("#productPrice").val(product.price);
-    $("#productDescription").val(product.description);
-    $("#productQuantity").val(product.quantity);
-    $("#productCategory").val(product.category);
-    // Handle image URL separately
+  // -----------------------------------------------------------------------------------------
 
-    // Show the modal and modify the submit button's event to update the product
-    $("#addProductModal").modal("show");
-    $("#addProductSubmit")
-      .off("click")
-      .on("click", function () {
-        const updatedProduct = {
-          name: $("#productName").val(),
-          price: $("#productPrice").val(),
-          description: $("#productDescription").val(),
-          quantity: $("#productQuantity").val(),
-          category: $("#productCategory").val(),
-          // Handle image URL separately
-        };
+  // editButton.on("click", (e) => {
+  //   e.stopPropagation();
 
-        const productImageFile = document.getElementById("productURL").files[0];
-        const formData = new FormData();
-        formData.append("productImage", productImageFile);
-        formData.append("product", JSON.stringify(updatedProduct));
+  //   // Populate the modal fields with current product details
+  //   $("#productName").val(product.name);
+  //   $("#productPrice").val(product.price);
+  //   $("#productDescription").val(product.description);
+  //   $("#productQuantity").val(product.quantity);
+  //   $("#productCategory").val(product.category);
+  //   $("#productURL").val(product.imageURL);
 
-        fetch(`http://localhost:8080/admin/products/${product.id}`, {
-          method: "PUT",
-          headers: { ...getAuthHeaders() },
-          body: formData,
-        })
-          .then(handleResponse)
-          .then((response) => {
-            loadAllProducts();
-          })
+  //   // Show the modal and modify the submit button's event to update the product
+  //   $("#addProductModal").modal("show");
+  //   $("#addProductSubmit")
+  //     .off("click")
+  //     .on("click", function () {
+  //       const updatedProduct = {
+  //         name: $("#productName").val(),
+  //         price: $("#productPrice").val(),
+  //         description: $("#productDescription").val(),
+  //         quantity: $("#productQuantity").val(),
+  //         category: $("#productCategory").val(),
+  //         imgURL: $("#productURL").val(),
+  //         // Handle image URL separately
+  //       };
 
-          .catch((error) => {
-            console.error("Error updating the product:", error);
-          });
-      });
-  });
+  //       const productImageFile = document.getElementById("productURL").files[0];
+  //       const formData = new FormData();
+  //       formData.append("product_img", productImageFile); // Changed to match the Java controller
+  //       formData.append("updatedProductDTO", JSON.stringify(updatedProduct));
 
-  deleteButton.on("click", (e) => {
-    e.stopPropagation();
+  //       fetch(`http://localhost:8080/admin/products/${product.id}`, {
+  //         method: "PUT",
+  //         headers: { ...getAuthHeaders() },
+  //         body: formData,
+  //       })
+  //         .then(handleResponse)
+  //         .then((response) => {
+  //           loadAllProducts();
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error updating the product:", error);
+  //         });
+  //     });
+  // });
 
-    if (confirm("Are you sure you want to delete this product?")) {
-      fetch(`http://localhost:8080/admin/products/${product.id}`, {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error deleting the product");
-          }
-          // Remove the card from the page or reload the products
-          card.remove();
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
-  });
+  // deleteButton.on("click", (e) => {
+  //   e.stopPropagation();
+
+  //   if (confirm("Are you sure you want to delete this product?")) {
+  //     fetch(`http://localhost:8080/admin/products/${product.id}`, {
+  //       method: "DELETE",
+  //       headers: getAuthHeaders(),
+  //     })
+  //       .then((response) => {
+  //         if (!response.ok) {
+  //           throw new Error("Error deleting the product");
+  //         }
+  //         // Remove the card from the page or reload the products
+  //         card.remove();
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error:", error);
+  //       });
+  //   }
+  // });
 
   // Function to display the modal when the button is clicked
-  $("#new-product-button").on("click", function () {
-    $("#addProductModal").modal("show");
-  });
+  // $("#new-product-button").on("click", function () {
+  //   $("#addProductModal").modal("show");
+  // });
 
-  // closes modal
-  $("#modal-close-button").on("click", function () {
-    $("#addProductModal").modal("hide");
-    $("#addProductForm")[0].reset();
-  });
+  // // closes modal
+  // $("#modal-close-button").on("click", function () {
+  //   $("#addProductModal").modal("hide");
+  //   $("#addProductForm")[0].reset();
+  // });
 
   cardBody.append(
     id,
@@ -127,6 +127,7 @@ function createProductCard(product) {
     description,
     quantity,
     category,
+    imgElement,
     editButton,
     deleteButton
   );
