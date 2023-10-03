@@ -20,24 +20,18 @@ function handleResponse(response) {
 // Function to create a product card
 function createProductCard(product) {
   const card = $('<div class="col-lg-4 col-md-6 col-sm-6 mt-3"></div>');
-  const cardInner = $(
-    '<div class="card mx-auto mb-2" style="background-color:transparent;"></div>'
-  );
+  const cardInner = $('<div class="card mx-auto mb-2 " style="background-color:transparent;"></div>');
+  const image = $(`<img src="${product.imageURL}" alt="${product.name}" class="img-fluid rounded-start rounded-end mb-3">`);
   const cardBody = $('<div class="card-body"></div>');
 
   const id = $(`<p class="card-text">ID: ${product.id}</p>`);
-  const productName = $(
-    `<p class="card-text">Produktname: ${product.name}</p>`
-  );
+  const productName = $(`<p class="card-text">Produktname: ${product.name}</p>`);
   const price = $(`<p class="card-text">Preis: ${product.price} </p>`);
-  const description = $(
-    `<p class="card-text">Beschreibung: ${product.description}</p>`
-  );
+  const description = $(`<p class="card-text">Beschreibung: ${product.description}</p>`);
   const quantity = $(`<p class="card-text">Menge: ${product.quantity}</p>`);
   const category = $(`<p class="card-text">Kategorie: ${product.category}</p>`);
-  const imgElement = $(`<img src="${product.imageURL}">`);
   const editButton = $('<button class="btn btn-primary me-3">Edit</button>');
-  const deleteButton = $('<button class="btn btn-primary">Delete</button>');
+  const deleteButton = $('<button class="btn btn-primary">Delete Product</button>');
 
 
   // -----------------------------------------------------------------------------------------
@@ -160,6 +154,7 @@ function createProductCard(product) {
     $("#addProductForm")[0].reset();
   });
 
+  cardInner.append(image);
   cardBody.append(
     id,
     productName,
@@ -167,7 +162,6 @@ function createProductCard(product) {
     description,
     quantity,
     category,
-    imgElement,
     editButton,
     deleteButton
   );

@@ -16,45 +16,68 @@
         integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/stylesheet.css" />
 </head>
-<style>
-input {
-     background-color:transparent;
-}
-</style>
 <body>
 
     <div id="navbar"></div>
-    <!-- <div class="container">
-        <div id="error-message" style="display:none;"> 
-            <h4>Access Denied!</h4>
-            <p> You do not have permission to view this content.</p>
-        </div>
-    </div> -->
+
     <div class="container content">
         <h2 id="admin-header" style="display: none;">Admin Panel - User List</h2>
         <!-- User Edit Modal -->
-        <div class="modal" tabindex="-1" id="editUserModal">
+        <div class="modal fade" tabindex="-1" id="editUserModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit User</h5>
+                        <h4 class="modal-title">User bearbeiten</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" id="editUsername" placeholder="Username">
-                        <!-- <input type="password" id="editPassword" placeholder="Password"> -->
-                        <input type="text" id="editFirstName" placeholder="First Name">
-                        <input type="text" id="editLastName" placeholder="Last Name">
-                        <input type="email" id="editEmail" placeholder="Email">
-                        <input type="text" id="editAddress" placeholder="Address">
-                        <input type="text" id="editCity" placeholder="City">
-                        <input type="text" id="editDoornumber" placeholder="Door Number">
-                        <input type="text" id="editPostalCode" placeholder="Postal Code">
-                        <!-- Add any other necessary fields -->
+                        <form id="editUserForm">
+                            <div class="form-group mb-2">
+                                <label for="editUsername">Username</label>
+                                <input type="text" class="form-control" id="editUsername" placeholder="Username">
+                            </div>
+                            <!-- <div class="form-group mb-2">
+                                <label for="editPassword">Passwort</label>
+                                <input type="text" class="form-control" id="editPassword" placeholder="Password">
+                            </div> -->
+                            <div class="row">
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editFirstName">Vorname</label>
+                                    <input type="text" class="form-control" id="editFirstName" placeholder="First Name">
+                                </div>
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editLastName">Nachname</label>
+                                    <input type="text" class="form-control" id="editLastName" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editEmail">E-Mail</label>
+                                <input type="email" class="form-control" id="editEmail" placeholder="Email">
+                            </div>
+                            <div class="row">
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editAddress">Adresse</label>
+                                    <input type="text" class="form-control" id="editAddress" placeholder="Address">
+                                </div>
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editCity">Stadt</label>
+                                    <input type="text" class="form-control" id="editCity" placeholder="City">
+                                </div>
+                            </div>
+                            <div class="row">
+                            <div class="form-group mb-2 col-6">
+                                <label for="editDoornumber">Hausnummer</label>
+                                <input type="text" class="form-control" id="editDoornumber" placeholder="Door Number">
+                            </div>
+                            <div class="form-group mb-2 col-6">
+                                <label for="editPostalCode">PLZ</label>
+                                <input type="text" class="form-control" id="editPostalCode" placeholder="Postal Code">
+                            </div>
+                        </div>
+                        </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+                        <button type="button" class="btn btn-primary" id="saveChanges">Speichern</button>
                     </div>
                 </div>
             </div>
@@ -63,8 +86,15 @@ input {
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="userCardContainer" style="display:none;">
             <!-- Initially hidden until validated -->
         </div>
+
+        <div id="error-message" style="display:none;"> 
+            <h4>Access Denied!</h4>
+            <p> You do not have permission to view this content.</p>
+        </div>
     </div>
-    
+
+   
+
 
     <div id="footer"></div>
     <script src="./javascript/admin-user-panel.js"></script>
