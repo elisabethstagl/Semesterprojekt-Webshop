@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.webshop.demo.dto.ProductDTO;
 import com.webshop.demo.model.Product;
 import com.webshop.demo.repository.ProductRepository;
 
@@ -49,17 +50,21 @@ public class ProductService {
         return filteredProducts;
     }
 
-    public Product update(Long id, Product updatedProduct) {
-        Product product = productRepos.findById(id).orElseThrow(EntityNotFoundException::new);
-
-        product.setName(updatedProduct.getName());
-        product.setPrice(updatedProduct.getPrice());
-        product.setDescription(updatedProduct.getDescription());
-        product.setCategory(updatedProduct.getCategory());
-        product.setQuantity(updatedProduct.getQuantity());
-        product.setImageURL(updatedProduct.getImageURL());
-
+    public Product update(Long id, ProductDTO updatedProductDTO) {
+        Product product = productRepos.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        product.setName(updatedProductDTO.getName());
+        product.setPrice(updatedProductDTO.getPrice());
+        product.setDescription(updatedProductDTO.getDescription());
+        product.setQuantity(updatedProductDTO.getQuantity());
+        product.setCategory(updatedProductDTO.getCategory());
+    
+        // Only update imageURL if it is provided in the DTO
+        if(updatedProductDTO.getimageURL() != null && !updatedProductDTO.getimageURL().isEmpty()) {
+            product.setImageURL(updatedProductDTO.getimageURL());
+        }
+    
         return productRepos.save(product);
     }
+    
 
 }

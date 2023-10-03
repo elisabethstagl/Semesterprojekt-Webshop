@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Users</title>
+    <link rel="icon" href="images/clementine.png" sizes="16x16 32x32" type="image/png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/stylesheet.css" />
+</head>
+<body>
+
+    <div id="navbar"></div>
+
+    <div class="container content">
+        <h2 id="admin-header" style="display: none;">Admin Panel - User List</h2>
+        <!-- User Edit Modal -->
+        <div class="modal fade" tabindex="-1" id="editUserModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">User bearbeiten</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editUserForm">
+                            <div class="form-group mb-2">
+                                <label for="editUsername">Username</label>
+                                <input type="text" class="form-control" id="editUsername" placeholder="Username">
+                            </div>
+                            <!-- <div class="form-group mb-2">
+                                <label for="editPassword">Passwort</label>
+                                <input type="text" class="form-control" id="editPassword" placeholder="Password">
+                            </div> -->
+                            <div class="row">
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editFirstName">Vorname</label>
+                                    <input type="text" class="form-control" id="editFirstName" placeholder="First Name">
+                                </div>
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editLastName">Nachname</label>
+                                    <input type="text" class="form-control" id="editLastName" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editEmail">E-Mail</label>
+                                <input type="email" class="form-control" id="editEmail" placeholder="Email">
+                            </div>
+                            <div class="row">
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editAddress">Adresse</label>
+                                    <input type="text" class="form-control" id="editAddress" placeholder="Address">
+                                </div>
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editCity">Stadt</label>
+                                    <input type="text" class="form-control" id="editCity" placeholder="City">
+                                </div>
+                            </div>
+                            <div class="row">
+                            <div class="form-group mb-2 col-6">
+                                <label for="editDoornumber">Hausnummer</label>
+                                <input type="text" class="form-control" id="editDoornumber" placeholder="Door Number">
+                            </div>
+                            <div class="form-group mb-2 col-6">
+                                <label for="editPostalCode">PLZ</label>
+                                <input type="text" class="form-control" id="editPostalCode" placeholder="Postal Code">
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="saveChanges">Speichern</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="userCardContainer" style="display:none;">
+            <!-- Initially hidden until validated -->
+        </div>
+
+        <div id="error-message" style="display:none;"> 
+            <h4>Access Denied!</h4>
+            <p> You do not have permission to view this content.</p>
+        </div>
+    </div>
+
+   
+
+
+    <div id="footer"></div>
+    <script src="./javascript/admin-user-panel.js"></script>
+    <script src="./javascript/main.js"></script>
+
+</body>
+
+</html>

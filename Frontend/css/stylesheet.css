@@ -129,7 +129,11 @@ body {
     padding: 15px;
 }
 
+
+option{
+    color: rgb(184, 107, 82);
+}
+=======
 #logoutContainer {
     display: none;
 }
-

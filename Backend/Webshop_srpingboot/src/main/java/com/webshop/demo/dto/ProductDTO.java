@@ -19,7 +19,7 @@ public class ProductDTO {
     private Integer quantity;
     private String category;
     private String imageURL;
-
+    // private byte[] product_img;
 
     // GETTERS & SETTERS    
 
@@ -72,11 +72,19 @@ public class ProductDTO {
         this.category = category;
     }
 
-    public String getImageURL(String imageURL) {
+    // public byte[] getProduct_img() {
+    //     return this.product_img;
+    // }
+
+    // public void setProduct_img(byte[] product_img) {
+    //     this.product_img = product_img;
+    // }
+
+    public String getimageURL() {
         return this.imageURL;
     }
 
-    public void setImageURL(String imageURL) {
+    public void setimageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
