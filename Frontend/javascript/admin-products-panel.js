@@ -42,7 +42,7 @@ function createProductCard(product) {
 
 
     // Show the modal and modify the submit button's event to update the product
-    $("#addProductModal").modal("show");
+    $("#editProductModal").modal("show");
     // Populate the modal fields with current product details
     $("#productName").val(product.name);
     $("#productPrice").val(product.price);
@@ -153,6 +153,12 @@ function createProductCard(product) {
     $("#addProductModal").modal("hide");
     $("#addProductForm")[0].reset();
   });
+
+  $("#edit-modal-close-button").on("click", function () {
+    $("#editProductModal").modal("hide");
+    $("#editProductForm")[0].reset();
+  });
+  
 
   cardInner.append(image);
   cardBody.append(

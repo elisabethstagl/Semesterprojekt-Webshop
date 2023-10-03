@@ -69,12 +69,60 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-close-button">Close</button>
-                <button type="button" class="btn btn-primary" id="addProductSubmit">Add Product</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-close-button">Schließen</button>
+                <button type="button" class="btn btn-primary" id="addProductSubmit">Produkt hinzufügen</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="editProductLabel">Produkt bearbeiten</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Add your form elements for product information here -->
+                <form id="editProductForm">
+                    <div class="form-group mb-2">
+                        <label for="productName">Produkt Name</label>
+                        <input type="text" class="form-control" id="productName" name="productName" required>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="productPrice">Preis</label>
+                        <input type="text" class="form-control" id="productPrice" name="productPrice" placeholder="99,99" required>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="productDescription">Beschreibung</label>
+                        <input type="text" class="form-control" id="productDescription" name="productDescription" required>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="productQuantity">Menge</label>
+                        <input type="text" class="form-control" id="productQuantity" name="productQuantity" required>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label for="productCategory">Kategorie</label>
+                        <select class="form-control" id="productCategory" required>
+                            <option>pflanzen</option>
+                            <option>toepfe</option>
+                            <option>pflanzenfreunde</option>
+                        </select>
+                    </div>
+                    <!-- <div class="form-group mb-2">
+                        <label for="productURL">Produktbild</label>
+                        <input type="file" class="form-control" id="productURL" name="productURL" accept="image/*" required>
+                    </div> -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="edit-modal-close-button">Schließen</button>
+                <button type="button" class="btn btn-primary" id="editProductSave">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     
         <div id="error-message" style="display:none;"> <!-- Error message area -->
