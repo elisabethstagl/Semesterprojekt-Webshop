@@ -19,9 +19,9 @@ function handleResponse(response) {
 
 // Function to create a user card
 function createUserCard(user) {
-  const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-4"></div>');
+  const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-2 mt-3"></div>');
   const cardInner = $(
-    '<div class="card mx-auto mb-5" style="background-color:transparent;"></div>'
+    '<div class="card mx-auto mb-1" style="background-color:transparent;"></div>'
   );
   const cardHeader = $(
     `<div class="card-header" data-bs-toggle="collapse" href="#collapse${user.id}" role="button" aria-expanded="false"></div>`
@@ -51,8 +51,8 @@ function createUserCard(user) {
   );
   const city = $(`<p class="card-text">City: ${user.city}</p>`);
 
-  const editButton = $('<button class="btn btn-primary">Edit</button>');
-  const deleteButton = $('<button class="btn btn-danger">Delete</button>');
+  const editButton = $('<button class="btn btn-primary me-3">Edit</button>');
+  const deleteButton = $('<button class="btn btn-primary">Delete</button>');
 
   editButton.on("click", (e) => {
     e.stopPropagation(); // Prevents the card from toggling when the button is clicked
