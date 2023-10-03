@@ -38,7 +38,7 @@ public class Product {
     @Column(name = "category")
     private String category;
 
-    @NotBlank
+    // @NotBlank
     @Column(name = "imageURL")
     private String imageURL;
 

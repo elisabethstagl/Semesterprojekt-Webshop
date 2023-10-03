@@ -57,8 +57,14 @@ public class ProductService {
         product.setDescription(updatedProductDTO.getDescription());
         product.setQuantity(updatedProductDTO.getQuantity());
         product.setCategory(updatedProductDTO.getCategory());
-        product.setImageURL(updatedProductDTO.getimageURL());
+    
+        // Only update imageURL if it is provided in the DTO
+        if(updatedProductDTO.getimageURL() != null && !updatedProductDTO.getimageURL().isEmpty()) {
+            product.setImageURL(updatedProductDTO.getimageURL());
+        }
+    
         return productRepos.save(product);
     }
+    
 
 }

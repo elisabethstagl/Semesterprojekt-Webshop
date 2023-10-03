@@ -113,14 +113,13 @@ public class AdminController {
             @RequestPart("updatedProductDTO") String updatedProductDTOJson,
             @RequestPart(required = false) MultipartFile product_img) {
         try {
-            ProductDTO updatedProductDTO = new ObjectMapper().readValue(updatedProductDTOJson, ProductDTO.class); 
+            ProductDTO updatedProductDTO = new ObjectMapper().readValue(updatedProductDTOJson, ProductDTO.class);
             Product product = productService.update(id, updatedProductDTO);
             return new ResponseEntity<>(product, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
 
     // create new product
     @PostMapping("/products")

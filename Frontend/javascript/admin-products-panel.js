@@ -35,90 +35,130 @@ function createProductCard(product) {
   );
   const quantity = $(`<p class="card-text">Menge: ${product.quantity}</p>`);
   const category = $(`<p class="card-text">Kategorie: ${product.category}</p>`);
-  const imgElement = $(`<img src="${product.imageURL}">`); 
+  const imgElement = $(`<img src="${product.imageURL}">`);
   const editButton = $('<button class="btn btn-primary me-3">Edit</button>');
   const deleteButton = $('<button class="btn btn-primary">Delete</button>');
 
 
   // -----------------------------------------------------------------------------------------
 
-  // editButton.on("click", (e) => {
-  //   e.stopPropagation();
+  editButton.on("click", (e) => {
+    e.stopPropagation();
 
-  //   // Populate the modal fields with current product details
-  //   $("#productName").val(product.name);
-  //   $("#productPrice").val(product.price);
-  //   $("#productDescription").val(product.description);
-  //   $("#productQuantity").val(product.quantity);
-  //   $("#productCategory").val(product.category);
-  //   $("#productURL").val(product.imageURL);
 
-  //   // Show the modal and modify the submit button's event to update the product
-  //   $("#addProductModal").modal("show");
-  //   $("#addProductSubmit")
-  //     .off("click")
-  //     .on("click", function () {
-  //       const updatedProduct = {
-  //         name: $("#productName").val(),
-  //         price: $("#productPrice").val(),
-  //         description: $("#productDescription").val(),
-  //         quantity: $("#productQuantity").val(),
-  //         category: $("#productCategory").val(),
-  //         imgURL: $("#productURL").val(),
-  //         // Handle image URL separately
-  //       };
 
-  //       const productImageFile = document.getElementById("productURL").files[0];
-  //       const formData = new FormData();
-  //       formData.append("product_img", productImageFile); // Changed to match the Java controller
-  //       formData.append("updatedProductDTO", JSON.stringify(updatedProduct));
+    // Show the modal and modify the submit button's event to update the product
+    $("#addProductModal").modal("show");
+    // Populate the modal fields with current product details
+    $("#productName").val(product.name);
+    $("#productPrice").val(product.price);
+    $("#productDescription").val(product.description);
+    $("#productQuantity").val(product.quantity);
+    $("#productCategory").val(product.category);
+    // $("#productURL").val(product.imageURL);
+    // $("#addProductSubmit")
+    //   .off("click")
+    //   .on("click", function () {
+    //     const updatedProduct = {
+    //       name: $("#productName").val(),
+    //       price: $("#productPrice").val(),
+    //       description: $("#productDescription").val(),
+    //       quantity: $("#productQuantity").val(),
+    //       category: $("#productCategory").val(),
+    //       imgURL: $("#productURL").val(),
+    //       // Handle image URL separately
+    //     };
 
-  //       fetch(`http://localhost:8080/admin/products/${product.id}`, {
-  //         method: "PUT",
-  //         headers: { ...getAuthHeaders() },
-  //         body: formData,
-  //       })
-  //         .then(handleResponse)
-  //         .then((response) => {
-  //           loadAllProducts();
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error updating the product:", error);
-  //         });
-  //     });
-  // });
+    //     const productImageFile = document.getElementById("productURL").files[0];
+    //     const formData = new FormData();
+    //     formData.append("product_img", productImageFile); // Changed to match the Java controller
+    //     formData.append("updatedProductDTO", JSON.stringify(updatedProduct));
 
-  // deleteButton.on("click", (e) => {
-  //   e.stopPropagation();
+    //     fetch(`http://localhost:8080/admin/products/${product.id}`, {
+    //       method: "PUT",
+    //       headers: { ...getAuthHeaders() },
+    //       body: formData,
+    //     })
+    //       .then(handleResponse)
+    //       .then((response) => {
+    //         loadAllProducts();
+    //       })
+    //       .catch((error) => {
+    //         console.error("Error updating the product:", error);
+    //       });
+    //   });
 
-  //   if (confirm("Are you sure you want to delete this product?")) {
-  //     fetch(`http://localhost:8080/admin/products/${product.id}`, {
-  //       method: "DELETE",
-  //       headers: getAuthHeaders(),
-  //     })
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           throw new Error("Error deleting the product");
-  //         }
-  //         // Remove the card from the page or reload the products
-  //         card.remove();
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error:", error);
-  //       });
-  //   }
-  // });
+  });
+
+  $(document).ready(function () {
+    $(document).on("click", "#addProductSubmit", function (e) {
+      e.preventDefault(); // Prevents the default form submission behavior
+
+      const newProduct = {
+        name: $("#productName").val(),
+        price: $("#productPrice").val(),
+        description: $("#productDescription").val(),
+        quantity: $("#productQuantity").val(),
+        category: $("#productCategory").val(),
+      };
+
+      // Validate input...
+      if (!newProduct.name || !newProduct.price || !newProduct.description || !newProduct.quantity || !newProduct.category) {
+        alert("All fields are required!");
+        return;
+      }
+
+      fetch(`http://localhost:8080/admin/products/${product.id}`, {
+        method: "PUT",
+        headers: {
+          ...getAuthHeaders(),
+          "Content-Type": "application/json",  // Adding a content type header
+        },
+        body: JSON.stringify(newProduct), // Sending JSON directly
+      })
+        .then(handleResponse)
+        .then((response) => {
+          loadAllProducts();
+          $("#addProductModal").modal("hide");  // Hide the modal
+          $("#addProductForm")[0].reset(); // Reset the form fields
+        })
+        .catch((error) => {
+          console.error("Error adding the product:", error);
+        });
+    });
+  });
+
+  deleteButton.on("click", (e) => {
+    e.stopPropagation();
+
+    if (confirm("Are you sure you want to delete this product?")) {
+      fetch(`http://localhost:8080/admin/products/${product.id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error deleting the product");
+          }
+          // Remove the card from the page or reload the products
+          card.remove();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  });
 
   // Function to display the modal when the button is clicked
-  // $("#new-product-button").on("click", function () {
-  //   $("#addProductModal").modal("show");
-  // });
+  $("#new-product-button").on("click", function () {
+    $("#addProductModal").modal("show");
+  });
 
-  // // closes modal
-  // $("#modal-close-button").on("click", function () {
-  //   $("#addProductModal").modal("hide");
-  //   $("#addProductForm")[0].reset();
-  // });
+  // closes modal
+  $("#modal-close-button").on("click", function () {
+    $("#addProductModal").modal("hide");
+    $("#addProductForm")[0].reset();
+  });
 
   cardBody.append(
     id,
