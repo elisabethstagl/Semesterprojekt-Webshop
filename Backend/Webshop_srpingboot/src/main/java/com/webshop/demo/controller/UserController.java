@@ -57,13 +57,13 @@ public class UserController {
         if (principal instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) principal;
             User user = userService.findByUsername(userDetails.getUsername());
-            if(user != null){
+            if (user != null) {
                 CurrentUserDTO currentUser = new CurrentUserDTO();
                 currentUser.setId(user.getId());
                 currentUser.setUsername(user.getUsername());
                 currentUser.setRole(userDetails.getAuthorities().stream()
-                                    .findFirst().orElseThrow(() -> new RuntimeException("No roles found for user."))
-                                    .getAuthority());
+                        .findFirst().orElseThrow(() -> new RuntimeException("No roles found for user."))
+                        .getAuthority());
                 System.out.println("User found in getCurrentUser()");
                 return currentUser;
             } else {
@@ -75,7 +75,6 @@ public class UserController {
         // If principal is not an instance of UserDetails, throw an exception.
         throw new RuntimeException("Unable to get current user details.");
     }
-
 
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping()
@@ -103,42 +102,74 @@ public class UserController {
         return userService.save(user);
     }
 
+    // Erlauben von Cross-Origin-Anfragen vom spezifizierten Ursprung
     @CrossOrigin(origins = "http://127.0.0.1:5500")
+    // Abbilden von HTTP POST-Anfragen auf den Endpunkt '/register'
     @PostMapping("/register")
+    // Indizieren, dass die Methode eine ResponseEntity zurückgibt, die sowohl den
+    // HTTP-Status als auch eine Map als Antwortkörper enthält
     public ResponseEntity<Map<String, String>> register(
+            // Validieren des eingehenden Registrierungsanforderungs-Payloads
             @Valid RegistrationRequest registrationRequest,
+            // Akzeptieren einer Profilbild-Datei als Teil der Anfrage
             @RequestParam("profilePicture") MultipartFile profilePicture) {
+
+        // Registrieren des Benutzers über den Benutzerdienst mit den bereitgestellten
+        // Registrierungsdetails und dem Profilbild
         userService.register(registrationRequest, profilePicture);
 
+        // Erstellen einer Map, um die Antwortnachricht zu halten
         Map<String, String> response = new HashMap<>();
-        response.put("message", "User registered successfully");
+        // Hinzufügen einer Erfolgsmeldung zur Antwort-Map
+        response.put("message", "Benutzer erfolgreich registriert");
 
+        // Zurückgeben eines 200 OK HTTP-Status zusammen mit der Antwort-Map
         return ResponseEntity.ok(response);
     }
 
+
+    // Erlauben von Cross-Origin-Anfragen von der spezifizierten Herkunft
     @CrossOrigin(origins = "http://127.0.0.1:5500")
+    // Zuordnen von HTTP POST-Anfragen auf den Endpunkt '/login'
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    // Die Methode gibt eine ResponseEntity zurück, welche den HTTP-Status und den
+    // Token als Antwortkörper enthält
+    public ResponseEntity<TokenResponse> authenticateUser(
+            // @RequestBody bindet den HTTP-Request-Body (also die JSON-Payload) an das
+            // LoginRequest-Objekt
+            @RequestBody LoginRequest loginRequest) {
+
+        // Aufruf der authenticateUser-Methode des userService mit Benutzername und
+        // Passwort aus dem LoginRequest
+        // und Speicherung des zurückgegebenen Tokens (falls vorhanden) in einer
+        // Optional-Variable
         Optional<String> token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
-        System.out.println("Hello");
-        return token.map(TokenResponse::new)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(401).body(null)); // Unauthorized
-                
+
+
+        // Rückgabe des Antwortobjekts:
+        // Wenn ein Token vorhanden ist, wird es in ein TokenResponse-Objekt gewrappt
+        // und mit dem HTTP-Status 200 OK zurückgegeben.
+        // Wenn kein Token vorhanden ist, wird eine Antwort mit dem HTTP-Status 401
+        // Unauthorized und ohne Körper zurückgegeben.
+        return token.map(TokenResponse::new) // Umwandeln des Tokens in ein TokenResponse-Objekt, falls es vorhanden ist
+                .map(ResponseEntity::ok) // Umwandeln des TokenResponse-Objekts in eine ResponseEntity mit Status 200 OK
+                .orElseGet(() -> ResponseEntity.status(401).body(null)); // Falls kein Token vorhanden ist, Rückgabe
+                                                                         // einer 401 Unauthorized-Antwort
+
     }
 
     // UPDATE
 
     // @PutMapping("/{id}")
     // public User update(@PathVariable Long id, @RequestBody User user) {
-    //     return userService.update(id, user);
+    // return userService.update(id, user);
     // }
 
     // DELETE
 
     // @DeleteMapping("/{id}")
     // public void deleteUser(@PathVariable Long id) {
-    //     userService.deleteById(id);
+    // userService.deleteById(id);
     // }
 
 }
