@@ -1,4 +1,6 @@
 
-$("#navbar").load("../Frontend/navbar.html .navbar");
+$(document).ready(function(){
+    $("#navbar").load("../Frontend/navbar.html .navbar");
+    $("#footer").load("../Frontend/footer.html #footerLoad");
+});
 
-$("#footer").load("../Frontend/footer.html #footerLoad");
