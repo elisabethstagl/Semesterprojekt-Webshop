@@ -33,10 +33,6 @@
                 <button type="button" class="btn btn-primary mb-4" onclick="performLogin()">Anmelden</button>
             </div>
             <a href="registrierung.html">Neu bei uns? Hier registrieren!</a>
-            <p id="loggedInMessage">Not logged in</p>
-            <div id="logoutContainer">
-                <button type="button" class="btn btn-light mt-3" onclick="logout()">Logout</button>
-            </div>
         </form>
     </div>
 
@@ -62,51 +58,6 @@ aria-hidden="true">
     <!-- Footer content and scripts -->
     <div id="footer"></div>
 
-    <script>
-        // JavaScript code for performing login and displaying error modal
-        function performLogin() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            // Client-side validation (add more checks as needed)
-            if (!username || !password) {
-                alert("Bitte geben Sie Benutzername und Passwort ein.");
-                return;
-            }
-
-            fetch("http://localhost:8080/users/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, password })
-            })
-                .then(response => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw new Error("Authentifizierung fehlgeschlagen");
-                    }
-                })
-                .then(data => {
-                    // Speichern des JWT-Tokens sicher, z.B. in einem Cookie oder Local Storage
-                    // In diesem Beispiel speichern wir es aus Vereinfachungsgründen im Local Storage
-                    localStorage.setItem("jwtToken", data.token);
-
-                    // Weiterleitung des Benutzers zur Hauptanwendungs- oder Dashboard-Seite
-                    window.location.href = '/Frontend/index.html';
-                })
-                .catch(error => {
-                    console.error("Fehler beim Login:", error);
-
-                    // Anzeigen der Fehlermeldung im Modal
-                    const errorModal = document.getElementById("errorModal");
-                    const errorMessage = document.getElementById("loginErrorMessage");
-                    errorMessage.textContent = "Login fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten.";
-                    $(errorModal).modal('show');
-                });
-        }
-    </script>
     <script src="javascript/main.js"></script>
     <script src="./javascript/login-logout.js"></script>
 

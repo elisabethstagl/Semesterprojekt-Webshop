@@ -42,6 +42,8 @@ function createUserCard(user) {
     `<p class="card-text">First Name: ${user.firstName} </p>`
   );
   const lastName = $(`<p class="card-text">Last Name: ${user.lastName}</p>`);
+  const password = $(`<p class="card-text">Passwort: ${user.password}</p>`);
+
   const address = $(`<p class="card-text">Adress: ${user.address}</p>`);
   const doornumber = $(
     `<p class="card-text">Door Number: ${user.doornumber}</p>`
@@ -57,19 +59,29 @@ function createUserCard(user) {
   editButton.on("click", (e) => {
     e.stopPropagation(); // Prevents the card from toggling when the button is clicked
     console.log("Edit button clicked for user:", user.id);
-    $("#editUsername").val(user.username);
-    $("#editPassword").val(user.password);
-    $("#editFirstName").val(user.firstName);
-    $("#editLastName").val(user.lastName);
-    $("#editEmail").val(user.email);
-    $("#editAddress").val(user.address);
-    $("#editCity").val(user.city);
-    $("#editDoornumber").val(user.doornumber);
-    $("#editPostalCode").val(user.postalCode);
 
-    // Store user ID for later usage
-    $("#editUserModal").data("userId", user.id);
+    fetch(`http://localhost:8080/admin/users/${user.id}`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  })
+    .then(handleResponse)
+    .then((user) => {
 
+      $("#editUsername").val(user.username);
+      $("#editPassword").val(user.password);
+      $("#editFirstName").val(user.firstName);
+      $("#editLastName").val(user.lastName);
+      $("#editEmail").val(user.email);
+      $("#editAddress").val(user.address);
+      $("#editCity").val(user.city);
+      $("#editDoornumber").val(user.doornumber);
+      $("#editPostalCode").val(user.postalCode);
+      $("#editRole").val(user.role);
+
+    
+      // Store user ID for later usage
+      $("#editUserModal").data("userId", user.id);
+    });
     // Display modal
     const editModal = new bootstrap.Modal(
       document.getElementById("editUserModal")
@@ -90,6 +102,7 @@ function createUserCard(user) {
   cardBody.append(
     id,
     sex,
+    password,
     firstName,
     lastName,
     address,
@@ -144,6 +157,7 @@ $("#saveChanges").on("click", () => {
     city: $("#editCity").val(),
     doornumber: $("#editDoornumber").val(),
     postalCode: $("#editPostalCode").val(),
+    role: $("#editRole").val()
   };
   // Send a PUT request with the updated user data
   fetch(`http://localhost:8080/admin/users/${userId}`, {
@@ -176,6 +190,9 @@ $("#saveChanges").on("click", () => {
         .find('.card-text:contains("First Name:")')
         .text(`First Name: ${updatedUser.firstName}`);
       userCard
+        .find('.card-text:contains("Passwort:")')
+        .text(`Passwort: ${updatedUser.password}`);
+      userCard
         .find('.card-text:contains("Last Name:")')
         .text(`Last Name: ${updatedUser.lastName}`);
       userCard
@@ -193,15 +210,16 @@ $("#saveChanges").on("click", () => {
 
       // Hide the modal
       const editModal = bootstrap.Modal.getInstance(
-        document.getElementById("editUserModal")
-      );
+        document.getElementById("editUserModal"));
       editModal.hide();
     })
+
 
     .catch((error) => {
       console.error("Error:", error.message);
       alert("Error updating user!");
     });
+
 });
 
 // First, fetch the current user details

@@ -94,6 +94,10 @@ body {
     font-size: 16px;
 }
 
+.navbar-dark .navbar-nav .nav-item .nav-link{
+    color: cornsilk;
+}
+
 .navbar-dark .navbar-nav .nav-link:hover,.navbar-dark .navbar-nav .nav-link.active, .navbar i:hover, .navbar i.active {
     color: rgb(184, 107, 82);
 }
@@ -132,8 +136,4 @@ body {
 
 option{
     color: rgb(184, 107, 82);
-}
-=======
-#logoutContainer {
-    display: none;
 }

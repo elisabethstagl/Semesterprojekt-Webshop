@@ -3,6 +3,7 @@ package com.webshop.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.webshop.demo.model.User;
+import com.webshop.demo.model.UserRole;
 
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public class AdminServiceImpl implements AdminService {
         Optional<User> userOptional = userService.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setRole(User.UserRole.ADMIN);
+            user.setRole(UserRole.ADMIN);
             userService.save(user);
             return true;
         }
