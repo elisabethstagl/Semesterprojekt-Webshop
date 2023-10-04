@@ -1,10 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&family=Young+Serif&display=swap');
 
 * {
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
-        sans-serif;
+    font-family: 'Work Sans', sans-serif;
     color: cornsilk;
     box-sizing: border-box;
+}
 
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+#guapo-word{
+    font-family: 'Young Serif', serif;
+}
+
+#guapo-logo{
+    font-family: 'Young Serif', serif;
 }
 
 .registrierungLabel {
@@ -45,6 +56,7 @@ body {
 }
 
 .btn, button, .btn-primary{
+    font-weight: 600;
     border-style: none;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -67,16 +79,6 @@ body {
 
 .accordion-item {
     border-color: rgba(135, 74, 54, 0.79);
-}
-
-@media screen and (max-width: 768px) {
-    .card-image {
-        width: 300px;
-    }
-
-    .card-products {
-        width: 300px;
-    }
 }
 
 .card-products {
@@ -102,23 +104,6 @@ body {
     color: rgb(184, 107, 82);
 }
 
-/*Mobile*/
-
-@media screen and (max-width: 768px) {
-    .navbar-dark .navbar-toggler, .navbar-toggler:focus,
-    .navbar-toggler:active{
-        border-style: none;
-        outline: none;
-        box-shadow: none;
-    }
-    
-
-    #menu-icon{
-        font-size: 35px;
-    }
-    
-    }
-
 .navbar i {
     font-size: 20px;
 }
@@ -136,4 +121,48 @@ body {
 
 option{
     color: rgb(184, 107, 82);
+}
+
+.cursor {
+    font-size: 1em;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+
+/*-----------------------------------------------Mobile--------------------------------------------*/
+
+@media screen and (max-width: 768px) {
+    .navbar-dark .navbar-toggler, .navbar-toggler:focus,
+    .navbar-toggler:active{
+        border-style: none;
+        outline: none;
+        box-shadow: none;
+    }
+    
+
+    #menu-icon{
+        font-size: 35px;
+    }
+
+    .card-image {
+        width: 300px;
+    }
+
+    .card-products {
+        width: 300px;
+    }
+
+    #icon-list{
+        display: inline-block;
+    }
+
 }

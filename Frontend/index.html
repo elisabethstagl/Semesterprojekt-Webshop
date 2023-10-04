@@ -25,12 +25,12 @@
     <div class="container content">
         <div class="row">
             <div class="col-lg-5 col-sm-12" style="text-align:center; margin-top: 60px;">
-                <h1 style="font-style: italic;">Where Green Dreams grow. <b> guapo. </b></h1>
+                <h1><span id="guapo-word"></span><span class="cursor">|</span></h1>
                 <h5 style="margin-top: 30px;">Willkommen in unserer Pflanzenwelt, in der jedes Blatt eine Geschichte von
                     Leben und Schönheit erzählt. Entdecken Sie unsere grüne Oase und holen Sie sich die Wunder der Natur
                     in Ihr Zuhause!</h5>
                 <a href="alle-produkte.html"><button type="button" class="btn btn-light"
-                        style="color: rgb(184, 107, 82); margin-top: 20px;">Alle Produkte</button></a>
+                        style="margin-top: 20px; margin-bottom: 20px;">Alle Produkte</button></a>
             </div>
 
             <div class="col-lg-7 col-sm-12" style="text-align: center;">
@@ -42,6 +42,25 @@
 
     <div id="footer"></div>
     <script src="./javascript/main.js"></script>
+    <script>
+        const text = "Where green dreams grow. guapo.";
+        const typingText = document.getElementById('guapo-word');
+        let index = 0;
+    
+        function typeText() {
+            if (index < text.length) {
+                typingText.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeText, 150); // Adjust the typing speed (milliseconds per character)
+            } else {
+                // Remove the blinking cursor once text is fully typed
+                document.querySelector('.cursor').style.display = 'none';
+            }
+        }
+    
+        setTimeout(typeText, 1000); // Delay initial typing start by 1 second to simulate a brief pause
+    </script>
+    
 </body>
 
 </html>
