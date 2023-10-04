@@ -33,6 +33,7 @@ public class UserService implements UserDetailsService {
     private final JwtUtil JwtUtil; // Inject JwtUtil
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtil JwtUtil) {
         this.passwordEncoder = passwordEncoder;
@@ -40,16 +41,22 @@ public class UserService implements UserDetailsService {
         this.JwtUtil = JwtUtil;
     }
 
-    // Add the registration method
+    // Methode zur Registrierung eines neuen Benutzers
     public User register(RegistrationRequest registrationRequest, MultipartFile profilePicture) {
+        // Überprüfen, ob bereits ein Benutzer mit dem gewünschten Benutzernamen
+        // existiert
         if (userRepository.existsByUsername(registrationRequest.getUsername())) {
+            // Falls ja, eine Laufzeitexception auslösen mit einer entsprechenden
+            // Fehlermeldung
             throw new RuntimeException("Username already exists.");
         }
 
-        // Hashing the password
+        // Das Klartextpasswort aus dem Registrierungsantrag mit einem Passwort-Encoder
+        // hashen
         String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 
-        // Creating a new user instance and setting fields
+        // Erstellen einer neuen Benutzerinstanz und Setzen der entsprechenden Felder
+        // mit den Werten aus dem Registrierungsantrag
         User newUser = new User();
         newUser.setSex(registrationRequest.getSex());
         newUser.setFirstName(registrationRequest.getFirstName());
@@ -60,33 +67,51 @@ public class UserService implements UserDetailsService {
         newUser.setCity(registrationRequest.getCity());
         newUser.setEmail(registrationRequest.getEmail());
         newUser.setUsername(registrationRequest.getUsername());
-        newUser.setPassword(hashedPassword);
-        newUser.setRole(UserRole.USER); // default role
+        newUser.setPassword(hashedPassword); // Setzen des gehashten Passworts
+        newUser.setRole(UserRole.USER); // Setzen der Benutzerrolle auf den Standardwert (USER)
 
-        // Handle profile picture upload
+        // Behandlung des Hochladens des Profilbilds
         try {
+            // Überprüfen, ob ein Profilbild bereitgestellt wurde und dieses nicht leer ist
             if (profilePicture != null && !profilePicture.isEmpty()) {
+                // Setzen des Profilbilds durch Konvertieren des Bilds in ein Byte-Array
                 newUser.setProfilePicture(profilePicture.getBytes());
             }
         } catch (IOException e) {
+            // Falls beim Hochladen des Bilds ein Fehler auftritt, eine Laufzeitexception
+            // auslösen
+            // mit einer entsprechenden Fehlermeldung
             throw new RuntimeException("Error uploading profile picture.");
         }
 
+        // Speichern des neuen Benutzers in der Datenbank und Rückgabe des gespeicherten
+        // Benutzerobjekts
         return userRepository.save(newUser);
     }
 
+    // Methode, um einen Benutzer zu authentifizieren und bei Erfolg einen JWT
+    // zurückzugeben
     public Optional<String> authenticateUser(String username, String password) {
+        // Suche nach einem Benutzer mit dem angegebenen Benutzernamen in der Datenbank
         Optional<User> userOptional = userRepository.findByUsername(username);
 
+        // Überprüfen, ob ein Benutzer mit dem angegebenen Benutzernamen gefunden wurde
         if (userOptional.isPresent()) {
+            // Extrahieren des User-Objekts aus dem Optional
             User user = userOptional.get();
 
+            // Überprüfen, ob das eingegebene Passwort mit dem in der Datenbank
+            // gespeicherten Passwort übereinstimmt
             if (passwordEncoder.matches(password, user.getPassword())) {
+                // Wenn das Passwort korrekt ist, generiere einen JWT für den Benutzer
                 String token = JwtUtil.generateToken(user);
+                // Rückgabe des Tokens eingepackt in einem Optional-Objekt
                 return Optional.of(token);
             }
         }
 
+        // Wenn der Benutzername nicht gefunden wurde oder das Passwort nicht korrekt
+        // ist, gib ein leeres Optional zurück
         return Optional.empty();
     }
 
@@ -109,10 +134,9 @@ public class UserService implements UserDetailsService {
     }
 
     public User update(Long id, UserDTO updatedUserDTO) {
-        User user = userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setUsername(updatedUserDTO.getUsername());
-        // Do not update the password directly from DTO. Usually, you'd hash and salt it, and/or use a dedicated method for password changes.
         user.setLastName(updatedUserDTO.getLastName());
         user.setFirstName(updatedUserDTO.getFirstName());
         user.setEmail(updatedUserDTO.getEmail());
@@ -120,8 +144,6 @@ public class UserService implements UserDetailsService {
         user.setCity(updatedUserDTO.getCity());
         user.setDoornumber(updatedUserDTO.getDoornumber());
         user.setPostalCode(updatedUserDTO.getPostalCode());
-        
-        // Other fields...
 
         return userRepository.save(user);
     }
@@ -130,35 +152,44 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Versuche, einen Benutzer mit dem gegebenen Benutzernamen aus der Datenbank zu
+        // holen
         Optional<User> userOptional = userRepository.findByUsername(username);
 
+        // Überprüfe, ob ein Benutzer gefunden wurde
         if (userOptional.isPresent()) {
+            // Holen Sie sich das User-Objekt aus dem Optional
             User user = userOptional.get();
 
-            // Convert UserRole to a GrantedAuthority
+            // Konvertiere UserRole zu einer GrantedAuthority, um die Autorität/Rolle zu
+            // repräsentieren
+            // (fügt "ROLE_" als Präfix hinzu, was eine übliche Praxis in Spring Security
+            // ist)
             GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toString());
 
-            // Create a collection of authorities (roles)
+            // Erstelle eine Sammlung von Autoritäten (Rollen), hier nur eine einzige Rolle
             Collection<GrantedAuthority> authorities = Collections.singleton(authority);
 
-            // Create a UserDetails object with user details and roles
+            // Erstelle ein UserDetails-Objekt mit Benutzerdetails und Rollen
             UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword()) // Use the hashed password from your database
-                .authorities(authorities)
-                .build();
+                    .withUsername(user.getUsername())
+                    .password(user.getPassword()) // Verwende das gehashte Passwort aus der Datenbank
+                    .authorities(authorities) // Setze die Rolle(n) des Benutzers
+                    .build();
 
-            // Log successful user retrieval
+            // Protokolliere das erfolgreiche Abrufen des Benutzers
             logger.info("User found with username: {}", username);
 
+            // Gib das UserDetails-Objekt zurück
             return userDetails;
         } else {
-            // Log unsuccessful user retrieval
+            // Protokolliere, dass der Benutzer nicht gefunden wurde
             logger.error("User not found with username: {}", username);
+            // Wirf eine Ausnahme, wenn der Benutzer nicht gefunden wurde
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
     }
+
 }
