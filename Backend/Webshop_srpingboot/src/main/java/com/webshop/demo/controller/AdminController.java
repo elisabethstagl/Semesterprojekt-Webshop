@@ -1,6 +1,4 @@
 package com.webshop.demo.controller;
-
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +57,7 @@ public class AdminController {
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO updatedUserDTO) {
         try {
+            System.out.println(updatedUserDTO.getRole());
             User user = userService.update(id, updatedUserDTO);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
@@ -67,7 +66,7 @@ public class AdminController {
     }
 
     // Endpoint to get user details by ID
-    @GetMapping("/users/{userId}")
+    @GetMapping("/users/{id}")
     public User read(@PathVariable Long id) {
         return userService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

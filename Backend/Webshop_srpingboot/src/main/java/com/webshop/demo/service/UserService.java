@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.webshop.demo.dto.RegistrationRequest;
 import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.User;
-import com.webshop.demo.model.User.UserRole;
+import com.webshop.demo.model.UserRole;
 
 /* Service ist für die Logik und Funktionalität verantwortlich.  */
 
@@ -144,6 +144,7 @@ public class UserService implements UserDetailsService {
         user.setCity(updatedUserDTO.getCity());
         user.setDoornumber(updatedUserDTO.getDoornumber());
         user.setPostalCode(updatedUserDTO.getPostalCode());
+        user.setRole(updatedUserDTO.getRole());
 
         return userRepository.save(user);
     }

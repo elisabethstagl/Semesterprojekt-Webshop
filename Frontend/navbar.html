@@ -17,7 +17,7 @@
 
     <nav class="navbar fixed-top navbar-expand-sm navbar-dark shadow p-3 mb-5 rounded">
         <div class="container">
-            <a href="./index.html" class="navbar-brand mb-0 h1" style="font-size: x-large; color: cornsilk">guapo.
+            <a href="./index.html" class="navbar-brand mb-0 h1" id="guapo-logo" style="font-size: x-large; color: cornsilk">guapo.
                 <img class="d-inline-block align-top" src="images/clementine.png" alt="clementines" width="38"
                     height="38" />
             </a>
@@ -37,23 +37,26 @@
                         <a href="gefilterte-produkte.html?category=pflanzenfreunde" class="nav-link" id="pflanzenfreunde">Pflanzenfreunde</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-3">
+                <ul class="navbar-nav ms-auto" id="icon-list">
+                    <li class="nav-item me-3" id="person-icon">
                         <a href="login.html" class="navbar-link">
                             <i class="bi bi-person-fill"></i>
                         </a>
                     </li>
-                    <li class="nav-item me-3">
+                    <li class="nav-item me-3" id="logout-icon" onclick="logout()">
+                            <i class="bi bi-box-arrow-right" ></i>
+                    </li>
+                    <li class="nav-item me-3" id="cart-icon">
                         <a href="einkaufswagen.html" class="navbar-link">
                             <i class="bi bi-cart2"></i>
                         </a>
                     </li>
-                    <li class="nav-item me-3">
+                    <li class="nav-item me-3" id="admin-user-icon">
                         <a href="admin-users-panel.html" class="navbar-link">
                             <i class="bi bi-person-fill-lock"></i>
                         </a>
                     </li>
-                    <li class="nav-item me-3">
+                    <li class="nav-item me-3" id="admin-product-icon">
                         <a href="admin-products-panel.html" class="navbar-link">
                             <i class="bi bi-database-fill-lock"></i>
                         </a>
@@ -63,7 +66,7 @@
 
         </div>
     </nav>
-
+<script src="javascript/navbar-admin-user.js"></script>
 </body>
 
 </html>

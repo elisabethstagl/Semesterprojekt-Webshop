@@ -70,10 +70,6 @@ public class User {
                                  // enum value (e.g., 'USER' or 'ADMIN'), rather than an ordinal integer.
     private UserRole role;
 
-    public enum UserRole {
-        USER, ADMIN
-    }
-
     @Lob
     @Column(name = "profile_picture", length = 100000)
     private byte[] profilePicture;

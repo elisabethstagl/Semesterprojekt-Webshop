@@ -1,5 +1,7 @@
 package com.webshop.demo.dto;
 
+import com.webshop.demo.model.UserRole;
+
 public class UserDTO {
     
     private String sex;
@@ -23,10 +25,6 @@ public class UserDTO {
     private String username;
 
     private UserRole role;
-
-    public enum UserRole {
-        USER, ADMIN
-    }
 
     public UserDTO() {
     }

@@ -4,7 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+// import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -23,6 +23,7 @@ public class Product {
     private String name;
 
     @NotNull
+    @Positive
     @Column(name = "price")
     private Double price;
 
@@ -31,6 +32,7 @@ public class Product {
     private String description;
 
     @NotNull
+    @Positive
     @Column(name = "quantity")
     private Integer quantity;
 
