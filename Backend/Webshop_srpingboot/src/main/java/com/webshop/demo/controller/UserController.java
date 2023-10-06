@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.webshop.demo.dto.CurrentUserDTO;
 import com.webshop.demo.dto.LoginRequest;
@@ -110,13 +108,11 @@ public class UserController {
     // HTTP-Status als auch eine Map als Antwortkörper enthält
     public ResponseEntity<Map<String, String>> register(
             // Validieren des eingehenden Registrierungsanforderungs-Payloads
-            @Valid RegistrationRequest registrationRequest,
-            // Akzeptieren einer Profilbild-Datei als Teil der Anfrage
-            @RequestParam("profilePicture") MultipartFile profilePicture) {
+            @Valid RegistrationRequest registrationRequest) {
 
         // Registrieren des Benutzers über den Benutzerdienst mit den bereitgestellten
         // Registrierungsdetails und dem Profilbild
-        userService.register(registrationRequest, profilePicture);
+        userService.register(registrationRequest);
 
         // Erstellen einer Map, um die Antwortnachricht zu halten
         Map<String, String> response = new HashMap<>();

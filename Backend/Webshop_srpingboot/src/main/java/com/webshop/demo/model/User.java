@@ -8,7 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+// import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -70,9 +70,6 @@ public class User {
                                  // enum value (e.g., 'USER' or 'ADMIN'), rather than an ordinal integer.
     private UserRole role;
 
-    @Lob
-    @Column(name = "profile_picture", length = 100000)
-    private byte[] profilePicture;
 
     // CONSTRUCTOR
 
@@ -80,7 +77,7 @@ public class User {
     }
 
     public User(String sex, String firstName, String lastName, String address, String doornumber, String postalCode,
-            String city, String email, String username, String password, UserRole role, byte[] profilePicture) {
+            String city, String email, String username, String password, UserRole role) {
         this.sex = sex;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -92,7 +89,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.profilePicture = profilePicture;
     }
 
     // GETTERS & SETTERS
@@ -187,14 +183,6 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
-    }
-
-    public byte[] getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(byte[] profilePicture) {
-        this.profilePicture = profilePicture;
     }
 
 }
