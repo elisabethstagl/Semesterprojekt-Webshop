@@ -1,13 +1,12 @@
 package com.webshop.demo.service;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import com.webshop.demo.repository.UserRepository;
 import com.webshop.demo.security.JwtUtil;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,9 +41,9 @@ public class UserService implements UserDetailsService {
     }
 
     // Methode zur Registrierung eines neuen Benutzers
-    public User register(RegistrationRequest registrationRequest, MultipartFile profilePicture) {
-        // Überprüfen, ob bereits ein Benutzer mit dem gewünschten Benutzernamen
-        // existiert
+    public User register(RegistrationRequest registrationRequest) {
+
+        // Überprüfen, ob bereits ein Benutzer mit dem gewünschten Benutzernamen existiert
         if (userRepository.existsByUsername(registrationRequest.getUsername())) {
             // Falls ja, eine Laufzeitexception auslösen mit einer entsprechenden
             // Fehlermeldung
@@ -70,19 +69,19 @@ public class UserService implements UserDetailsService {
         newUser.setPassword(hashedPassword); // Setzen des gehashten Passworts
         newUser.setRole(UserRole.USER); // Setzen der Benutzerrolle auf den Standardwert (USER)
 
-        // Behandlung des Hochladens des Profilbilds
-        try {
-            // Überprüfen, ob ein Profilbild bereitgestellt wurde und dieses nicht leer ist
-            if (profilePicture != null && !profilePicture.isEmpty()) {
-                // Setzen des Profilbilds durch Konvertieren des Bilds in ein Byte-Array
-                newUser.setProfilePicture(profilePicture.getBytes());
-            }
-        } catch (IOException e) {
-            // Falls beim Hochladen des Bilds ein Fehler auftritt, eine Laufzeitexception
-            // auslösen
-            // mit einer entsprechenden Fehlermeldung
-            throw new RuntimeException("Error uploading profile picture.");
-        }
+        // // Behandlung des Hochladens des Profilbilds
+        // try {
+        //     // Überprüfen, ob ein Profilbild bereitgestellt wurde und dieses nicht leer ist
+        //     if (profilePicture != null && !profilePicture.isEmpty()) {
+        //         // Setzen des Profilbilds durch Konvertieren des Bilds in ein Byte-Array
+        //         newUser.setProfilePicture(profilePicture.getBytes());
+        //     }
+        // } catch (IOException e) {
+        //     // Falls beim Hochladen des Bilds ein Fehler auftritt, eine Laufzeitexception
+        //     // auslösen
+        //     // mit einer entsprechenden Fehlermeldung
+        //     throw new RuntimeException("Error uploading profile picture.");
+        // }
 
         // Speichern des neuen Benutzers in der Datenbank und Rückgabe des gespeicherten
         // Benutzerobjekts
