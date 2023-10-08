@@ -37,7 +37,7 @@
             </div>
             <div class="modal-body">
                 <!-- Add your form elements for product information here -->
-                <form id="addProductForm">
+                <form id="addProductForm" enctype="multipart/form-data">
                     <div class="form-group mb-2">
                         <label for="productName">Produkt Name</label>
                         <input type="text" class="form-control" id="productName" name="productName" required>
@@ -62,6 +62,11 @@
                             <option>pflanzenfreunde</option>
                         </select>
                     </div>
+                    <div class="form-group mb-2">
+                        <label for="productImage">Produktbild</label>
+                        <input type="file" class="form-control" id="productImage" name="productImage" accept="image/*" required>
+                    </div>
+                    
                     <!-- <div class="form-group mb-2">
                         <label for="productURL">Produktbild</label>
                         <input type="file" class="form-control" id="productURL" name="productURL" accept="image/*" required>

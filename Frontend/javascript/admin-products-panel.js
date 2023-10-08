@@ -10,6 +10,54 @@ function getAuthHeaders() {
   };
 }
 
+$(document).ready(function () {
+  $('#addProductSubmit').click(function (e) {
+    e.preventDefault();
+
+    var imageFile = $('#productImage').prop('files')[0];
+
+    var formData = new FormData();
+
+    // Create product object
+    var product = {
+      name: $('#productName').val(),
+      price: $('#productPrice').val(),
+      description: $('#productDescription').val(),
+      quantity: $('#productQuantity').val(),
+      category: $('#productCategory').val()
+    };
+
+    // Append stringified product object
+    formData.append("product", JSON.stringify(product));
+
+    // Append image file
+    formData.append("productImage", imageFile);
+
+    fetch("http://localhost:8080/admin/products/add", {
+      method: "POST",
+      // No 'Content-Type' header—fetch sets it automatically due to FormData
+      headers: getAuthHeaders(),
+      body: formData,
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert("Product added successfully!");
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert("Error adding product!");
+      });
+  });
+});
+
+
+
+
 function handleResponse(response) {
   if (!response.ok) {
     throw new Error("Network response was not ok: " + response.statusText);
@@ -85,7 +133,7 @@ function createProductCard(product) {
   });
 
   $(document).ready(function () {
-    $(document).on("click", "#addProductSubmit", function (e) {
+    $(document).on("click", "#editProductSave", function (e) {
       e.preventDefault(); // Prevents the default form submission behavior
 
       const newProduct = {
@@ -101,6 +149,8 @@ function createProductCard(product) {
         alert("All fields are required!");
         return;
       }
+
+      console.log(newProduct);
 
       fetch(`http://localhost:8080/admin/products/${product.id}`, {
         method: "PUT",
@@ -158,7 +208,7 @@ function createProductCard(product) {
     $("#editProductModal").modal("hide");
     $("#editProductForm")[0].reset();
   });
-  
+
 
   cardInner.append(image);
   cardBody.append(

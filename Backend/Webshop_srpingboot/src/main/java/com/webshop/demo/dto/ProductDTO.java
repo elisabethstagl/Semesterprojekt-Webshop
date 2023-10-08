@@ -1,5 +1,7 @@
 package com.webshop.demo.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 // import com.webshop.demo.model.Product;
 
 // DTO for {@link Product}
@@ -18,7 +20,7 @@ public class ProductDTO {
     private String description;
     private Integer quantity;
     private String category;
-    private String imageURL;
+    private MultipartFile productImage;
     // private byte[] product_img;
 
     // GETTERS & SETTERS    
@@ -72,20 +74,12 @@ public class ProductDTO {
         this.category = category;
     }
 
-    // public byte[] getProduct_img() {
-    //     return this.product_img;
-    // }
-
-    // public void setProduct_img(byte[] product_img) {
-    //     this.product_img = product_img;
-    // }
-
-    public String getimageURL() {
-        return this.imageURL;
+    public MultipartFile getProductImage() {
+        return this.productImage;
     }
 
-    public void setimageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
     }
 
 }

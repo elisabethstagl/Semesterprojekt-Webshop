@@ -1,6 +1,14 @@
 package com.webshop.demo.controller;
-import java.util.List;
 
+import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +62,7 @@ public class AdminController {
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO updatedUserDTO) {
         try {
-            System.out.println(updatedUserDTO.getRole());
+            // System.out.println(updatedUserDTO.getRole());
             User user = userService.update(id, updatedUserDTO);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
@@ -106,24 +111,57 @@ public class AdminController {
         productService.deleteById(id);
     }
 
-    @CrossOrigin(origins = "http://127.0.0.1:5500")
-    @PutMapping("/products/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id,
-            @RequestPart("updatedProductDTO") String updatedProductDTOJson,
-            @RequestPart(required = false) MultipartFile product_img) {
-        try {
-            ProductDTO updatedProductDTO = new ObjectMapper().readValue(updatedProductDTOJson, ProductDTO.class);
-            Product product = productService.update(id, updatedProductDTO);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+    // Endpoint to update a product by ID
+    // @CrossOrigin(origins = "http://127.0.0.1:5500")
+    // @PutMapping("/products/{id}")
+    // public ResponseEntity<?> updateProduct(@PathVariable Long id,
+    // @RequestBody ProductDTO updatedProductDTO) {
+    // try {
+    // // ProductDTO updatedProductDTO = new
+    // // ObjectMapper().readValue(updatedProductDTOJson, ProductDTO.class);
+    // Product product = productService.update(id, updatedProductDTO);
+    // return new ResponseEntity<>(product, HttpStatus.OK);
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    // }
+    // }
 
-    // create new product
-    @PostMapping("/products")
+    // Endpoint to create a product
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @PostMapping(path = "/products/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody @Valid Product product) {
+    public Product create(
+            @RequestPart("product") @Valid String productJson,
+            @RequestPart("productImage") MultipartFile file) throws IOException {
+
+        // Deserializing product data
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
+
+        // Defining the path where you want to store the file
+        String filePath = "C:\\Users\\Samuel\\Desktop\\Semesterprojekt-Webshop\\Frontend\\images\\";
+        File convertFile = new File(filePath + file.getOriginalFilename());
+
+        // Making sure the directory exists
+        if (!convertFile.getParentFile().exists()) {
+            convertFile.getParentFile().mkdirs();
+        }
+        convertFile.createNewFile();
+
+        // Writing the file
+        try (FileOutputStream fout = new FileOutputStream(convertFile)) {
+            fout.write(file.getBytes());
+        }
+
+        // Creating and saving the product
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setDescription(productDTO.getDescription());
+        product.setQuantity(productDTO.getQuantity());
+        product.setCategory(productDTO.getCategory());
+        product.setImageURL("images/" + file.getOriginalFilename());
+
         return productService.save(product);
     }
 
