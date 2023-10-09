@@ -1,6 +1,7 @@
 package com.webshop.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -110,6 +111,13 @@ public class AdminController {
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
     }
+    
+    @GetMapping("/products/{id}")
+    public Product read(@PathVariable long id) {
+        return productService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
 
     // Endpoint to update a product by ID
     // @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -139,7 +147,7 @@ public class AdminController {
         ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
 
         // Defining the path where you want to store the file
-        String filePath = "C:\\Users\\Samuel\\Desktop\\Semesterprojekt-Webshop\\Frontend\\images\\";
+        String filePath = "Frontend/images";
         File convertFile = new File(filePath + file.getOriginalFilename());
 
         // Making sure the directory exists
@@ -163,6 +171,62 @@ public class AdminController {
         product.setImageURL("images/" + file.getOriginalFilename());
 
         return productService.save(product);
+    }
+
+    // Edit product
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
+    @PutMapping(path = "/products/edit/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public Product edit(
+            @PathVariable Long id,
+            @RequestPart("product") @Valid String productJson,
+            @RequestPart("productImage") MultipartFile file) throws IOException {
+
+        Product existingProduct;
+        Optional<Product> optionalProduct = productService.findById(id);
+
+        if (optionalProduct.isPresent()) {
+            existingProduct = optionalProduct.get();
+            // Hier können Sie existingProduct verwenden
+        } else {
+            // Handle den Fall, in dem das Produkt nicht gefunden wurde
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id);
+        }
+
+        // Deserializing product data
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
+
+        // Update the product details
+        existingProduct.setName(productDTO.getName());
+        existingProduct.setPrice(productDTO.getPrice());
+        existingProduct.setDescription(productDTO.getDescription());
+        existingProduct.setQuantity(productDTO.getQuantity());
+        existingProduct.setCategory(productDTO.getCategory());
+
+        // Check if a new image file is provided and update it
+        if (file != null && !file.isEmpty()) {
+            // Define the path where you want to store the file
+            String filePath = "Frontend/images/";
+            File convertFile = new File(filePath + file.getOriginalFilename());
+
+            // Make sure the directory exists
+            if (!convertFile.getParentFile().exists()) {
+                convertFile.getParentFile().mkdirs();
+            }
+            convertFile.createNewFile();
+
+            // Write the file
+            try (FileOutputStream fout = new FileOutputStream(convertFile)) {
+                fout.write(file.getBytes());
+            }
+
+            // Update the image URL
+            existingProduct.setImageURL("images/" + file.getOriginalFilename());
+        }
+
+        // Save the updated product
+        return productService.save(existingProduct);
     }
 
 }
