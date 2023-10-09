@@ -26,7 +26,7 @@ function performLogin() {
         .then(data => {
             // Speichern des JWT-Tokens sicher, z.B. in einem Cookie oder Local Storage
             // In diesem Beispiel speichern wir es aus Vereinfachungsgründen im Local Storage
-            localStorage.setItem("jwtToken", data.token);
+            sessionStorage.setItem("jwtToken", data.token);
 
             // Weiterleitung des Benutzers zur Hauptanwendungs- oder Dashboard-Seite
             window.location.href = '/Frontend/index.html';
@@ -43,14 +43,14 @@ function performLogin() {
 }
 
 
-// Function to retrieve the JWT token from localStorage
+// Function to retrieve the JWT token from sessionStorage
 function getToken() {
-    return localStorage.getItem("jwtToken");
+    return sessionStorage.getItem("jwtToken");
 }
 
 // Function to check if the user is logged in
 function isLoggedIn() {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     return !!token; // Return true if a token exists, false otherwise
 }
 
@@ -72,22 +72,22 @@ function updateUI() {
 // });
 
 function logout() {
-    // Remove the JWT token from local storage
-    localStorage.removeItem("jwtToken");
+    // Remove the JWT token from session storage
+    sessionStorage.removeItem("jwtToken");
 
     // Redirect the user to the login page
     window.location.href = '/Frontend/login.html';
 }
 
 //TOKEN EXPIRED - must test it first
-// // Function to retrieve the JWT token from localStorage
+// // Function to retrieve the JWT token from sessionStorage
 // function getToken() {
-//     return localStorage.getItem("jwtToken");
+//     return sessionStorage.getItem("jwtToken");
 // }
 
 // // Function to check if the user is logged in and the token is not expired
 // function isLoggedIn() {
-//     const token = localStorage.getItem("jwtToken");
+//     const token = sessionStorage.getItem("jwtToken");
 //     if (!token) {
 //         return false; // No token, user is not logged in
 //     }
@@ -122,8 +122,8 @@ function logout() {
 
 // // Rest of your code, including the logout function
 // function logout() {
-//     // Remove the JWT token from local storage
-//     localStorage.removeItem("jwtToken");
+//     // Remove the JWT token from session storage
+//     sessionStorage.removeItem("jwtToken");
 
 //     // Redirect the user to the login page
 //     window.location.href = '/Frontend/login.html';
@@ -131,8 +131,8 @@ function logout() {
 
 
 // function logout() {
-// // Remove the JWT token from local storage
-// localStorage.removeItem("jwtToken");
+// // Remove the JWT token from session storage
+// sessionStorage.removeItem("jwtToken");
 
 // // Optionally, you can perform other cleanup tasks here
 // // For example, redirect the user to the login page

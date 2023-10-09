@@ -1,5 +1,5 @@
 function getAuthHeaders() {
-  const token = localStorage.getItem("jwtToken");
+  const token = sessionStorage.getItem("jwtToken");
   if (!token) {
     alert("Not authenticated!");
     window.location.href = "login.html"; // Redirect to login or other appropriate page

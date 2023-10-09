@@ -2,7 +2,7 @@
 const authenticationCheckURL = "http://localhost:8080/users/current-user";
 
 function getAuthHeaders() {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     if (token) {
         return {
             Authorization: "Bearer " + token,
