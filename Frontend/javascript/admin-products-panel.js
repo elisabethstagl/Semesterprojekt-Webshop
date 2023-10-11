@@ -76,6 +76,7 @@ function createProductCard(product) {
   const description = $(`<p class="card-text">Beschreibung: ${product.description}</p>`);
   const quantity = $(`<p class="card-text">Menge: ${product.quantity}</p>`);
   const category = $(`<p class="card-text">Kategorie: ${product.category}</p>`);
+  const imageFile = $(`<p class="card-text">Bild: ${product.imageURL}</p>`);
   const editProductButton = $('<button class="btn btn-primary me-3">Edit</button>');
   const deleteProductButton = $('<button class="btn btn-primary">Delete Product</button>');
 
@@ -93,14 +94,16 @@ function createProductCard(product) {
       .then(handleResponse)
       .then((productData) => {
         // Filling form fields with product data
+        $("#editProductID").val(productData.id);
         $("#editProductName").val(productData.name);
         $("#editProductPrice").val(productData.price);
         $("#editProductDescription").val(productData.description);
         $("#editProductQuantity").val(productData.quantity);
         $("#editProductCategory").val(productData.category);
+        $("#editProductURL").val(productData.imageURL);
   
         // Displaying the current product image
-        $("#currentProductImage").attr("src", `Frontend/images/${productData.imageURL}`);
+        $("#editProductURL").attr("src", `Frontend/images/${productData.imageURL}`);
   
         // Store product ID for later usage
         $("#editProductModal").data("productId", productData.id);
@@ -116,49 +119,52 @@ function createProductCard(product) {
   $("#editProductSave").click(function (e) {
     e.preventDefault();
   
-    var productId = $("#editProductModal").data("productId");
+    var productId = product.id;
+    console.log('Product ID:', productId);
   
-    var imageFile = $("#editProductImage").prop("files")[0];
+    // var imageFile = $("#editProductURL").prop("files")[0];
   
-    var formData = new FormData();
+    // var formData = new FormData();
   
-    // Aktualisiertes Produktobjekt erstellen
-    var updatedProduct = {
-      name: $("#editProductName").val(),
-      price: $("#editProductPrice").val(),
-      description: $("#editProductDescription").val(),
-      quantity: $("#editProductQuantity").val(),
-      category: $("#editProductCategory").val(),
-    };
+    // // Aktualisiertes Produktobjekt erstellen
+    // var updatedProduct = {
+    //   id: $("#editProductID").val(),
+    //   name: $("#editProductName").val(),
+    //   price: $("#editProductPrice").val(),
+    //   description: $("#editProductDescription").val(),
+    //   quantity: $("#editProductQuantity").val(),
+    //   category: $("#editProductCategory").val(),
+    //   // productImage: $("#editProductURL").val(),
+    // };
   
-    // Das Produktobjekt in FormData anhängen
-    formData.append("product", JSON.stringify(updatedProduct));
+    // // Das Produktobjekt in FormData anhängen
+    // formData.append("product", JSON.stringify(updatedProduct));
   
-    // Das Bild anhängen, wenn ein neues Bild ausgewählt wurde
-    if (imageFile) {
-      formData.append("productImage", imageFile);
-    }
+    // // Das Bild anhängen, wenn ein neues Bild ausgewählt wurde
+    // // if (imageFile) {
+    // formData.append("productImage", imageFile);
+    // // }
   
-    fetch(`http://localhost:8080/admin/products/edit/${productId}`, {
-      method: "PUT",
-      // Kein 'Content-Type'-Header erforderlich - fetch setzt ihn automatisch aufgrund von FormData
-      headers: getAuthHeaders(),
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        alert("Product updated successfully!");
-        $("#editProductModal").modal("hide");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Error updating product!");
-      });
+    // fetch(`http://localhost:8080/admin/products/edit/${productId}`, {
+    //   method: "PUT",
+    //   // Kein 'Content-Type'-Header erforderlich - fetch setzt ihn automatisch aufgrund von FormData
+    //   headers: getAuthHeaders(),
+    //   body: formData,
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     alert("Product updated successfully!");
+    //     $("#editProductModal").modal("hide");
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //     alert("Error updating product!");
+    //   });
   });
   
 
@@ -212,6 +218,7 @@ function createProductCard(product) {
     description,
     quantity,
     category,
+    imageFile,
     editProductButton,
     deleteProductButton
   );

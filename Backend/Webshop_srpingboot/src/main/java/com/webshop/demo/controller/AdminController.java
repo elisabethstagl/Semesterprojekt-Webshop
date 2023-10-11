@@ -24,13 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webshop.demo.dto.ProductDTO;
 import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.Product;
 import com.webshop.demo.model.User;
-import com.webshop.demo.service.AdminServiceImpl;
 import com.webshop.demo.service.UserService;
 
 import jakarta.validation.Valid;
@@ -42,14 +41,14 @@ import com.webshop.demo.service.ProductService;
 @RequestMapping("/admin")
 public class AdminController {
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @Autowired
     private ProductService productService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private AdminServiceImpl adminServiceImpl;
 
     // Endpoint to list all registered users
     @GetMapping("/users")
@@ -85,16 +84,16 @@ public class AdminController {
         userService.deleteById(id);
     }
 
-    // Endpoint to promote a user to admin
-    @PostMapping("/users/{userId}/promote")
-    public ResponseEntity<String> promoteToAdmin(@PathVariable Long userId) {
-        boolean promoted = adminServiceImpl.promoteUserToAdmin(userId);
-        if (promoted) {
-            return ResponseEntity.ok("User promoted to admin.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    // // Endpoint to promote a user to admin
+    // @PostMapping("/users/{userId}/promote")
+    // public ResponseEntity<String> promoteToAdmin(@PathVariable Long userId) {
+    //     boolean promoted = adminServiceImpl.promoteUserToAdmin(userId);
+    //     if (promoted) {
+    //         return ResponseEntity.ok("User promoted to admin.");
+    //     } else {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
 
     // ---------------------------------------------PRODUCTS---------------------------------------------
 
@@ -111,13 +110,12 @@ public class AdminController {
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
     }
-    
+
     @GetMapping("/products/{id}")
-    public Product read(@PathVariable long id) {
+    public Product readd(@PathVariable Long id) {
         return productService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
-
 
     // Endpoint to update a product by ID
     // @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -147,8 +145,7 @@ public class AdminController {
         ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
 
         // Defining the path where you want to store the file
-        String filePath = "Frontend/images";
-        File convertFile = new File(filePath + file.getOriginalFilename());
+        File convertFile = new File(uploadDir + file.getOriginalFilename());
 
         // Making sure the directory exists
         if (!convertFile.getParentFile().exists()) {
@@ -170,6 +167,7 @@ public class AdminController {
         product.setCategory(productDTO.getCategory());
         product.setImageURL("images/" + file.getOriginalFilename());
 
+        // Assuming there's a productService instance to handle saving
         return productService.save(product);
     }
 
@@ -207,8 +205,7 @@ public class AdminController {
         // Check if a new image file is provided and update it
         if (file != null && !file.isEmpty()) {
             // Define the path where you want to store the file
-            String filePath = "Frontend/images/";
-            File convertFile = new File(filePath + file.getOriginalFilename());
+            File convertFile = new File(uploadDir + file.getOriginalFilename());
 
             // Make sure the directory exists
             if (!convertFile.getParentFile().exists()) {

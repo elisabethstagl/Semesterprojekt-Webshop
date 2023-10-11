@@ -49,7 +49,7 @@ public class UserController {
     public CurrentUserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Entering getCurrentUser()");
-        // The principal should be your user object, or its user details representation
+        
         Object principal = auth.getPrincipal();
         System.out.println("Principal Type: " + principal.getClass().getName());
         if (principal instanceof UserDetails) {
