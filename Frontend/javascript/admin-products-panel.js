@@ -48,6 +48,7 @@ $(document).ready(function () {
       })
       .then(data => {
         alert("Product added successfully!");
+        document.getElementById("addProductForm").reset();
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -100,13 +101,15 @@ function createProductCard(product) {
         $("#editProductDescription").val(productData.description);
         $("#editProductQuantity").val(productData.quantity);
         $("#editProductCategory").val(productData.category);
-        $("#editProductURL").val(productData.imageURL);
-  
+        //console.log("image url: " + productData.imageURL);
+        //$("#editProductURL").val(productData.imageURL);
+        $("#editProductURL").data("url", productData.imageURL);
         // Displaying the current product image
-        $("#editProductURL").attr("src", `Frontend/images/${productData.imageURL}`);
+        //$("#editProductURL").attr("src", `Frontend/images/${productData.imageURL}`);
   
         // Store product ID for later usage
         $("#editProductModal").data("productId", productData.id);
+        console.log($("#editProductModal").data("productId"));
       });
   
     // Display modal
@@ -115,59 +118,6 @@ function createProductCard(product) {
     );
     editProductModal.show();
   });
-  
-  $("#editProductSave").click(function (e) {
-    e.preventDefault();
-  
-    var productId = product.id;
-    console.log('Product ID:', productId);
-  
-    // var imageFile = $("#editProductURL").prop("files")[0];
-  
-    // var formData = new FormData();
-  
-    // // Aktualisiertes Produktobjekt erstellen
-    // var updatedProduct = {
-    //   id: $("#editProductID").val(),
-    //   name: $("#editProductName").val(),
-    //   price: $("#editProductPrice").val(),
-    //   description: $("#editProductDescription").val(),
-    //   quantity: $("#editProductQuantity").val(),
-    //   category: $("#editProductCategory").val(),
-    //   // productImage: $("#editProductURL").val(),
-    // };
-  
-    // // Das Produktobjekt in FormData anhängen
-    // formData.append("product", JSON.stringify(updatedProduct));
-  
-    // // Das Bild anhängen, wenn ein neues Bild ausgewählt wurde
-    // // if (imageFile) {
-    // formData.append("productImage", imageFile);
-    // // }
-  
-    // fetch(`http://localhost:8080/admin/products/edit/${productId}`, {
-    //   method: "PUT",
-    //   // Kein 'Content-Type'-Header erforderlich - fetch setzt ihn automatisch aufgrund von FormData
-    //   headers: getAuthHeaders(),
-    //   body: formData,
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     alert("Product updated successfully!");
-    //     $("#editProductModal").modal("hide");
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //     alert("Error updating product!");
-    //   });
-  });
-  
-
 
   // Produkt löschen
   deleteProductButton.on("click", (e) => {
@@ -227,6 +177,56 @@ function createProductCard(product) {
 
   return card;
 }
+
+$("#editProductSave").click(function (e) {
+  e.preventDefault();
+  var productId = $("#editProductModal").data("productId");
+
+  // Check if an image file is selected
+  var imageFile = $("#editProductURL").prop("files")[0];
+  var imageUrl = $("#editProductURL").data("url");
+  
+  var formData = new FormData();
+
+  // Create the updated product object
+  var updatedProduct = {
+    id: $("#editProductID").val(),
+    name: $("#editProductName").val(),
+    price: $("#editProductPrice").val(),
+    description: $("#editProductDescription").val(),
+    quantity: $("#editProductQuantity").val(),
+    category: $("#editProductCategory").val(),
+  };
+
+  // Append the product object to formData
+  formData.append("product", JSON.stringify(updatedProduct));
+
+  // Append the image file if it exists
+  if (imageFile) {
+    formData.append("productImage", imageFile);
+  }
+
+  fetch(`http://localhost:8080/admin/products/edit/${productId}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      alert("Product updated successfully!");
+      $("#editProductModal").modal("hide");
+      loadAllProducts();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Error updating product!");
+    });
+});
 
 function loadAllProducts() {
   $("#productsCardContainer").empty(); // Empty the container

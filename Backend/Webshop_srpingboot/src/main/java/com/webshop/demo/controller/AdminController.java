@@ -112,7 +112,7 @@ public class AdminController {
     }
 
     @GetMapping("/products/{id}")
-    public Product readd(@PathVariable Long id) {
+    public Product readProduct(@PathVariable Long id) {
         return productService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -178,52 +178,48 @@ public class AdminController {
     public Product edit(
             @PathVariable Long id,
             @RequestPart("product") @Valid String productJson,
-            @RequestPart("productImage") MultipartFile file) throws IOException {
-
+            @RequestPart(value = "productImage", required = false) MultipartFile file) throws IOException {
+    
         Product existingProduct;
         Optional<Product> optionalProduct = productService.findById(id);
-
+    
         if (optionalProduct.isPresent()) {
             existingProduct = optionalProduct.get();
-            // Hier können Sie existingProduct verwenden
+            // Handle existingProduct
         } else {
-            // Handle den Fall, in dem das Produkt nicht gefunden wurde
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id);
         }
-
-        // Deserializing product data
+    
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
-
+    
         // Update the product details
         existingProduct.setName(productDTO.getName());
         existingProduct.setPrice(productDTO.getPrice());
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setQuantity(productDTO.getQuantity());
         existingProduct.setCategory(productDTO.getCategory());
-
-        // Check if a new image file is provided and update it
+    
         if (file != null && !file.isEmpty()) {
             // Define the path where you want to store the file
             File convertFile = new File(uploadDir + file.getOriginalFilename());
-
-            // Make sure the directory exists
+    
             if (!convertFile.getParentFile().exists()) {
                 convertFile.getParentFile().mkdirs();
             }
             convertFile.createNewFile();
-
-            // Write the file
+    
             try (FileOutputStream fout = new FileOutputStream(convertFile)) {
                 fout.write(file.getBytes());
             }
-
-            // Update the image URL
+    
             existingProduct.setImageURL("images/" + file.getOriginalFilename());
         }
-
-        // Save the updated product
+    
+        System.out.println(existingProduct.getImageURL());
+    
         return productService.save(existingProduct);
     }
+    
 
 }
