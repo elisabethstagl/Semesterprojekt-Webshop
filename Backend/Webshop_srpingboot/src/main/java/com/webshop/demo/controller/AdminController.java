@@ -2,6 +2,7 @@ package com.webshop.demo.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -87,12 +88,12 @@ public class AdminController {
     // // Endpoint to promote a user to admin
     // @PostMapping("/users/{userId}/promote")
     // public ResponseEntity<String> promoteToAdmin(@PathVariable Long userId) {
-    //     boolean promoted = adminServiceImpl.promoteUserToAdmin(userId);
-    //     if (promoted) {
-    //         return ResponseEntity.ok("User promoted to admin.");
-    //     } else {
-    //         return ResponseEntity.notFound().build();
-    //     }
+    // boolean promoted = adminServiceImpl.promoteUserToAdmin(userId);
+    // if (promoted) {
+    // return ResponseEntity.ok("User promoted to admin.");
+    // } else {
+    // return ResponseEntity.notFound().build();
+    // }
     // }
 
     // ---------------------------------------------PRODUCTS---------------------------------------------
@@ -108,29 +109,24 @@ public class AdminController {
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable Long id) {
+        // Optional<Product> optionalProduct = productService.findById(id);
+        // if (optionalProduct.isPresent()) {
+        // Product product = optionalProduct.get();
+        // // Delete the associated image file
+        // String imagePath = product.getImageURL();
+        // File imageFile = new File(uploadDir + imagePath);
+        // if (imageFile.exists()) {
+        // imageFile.delete();
+        // }
         productService.deleteById(id);
     }
+    // }
 
     @GetMapping("/products/{id}")
     public Product readProduct(@PathVariable Long id) {
         return productService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
-
-    // Endpoint to update a product by ID
-    // @CrossOrigin(origins = "http://127.0.0.1:5500")
-    // @PutMapping("/products/{id}")
-    // public ResponseEntity<?> updateProduct(@PathVariable Long id,
-    // @RequestBody ProductDTO updatedProductDTO) {
-    // try {
-    // // ProductDTO updatedProductDTO = new
-    // // ObjectMapper().readValue(updatedProductDTOJson, ProductDTO.class);
-    // Product product = productService.update(id, updatedProductDTO);
-    // return new ResponseEntity<>(product, HttpStatus.OK);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    // }
-    // }
 
     // Endpoint to create a product
     @CrossOrigin(origins = "http://127.0.0.1:5500")
@@ -144,8 +140,11 @@ public class AdminController {
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
 
+        // Generating a unique file name using UUID
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
         // Defining the path where you want to store the file
-        File convertFile = new File(uploadDir + file.getOriginalFilename());
+        File convertFile = new File(uploadDir + uniqueFileName);
 
         // Making sure the directory exists
         if (!convertFile.getParentFile().exists()) {
@@ -165,7 +164,7 @@ public class AdminController {
         product.setDescription(productDTO.getDescription());
         product.setQuantity(productDTO.getQuantity());
         product.setCategory(productDTO.getCategory());
-        product.setImageURL("images/" + file.getOriginalFilename());
+        product.setImageURL("images/" + uniqueFileName);
 
         // Assuming there's a productService instance to handle saving
         return productService.save(product);
@@ -179,47 +178,56 @@ public class AdminController {
             @PathVariable Long id,
             @RequestPart("product") @Valid String productJson,
             @RequestPart(value = "productImage", required = false) MultipartFile file) throws IOException {
-    
+
         Product existingProduct;
         Optional<Product> optionalProduct = productService.findById(id);
-    
+
         if (optionalProduct.isPresent()) {
             existingProduct = optionalProduct.get();
             // Handle existingProduct
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with ID: " + id);
         }
-    
+
         ObjectMapper objectMapper = new ObjectMapper();
         ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
-    
+
         // Update the product details
         existingProduct.setName(productDTO.getName());
         existingProduct.setPrice(productDTO.getPrice());
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setQuantity(productDTO.getQuantity());
         existingProduct.setCategory(productDTO.getCategory());
-    
+
         if (file != null && !file.isEmpty()) {
-            // Define the path where you want to store the file
-            File convertFile = new File(uploadDir + file.getOriginalFilename());
-    
-            if (!convertFile.getParentFile().exists()) {
-                convertFile.getParentFile().mkdirs();
+            // Generate a unique file name using UUID for the new image
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
+            // Define the path where you want to store the new image file
+            File newImageFile = new File(uploadDir + uniqueFileName);
+
+            if (!newImageFile.getParentFile().exists()) {
+                newImageFile.getParentFile().mkdirs();
             }
-            convertFile.createNewFile();
-    
-            try (FileOutputStream fout = new FileOutputStream(convertFile)) {
+            newImageFile.createNewFile();
+
+            try (FileOutputStream fout = new FileOutputStream(newImageFile)) {
                 fout.write(file.getBytes());
             }
-    
-            existingProduct.setImageURL("images/" + file.getOriginalFilename());
+
+            // Delete the old image file
+            String oldImagePath = existingProduct.getImageURL();
+            File oldImageFile = new File(uploadDir + oldImagePath);
+            if (oldImageFile.exists()) {
+                oldImageFile.delete();
+            }
+
+            existingProduct.setImageURL("images/" + uniqueFileName);
         }
-    
+
         System.out.println(existingProduct.getImageURL());
-    
+
         return productService.save(existingProduct);
     }
-    
 
 }

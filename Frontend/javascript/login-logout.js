@@ -81,7 +81,7 @@ function logout() {
 
 
 // TOKEN EXPIRES - aber Zeit wann er abläuft ist falsch und Token wird nicht richtig gelöscht ? nochmal checken
-//  // JavaScript code for performing login and displaying error modal
+ // JavaScript code for performing login and displaying error modal
 //  function performLogin() {
 //     const username = document.getElementById("username").value;
 //     const password = document.getElementById("password").value;

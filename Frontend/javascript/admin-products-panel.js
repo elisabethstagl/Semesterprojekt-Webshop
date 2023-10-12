@@ -36,7 +36,6 @@ $(document).ready(function () {
 
     fetch("http://localhost:8080/admin/products/add", {
       method: "POST",
-      // No 'Content-Type' header—fetch sets it automatically due to FormData
       headers: getAuthHeaders(),
       body: formData,
     })
@@ -48,6 +47,7 @@ $(document).ready(function () {
       })
       .then(data => {
         alert("Product added successfully!");
+
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -100,15 +100,10 @@ function createProductCard(product) {
         $("#editProductDescription").val(productData.description);
         $("#editProductQuantity").val(productData.quantity);
         $("#editProductCategory").val(productData.category);
-        //console.log("image url: " + productData.imageURL);
-        //$("#editProductURL").val(productData.imageURL);
         $("#editProductURL").data("url", productData.imageURL);
-        // Displaying the current product image
-        //$("#editProductURL").attr("src", `Frontend/images/${productData.imageURL}`);
-  
+
         // Store product ID for later usage
         $("#editProductModal").data("productId", productData.id);
-        console.log($("#editProductModal").data("productId"));
       });
   
     // Display modal
@@ -188,7 +183,6 @@ $("#editProductSave").click(function (e) {
 
   // Check if an image file is selected
   var imageFile = $("#editProductURL").prop("files")[0];
-  var imageUrl = $("#editProductURL").data("url");
   
   var formData = new FormData();
 
