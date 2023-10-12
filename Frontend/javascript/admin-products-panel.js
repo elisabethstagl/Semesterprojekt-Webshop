@@ -48,7 +48,6 @@ $(document).ready(function () {
       })
       .then(data => {
         alert("Product added successfully!");
-        document.getElementById("addProductForm").reset();
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -146,6 +145,11 @@ function createProductCard(product) {
   // Function to display the modal when the button is clicked
   $("#new-product-button").on("click", function () {
     $("#addProductModal").modal("show");
+  });
+
+  //reset form after adding product
+  $("#addProductSubmit").on("click", function () {
+    $("#addProductForm")[0].reset();
   });
 
   // closes modal
