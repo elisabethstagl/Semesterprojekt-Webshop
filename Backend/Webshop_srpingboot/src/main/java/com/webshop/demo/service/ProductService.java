@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.webshop.demo.dto.ProductDTO;
 import com.webshop.demo.model.Product;
 import com.webshop.demo.repository.ProductRepository;
 
@@ -50,21 +49,21 @@ public class ProductService {
         return filteredProducts;
     }
 
-    public Product update(Long id, ProductDTO updatedProductDTO) {
-        Product product = productRepos.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setName(updatedProductDTO.getName());
-        product.setPrice(updatedProductDTO.getPrice());
-        product.setDescription(updatedProductDTO.getDescription());
-        product.setQuantity(updatedProductDTO.getQuantity());
-        product.setCategory(updatedProductDTO.getCategory());
+    // public Product update(Long id, ProductDTO updatedProductDTO) {
+    //     Product product = productRepos.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    //     product.setName(updatedProductDTO.getName());
+    //     product.setPrice(updatedProductDTO.getPrice());
+    //     product.setDescription(updatedProductDTO.getDescription());
+    //     product.setQuantity(updatedProductDTO.getQuantity());
+    //     product.setCategory(updatedProductDTO.getCategory());
     
-        // Only update imageURL if it is provided in the DTO
-        if(updatedProductDTO.getimageURL() != null && !updatedProductDTO.getimageURL().isEmpty()) {
-            product.setImageURL(updatedProductDTO.getimageURL());
-        }
+    //     // Only update imageURL if it is provided in the DTO
+    //     if(updatedProductDTO.getimageURL() != null && !updatedProductDTO.getimageURL().isEmpty()) {
+    //         product.setImageURL(updatedProductDTO.getimageURL());
+    //     }
     
-        return productRepos.save(product);
-    }
+    //     return productRepos.save(product);
+    // }
     
 
 }

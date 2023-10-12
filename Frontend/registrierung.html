@@ -109,10 +109,6 @@
 
             <!-- Submit Button -->
             <div class="mb-3">
-                <label for="profilePicture" class="form-label">Profilbild</label>
-                <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
-            </div>
-            <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Registrieren</button>
             </div>
         </form>
@@ -125,6 +121,7 @@
 
                 const formData = new FormData(registrationForm);
 
+                
                 fetch("http://localhost:8080/users/register", {
                     method: "POST",
                     body: formData
@@ -144,7 +141,7 @@
                         }
                     })
                     .catch(error => {
-                        console.error("Error during registration:", error);
+                        console.error("Error during registration haha:", error);
                     });
 
             });

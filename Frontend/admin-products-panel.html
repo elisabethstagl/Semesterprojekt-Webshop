@@ -23,108 +23,125 @@
 
     <div class="container content">
         <h2 id="admin-header" style="display: none;">Admin Panel - Products</h2>
-        <button id="new-product-button" type="button" class="btn btn-primary mb-2" style="display: none;">Produkt hinzufügen</button>
+        <button id="new-product-button" type="button" class="btn btn-primary mb-2" style="display: none;">Produkt
+            hinzufügen</button>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="productsCardContainer" style="display:none;">   <!-- Initially hidden until validated -->              
-    </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="productsCardContainer" style="display:none;">
+            <!-- Initially hidden until validated -->
+        </div>
 
-<!-- Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="addProductModalLabel">Produkt hinzufügen</h4>
-            </div>
-            <div class="modal-body">
-                <!-- Add your form elements for product information here -->
-                <form id="addProductForm">
-                    <div class="form-group mb-2">
-                        <label for="productName">Produkt Name</label>
-                        <input type="text" class="form-control" id="productName" name="productName" required>
+        <!-- Modal -->
+        <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="addProductModalLabel">Produkt hinzufügen</h4>
                     </div>
-                    <div class="form-group mb-2">
-                        <label for="productPrice">Preis</label>
-                        <input type="text" class="form-control" id="productPrice" name="productPrice" placeholder="99,99" required>
+                    <div class="modal-body">
+                        <!-- Add your form elements for product information here -->
+                        <form id="addProductForm" enctype="multipart/form-data">
+                            <div class="form-group mb-2">
+                                <label for="productName">Produkt Name</label>
+                                <input type="text" class="form-control" id="productName" name="productName" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="productPrice">Preis</label>
+                                <input type="text" class="form-control" id="productPrice" name="productPrice"
+                                    placeholder="99.99" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="productDescription">Beschreibung</label>
+                                <input type="text" class="form-control" id="productDescription"
+                                    name="productDescription" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="productQuantity">Menge</label>
+                                <input type="text" class="form-control" id="productQuantity" name="productQuantity"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="productCategory">Kategorie</label>
+                                <select class="form-control" id="productCategory" required>
+                                    <option>pflanzen</option>
+                                    <option>toepfe</option>
+                                    <option>pflanzenfreunde</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="productImage">Produktbild</label>
+                                <input type="file" class="form-control" id="productImage" name="productImage"
+                                    accept="image/*" required>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group mb-2">
-                        <label for="productDescription">Beschreibung</label>
-                        <input type="text" class="form-control" id="productDescription" name="productDescription" required>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                            id="modal-close-button">Schließen</button>
+                        <button type="button" class="btn btn-primary" id="addProductSubmit">Produkt hinzufügen</button>
                     </div>
-                    <div class="form-group mb-2">
-                        <label for="productQuantity">Menge</label>
-                        <input type="text" class="form-control" id="productQuantity" name="productQuantity" required>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="productCategory">Kategorie</label>
-                        <select class="form-control" id="productCategory" required>
-                            <option>pflanzen</option>
-                            <option>toepfe</option>
-                            <option>pflanzenfreunde</option>
-                        </select>
-                    </div>
-                    <!-- <div class="form-group mb-2">
-                        <label for="productURL">Produktbild</label>
-                        <input type="file" class="form-control" id="productURL" name="productURL" accept="image/*" required>
-                    </div> -->
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-close-button">Schließen</button>
-                <button type="button" class="btn btn-primary" id="addProductSubmit">Produkt hinzufügen</button>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="editProductLabel">Produkt bearbeiten</h4>
-            </div>
-            <div class="modal-body">
-                <!-- Add your form elements for product information here -->
-                <form id="editProductForm">
-                    <div class="form-group mb-2">
-                        <label for="productName">Produkt Name</label>
-                        <input type="text" class="form-control" id="productName" name="productName" required>
+        <div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="editProductLabel">Produkt bearbeiten</h4>
                     </div>
-                    <div class="form-group mb-2">
-                        <label for="productPrice">Preis</label>
-                        <input type="text" class="form-control" id="productPrice" name="productPrice" placeholder="99,99" required>
+                    <div class="modal-body">
+                        <!-- Add your form elements for product information here -->
+                        <form id="editProductForm">
+                            <div style="display: none;"><label for="editProductID">Produkt ID</label><input type="text" class="form-control" id="editProductID" name="editProductID">
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editProductName">Produkt Name</label>
+                                <input type="text" class="form-control" id="editProductName" name="editProductName"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editProductPrice">Preis</label>
+                                <input type="text" class="form-control" id="editProductPrice" name="editProductPrice"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editProductDescription">Beschreibung</label>
+                                <input type="text" class="form-control" id="editProductDescription"
+                                    name="editProductDescription" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editProductQuantity">Menge</label>
+                                <input type="text" class="form-control" id="editProductQuantity"
+                                    name="editProductQuantity" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editProductCategory">Kategorie</label>
+                                <select class="form-control" id="editProductCategory" required>
+                                    <option>pflanzen</option>
+                                    <option>toepfe</option>
+                                    <option>pflanzenfreunde</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="editProductURL">Produktbild</label>
+                                <input type="file" class="form-control" id="editProductURL" name="editProductURL"
+                                    accept="image/*">
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group mb-2">
-                        <label for="productDescription">Beschreibung</label>
-                        <input type="text" class="form-control" id="productDescription" name="productDescription" required>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                            id="edit-modal-close-button">Schließen</button>
+                        <button type="button" class="btn btn-primary" id="editProductSave">Speichern</button>
                     </div>
-                    <div class="form-group mb-2">
-                        <label for="productQuantity">Menge</label>
-                        <input type="text" class="form-control" id="productQuantity" name="productQuantity" required>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="productCategory">Kategorie</label>
-                        <select class="form-control" id="productCategory" required>
-                            <option>pflanzen</option>
-                            <option>toepfe</option>
-                            <option>pflanzenfreunde</option>
-                        </select>
-                    </div>
-                    <!-- <div class="form-group mb-2">
-                        <label for="productURL">Produktbild</label>
-                        <input type="file" class="form-control" id="productURL" name="productURL" accept="image/*" required>
-                    </div> -->
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="edit-modal-close-button">Schließen</button>
-                <button type="button" class="btn btn-primary" id="editProductSave">Speichern</button>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
 
-    
+
         <div id="error-message" style="display:none;"> <!-- Error message area -->
             <h4>Access Denied!</h4>
             <p> You do not have permission to view this content.</p>
