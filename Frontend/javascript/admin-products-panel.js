@@ -45,10 +45,10 @@ $(document).ready(function () {
         }
         return response.json();
       })
-      .then(data => {
-        alert("Product added successfully!");
+      // .then(data => {
+      //   // alert("Product added successfully!");
 
-      })
+      // })
       .catch((error) => {
         console.error('Error:', error);
         alert("Error adding product!");
