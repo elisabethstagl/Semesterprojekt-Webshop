@@ -34,12 +34,11 @@ public class PositionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Position createPosition(@RequestBody PositionDTO positionDTO){
-        return positionService.save(fromDTO(positionDTO), 0L, positionDTO.getProductId()); //abändern weil id 0L
+    public Position createPosition(@RequestBody PositionDTO positionDTO) {
+        Position position = new Position();
+        position.setQuantity(positionDTO.getQuantity());
+        return positionService.save(position, positionDTO.getUserId(), positionDTO.getProductId());
     }
 
-    private static Position fromDTO(PositionDTO positionDTO){
-        return new Position(positionDTO.getId(), positionDTO.getQuantity());
-    }
 
 }

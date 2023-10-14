@@ -41,6 +41,11 @@ public class Position {
         this.quantity = quantity;
     }
 
+    public Position(Product product, Integer quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
+
     // GETTERS & SETTERS
 
 

@@ -1,3 +1,29 @@
+
+// // Funktion zum Laden und Anzeigen der Produkte im Warenkorb
+// function loadPositions() {
+//     const userId = getUserIdFromURL();
+//     const shoppingCartUrl = `http://localhost:8080/shoppingCart/${userId}`;
+
+//     $.ajax({
+//         url: shoppingCartUrl,
+//         type: "GET",
+//         cors: true,
+//         success: function (positions) {
+//             // Produktdaten erfolgreich abgerufen, jetzt anzeigen
+//             displayPositions(positions);
+//         },
+//         error: function (error) {
+//             console.error("Fehler beim Laden der Produktdaten:", error);
+//         }
+//     });
+// }
+
+// // Funktion zum Auslesen der User-ID aus der URL
+// function getUserIdFromURL() {
+//     const params = new URLSearchParams(window.location.search);
+//     return params.get("id");
+// }
+
 // Funktion zum Laden und Anzeigen der Produktdaten
 function loadProductDetails() {
     const productId = getProductIdFromURL();
@@ -41,16 +67,6 @@ function createProductRow(product) {
     const price = $(`<h2>${product.price}€</h2>`);
     const warenkorbButton = $(`<button type="button" class="btn btn-light" style="color: rgb(184, 107, 82); margin-top: 20px; margin-bottom: 40px;">In den Warenkorb</button></button>`);
 
-    // Event handler for the "In den Warenkorb" button click
-    warenkorbButton.on("click", (e) => {
-    e.stopPropagation(); // Prevents any parent click event from firing
-    const productId = getProductIdFromURL();
-    console.log("added to cart:" + productId);
-    // addToCart(productId, quantity);
-    });
-
-
-
     // Füge die HTML-Elemente zur Zeile hinzu
     imageCol.append(image);
     infoCol.append(title);
@@ -68,42 +84,6 @@ function getProductIdFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
 }
-
-// Function to get the user's shopping cart ID
-function getShoppingCartId(userId) {
-    $.ajax({
-        url: `http://localhost:8080/shoppingCart/${userId}`,
-        type: "GET",
-        success: function (shoppingCart) {
-            // Get the shopping cart ID from the response
-            const cartId = shoppingCart.id;
-
-            // Call addToCart with the retrieved cartId
-            addToCart(cartId);
-        },
-        error: function (error) {
-            console.error("Error getting shopping cart:", error);
-        }
-    });
-}
-
-// // Function to add a product to the shopping cart
-// function addToCart(cartId) {
-//     const productId = getProductIdFromURL();
-//     const quantity = 1; // You can adjust the quantity as needed
-
-//     $.ajax({
-//         url: `http://localhost:8080/shoppingCart/${cartId}/addProduct?productId=${productId}&quantity=${quantity}`,
-//         type: "POST",
-//         success: function (response) {
-//             // Handle a successful addition to the shopping cart
-//             alert("Product added to the cart successfully!");
-//         },
-//         error: function (error) {
-//             console.error("Error adding product to the cart:", error);
-//         }
-//     });
-// }
 
 // Rufe die Funktion zum Laden der Produktdaten auf, wenn die Seite geladen ist
 $(document).ready(function () {

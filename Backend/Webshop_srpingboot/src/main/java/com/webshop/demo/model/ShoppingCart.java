@@ -1,6 +1,7 @@
 package com.webshop.demo.model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -18,10 +19,17 @@ public class ShoppingCart {
 
      // CONSTRUCTOR
 
-    public ShoppingCart(User user) {
-        
+    public ShoppingCart() {
+        // Default constructor for JPA
     }
 
+
+    public ShoppingCart(User user) {
+        this.user = user;
+        this.positions = new ArrayList<>();
+    }
+
+    //RELATIONSHIP TABLES
     
 
     @Id //gibt Primärschlüssel an
@@ -35,5 +43,29 @@ public class ShoppingCart {
 
     @OneToMany(mappedBy = "shoppingCart")
     @JsonBackReference
-    private Set<Position> positions;
+    private List<Position> positions;
+
+
+    //GETTER & SETTER
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
+
 }
