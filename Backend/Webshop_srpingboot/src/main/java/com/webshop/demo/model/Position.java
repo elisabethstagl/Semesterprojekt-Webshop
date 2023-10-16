@@ -16,8 +16,8 @@ public class Position {
     
     @Id //gibt Primärschlüssel an
     @GeneratedValue //id wird automatisch von DB generiert
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "position_id")
+    private Long positionId;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -36,21 +36,47 @@ public class Position {
         //default constructor for jpa
     }
 
-    public Position(Long id, Integer quantity){
-        this.id = id;
+    public Position(Long positionId, Integer quantity, ShoppingCart shoppingCart, Product product) {
+        this.positionId = positionId;
         this.quantity = quantity;
+        this.shoppingCart = shoppingCart;
+        this.product = product;
     }
 
-    public Position(Product product, Integer quantity) {
-        this.product = product;
-        this.quantity = quantity;
-    }
 
     // GETTERS & SETTERS
 
 
-    public Long getId() {
-        return this.id;
+    // public Long getPositionId() {
+    //     return this.positionId;
+    // }
+
+    // public Integer getQuantity() {
+    //     return this.quantity;
+    // }
+
+    // public void setQuantity(Integer quantity) {
+    //     this.quantity = quantity;
+    // }
+
+    // public ShoppingCart getShoppingCart() {
+    //     return this.shoppingCart;
+    // }
+
+    // public void setShoppingCart(ShoppingCart shoppingCart) {
+    //     this.shoppingCart = shoppingCart;
+    // }
+
+    // public Product getProduct() {
+    //     return this.product;
+    // }
+
+    // public void setProduct(Product product) {
+    //     this.product = product;
+    // }
+
+    public Long getPositionId() {
+        return this.positionId;
     }
 
     public Integer getQuantity() {
@@ -76,5 +102,21 @@ public class Position {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    public Position quantity(Integer quantity) {
+        setQuantity(quantity);
+        return this;
+    }
+
+    public Position shoppingCart(ShoppingCart shoppingCart) {
+        setShoppingCart(shoppingCart);
+        return this;
+    }
+
+    public Position product(Product product) {
+        setProduct(product);
+        return this;
+    }
+
 
 }

@@ -35,7 +35,7 @@ public class SecurityConfig {
             .and()
             .addFilterBefore((Filter) jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter before UsernamePasswordAuthenticationFilter
             .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/products", "/products/*").permitAll()
+                .requestMatchers(HttpMethod.GET, "/products", "/products/*", "/shoppingCart/*", "/shoppingCart").permitAll()
                 .requestMatchers( "/users/register", "/users/login", "registrierung.html", "login.html", "index.html", "/users", "/users/current-user").permitAll()  // Allow access to registration and login endpoints
                 .requestMatchers("/admin/**").hasRole("ADMIN") // Restrict access to admin endpoints
                 .anyRequest().authenticated()         // All other requests need authentication

@@ -44,11 +44,66 @@ function createProductRow(product) {
     // Event handler for the "In den Warenkorb" button click
     warenkorbButton.on("click", (e) => {
     e.stopPropagation(); // Prevents any parent click event from firing
+    const token = sessionStorage.getItem("jwtToken");
+    if (!token){
+        alert ("Please log in to add products to your shopping cart.")
+        return;
+    }
     const productId = getProductIdFromURL();
     console.log("added to cart:" + productId);
-    // addToCart(productId, quantity);
+    addToShoppingCart(productId, token);
     });
 
+
+    function addToShoppingCart(productId, token) {
+        // Get the user's cart ID from the token (you may need to decode the token)
+        const userId = getUserId(token);
+        if (!userId) {
+            alert("Unable to get user information from the token.");
+            return;
+        }
+    
+        // Make an AJAX request to add the product to the shopping cart
+        $.ajax({
+            url: `http://localhost:8080/shoppingCart/add/${productId}`,
+            type: "POST",
+            data: {
+                userId: userId,
+                productId: productId
+            },
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            success: function (response) {
+                alert("Product added to the shopping cart.");
+            },
+            error: function (error) {
+                console.error("Error adding the product to the shopping cart:", error);
+            }
+        });
+    }
+    
+
+    // Function to get the user's cart ID
+function getUserId() {
+    const token = sessionStorage.getItem("jwtToken");
+    if (!token) {
+        alert("User is not authenticated. Please log in.");
+        window.location.href = "login.html"; // Redirect to the login page        
+        return null;
+    }
+
+    // Decode the JWT token to get user data
+    const tokenPayload = token.split(".")[1];
+    const decodedPayload = atob(tokenPayload);
+    const userData = JSON.parse(decodedPayload);
+
+    // Extract the userId from the decoded user data
+    const userId = userData.userId;
+    const username = userData.username;
+
+    return userId;
+}
 
 
     // Füge die HTML-Elemente zur Zeile hinzu
@@ -68,42 +123,6 @@ function getProductIdFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
 }
-
-// Function to get the user's shopping cart ID
-function getShoppingCartId(userId) {
-    $.ajax({
-        url: `http://localhost:8080/shoppingCart/${userId}`,
-        type: "GET",
-        success: function (shoppingCart) {
-            // Get the shopping cart ID from the response
-            const cartId = shoppingCart.id;
-
-            // Call addToCart with the retrieved cartId
-            addToCart(cartId);
-        },
-        error: function (error) {
-            console.error("Error getting shopping cart:", error);
-        }
-    });
-}
-
-// // Function to add a product to the shopping cart
-// function addToCart(cartId) {
-//     const productId = getProductIdFromURL();
-//     const quantity = 1; // You can adjust the quantity as needed
-
-//     $.ajax({
-//         url: `http://localhost:8080/shoppingCart/${cartId}/addProduct?productId=${productId}&quantity=${quantity}`,
-//         type: "POST",
-//         success: function (response) {
-//             // Handle a successful addition to the shopping cart
-//             alert("Product added to the cart successfully!");
-//         },
-//         error: function (error) {
-//             console.error("Error adding product to the cart:", error);
-//         }
-//     });
-// }
 
 // Rufe die Funktion zum Laden der Produktdaten auf, wenn die Seite geladen ist
 $(document).ready(function () {

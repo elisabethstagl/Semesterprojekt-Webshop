@@ -1,33 +1,30 @@
 package com.webshop.demo.model;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity(name = "shoppingCart")
 public class ShoppingCart {
     
 
-     // CONSTRUCTOR
+    //  // CONSTRUCTOR
 
-    public ShoppingCart() {
-        // Default constructor for JPA
-    }
+    // public ShoppingCart() {
+    //     // Default constructor for JPA
+    // }
 
 
-    public ShoppingCart(User user) {
-        this.user = user;
-        this.positions = new ArrayList<>();
-    }
+    // public ShoppingCart(User user) {
+    //     this.user = user;
+    //     this.positions = new ArrayList<>();
+    // }
 
     //RELATIONSHIP TABLES
     
@@ -37,23 +34,53 @@ public class ShoppingCart {
     @Column(name ="id")
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name ="user_id", nullable = true)
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart")
-    @JsonBackReference
+    // @JsonBackReference
     private List<Position> positions;
 
 
     //GETTER & SETTER
 
+    // public Long getId() {
+    //     return id;
+    // }
+
+    // public User getUser() {
+    //     return user;
+    // }
+
+    // public void setUser(User user) {
+    //     this.user = user;
+    // }
+
+    // public List<Position> getPositions() {
+    //     return positions;
+    // }
+
+    // public void setPositions(List<Position> positions) {
+    //     this.positions = positions;
+    // }
+
+
+    public ShoppingCart() {
+    }
+
+    public ShoppingCart(Long id, User user, List<Position> positions) {
+        this.id = id;
+        this.user = user;
+        this.positions = positions;
+    }
+
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public void setUser(User user) {
@@ -61,11 +88,22 @@ public class ShoppingCart {
     }
 
     public List<Position> getPositions() {
-        return positions;
+        return this.positions;
     }
 
     public void setPositions(List<Position> positions) {
         this.positions = positions;
     }
+
+    public ShoppingCart user(User user) {
+        setUser(user);
+        return this;
+    }
+
+    public ShoppingCart positions(List<Position> positions) {
+        setPositions(positions);
+        return this;
+    }
+
 
 }

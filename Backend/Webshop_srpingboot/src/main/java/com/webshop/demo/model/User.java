@@ -8,7 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-// import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -184,5 +184,23 @@ public class User {
     public void setRole(UserRole role) {
         this.role = role;
     }
+
+    public User shoppingCart(ShoppingCart shoppingCart) {
+        setShoppingCart(shoppingCart);
+        return this;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return this.shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    //RELATIONSHIP TABLE
+
+    @OneToOne
+    private ShoppingCart shoppingCart;
 
 }

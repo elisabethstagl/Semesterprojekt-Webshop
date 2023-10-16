@@ -32,13 +32,13 @@ public class PositionController {
 
     //Methoden
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Position createPosition(@RequestBody PositionDTO positionDTO) {
-        Position position = new Position();
-        position.setQuantity(positionDTO.getQuantity());
-        return positionService.save(position, positionDTO.getUserId(), positionDTO.getProductId());
-    }
+    // @PostMapping
+    // @ResponseStatus(HttpStatus.CREATED)
+    // public Position createPosition(@RequestBody PositionDTO positionDTO) {
+    //     Position position = new Position();
+    //     position.setQuantity(positionDTO.getQuantity());
+    //     return positionService.save(position, positionDTO.getId(), positionDTO.getProductId());
+    // }
 
 
 }
