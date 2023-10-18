@@ -25,11 +25,14 @@ function performLogin() {
         })
         .then(data => {
             // Speichern des JWT-Tokens sicher, z.B. in einem Cookie oder Local Storage
-            // In diesem Beispiel speichern wir es aus Vereinfachungsgründen im Local Storage
             sessionStorage.setItem("jwtToken", data.token);
+            createShoppingCart();
 
             // Weiterleitung des Benutzers zur Hauptanwendungs- oder Dashboard-Seite
             window.location.href = '/Frontend/index.html';
+
+            
+
         })
         .catch(error => {
             console.error("Fehler beim Login:", error);
@@ -42,8 +45,51 @@ function performLogin() {
         });
 }
 
-// Function to retrieve the JWT token from session storage
+function createShoppingCart() {
+    const userId = getUserId();
+    fetch(`http://localhost:8080/shoppingCart/create/${userId}`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Shopping Cart erstellt"); 
+        } else {
+            console.log("Fehler beim Shopping Cart erstellen");
+        }
+    })
+    .then(data => {
+        console.log(data)
+    })
+    .catch(error => {
+        console.error("Error creating shopping cart:", error);
+    });
+}
 
+
+// Function to get the user's cart ID
+function getUserId() {
+    const token = sessionStorage.getItem("jwtToken");
+    if (!token) {
+        alert("User is not authenticated. Please log in.");
+        window.location.href = "login.html"; // Redirect to the login page        
+        return null;
+    }
+
+    // Decode the JWT token to get user data
+    const tokenPayload = token.split(".")[1];
+    const decodedPayload = atob(tokenPayload);
+    const userData = JSON.parse(decodedPayload);
+
+    // Extract the userId from the decoded user data
+    const userId = userData.userId;
+    console.log("user id: " +userId);
+
+    return userId;
+}
+
+
+// Function to retrieve the JWT token from session storage
 function getToken() {
     return sessionStorage.getItem("jwtToken");
 }

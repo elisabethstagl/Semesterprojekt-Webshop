@@ -45,6 +45,7 @@ function createProductRow(product) {
     warenkorbButton.on("click", (e) => {
     e.stopPropagation(); // Prevents any parent click event from firing
     const token = sessionStorage.getItem("jwtToken");
+    console.log("das ist der token: " + token);
     if (!token){
         alert ("Please log in to add products to your shopping cart.")
         return;
@@ -57,7 +58,8 @@ function createProductRow(product) {
 
     function addToShoppingCart(productId, token) {
         // Get the user's cart ID from the token (you may need to decode the token)
-        const userId = getUserId(token);
+        const userId = getUserId();
+        console.log("user id: " + userId);
         if (!userId) {
             alert("Unable to get user information from the token.");
             return;
@@ -69,7 +71,6 @@ function createProductRow(product) {
             type: "POST",
             data: {
                 userId: userId,
-                productId: productId
             },
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -100,7 +101,6 @@ function getUserId() {
 
     // Extract the userId from the decoded user data
     const userId = userData.userId;
-    const username = userData.username;
 
     return userId;
 }

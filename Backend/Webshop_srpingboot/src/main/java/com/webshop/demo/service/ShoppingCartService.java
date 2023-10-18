@@ -34,11 +34,10 @@ public class ShoppingCartService {
     private ProductRepository productRepository;
 
 
-    public ShoppingCart saveShoppingCart(String username) {
+    public ShoppingCart saveShoppingCart(Long userId) {
 
-        User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
-
-        Long userId = userOpt.getId();
+        // User userOpt = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        // Long userId = userOpt.getId();
         ShoppingCart cartOpt = shoppingCartRepos.findByUserId(userId);
         if(!(cartOpt == null)){
             return cartOpt;
@@ -48,58 +47,54 @@ public class ShoppingCartService {
         User user = userRepository.findById(userId).get();
         user.setShoppingCart(shoppingCart);
         shoppingCart.setUser(user);
-
+        System.out.println("shopping cart " + shoppingCart);
         return shoppingCartRepos.save(shoppingCart);
     }
 
-    public ShoppingCart viewCart(String username) {
-        User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
-        Long userId = userOpt.getId();
+    public ShoppingCart viewCart(Long userId) {
+        userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        // Long userId = userOpt.getId();
         ShoppingCart cartOpt = shoppingCartRepos.findByUserId(userId);
-
         return cartOpt;
     }
 
 
-    public ShoppingCart addProductToCart (String userName,Long productId) {
-
-        User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
-        Long cartId = userOpt.getShoppingCart().getId();
-
-        Optional<Product> productOpt = productRepository.findById(productId);
-        if(productOpt.isEmpty()){
-            throw new RuntimeException("Product not found");
-            }
-
-        User user = userRepository.findById(cartId).get();
+    public ShoppingCart addProductToCart(Long userId, Long productId) {
+        // Retrieve the user and product
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+    
         ShoppingCart shoppingCart = user.getShoppingCart();
         List<Position> positions = shoppingCart.getPositions();
-
+    
         boolean productFoundInCart = false;
-
-        //Check if product is in cart
-        for (Position position : positions){
-            if(position.getProduct().equals(productOpt.get())){
+    
+        // Check if the product is in the cart
+        for (Position position : positions) {
+            if (position.getProduct().equals(product)) {
                 position.setQuantity(position.getQuantity() + 1);
                 productFoundInCart = true;
                 positionRepository.save(position);
                 break;
             }
         }
-
-        if (!productFoundInCart){
+    
+        if (!productFoundInCart) {
+            // Create a new position if the product is not in the cart
             Position newPosition = new Position();
             newPosition.setShoppingCart(shoppingCart);
-            newPosition.setProduct(productOpt.get());
+            newPosition.setProduct(product);
             newPosition.setQuantity(1);
             positions.add(newPosition);
             positionRepository.save(newPosition);
         }
-
+    
+        // Save the updated shopping cart
         shoppingCart.setPositions(positions);
         shoppingCartRepos.save(shoppingCart);
         return shoppingCart;
     }
+    
 
     public ShoppingCart removeProductFromCart(String userName, Long productId){
         User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);

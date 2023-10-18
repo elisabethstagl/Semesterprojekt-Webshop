@@ -106,4 +106,15 @@ public class ShoppingCart {
     }
 
 
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", user='" + getUser() + "'" +
+            ", positions='" + getPositions() + "'" +
+            "}";
+    }
+
+
+
 }
