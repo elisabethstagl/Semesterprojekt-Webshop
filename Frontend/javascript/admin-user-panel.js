@@ -17,6 +17,70 @@ function handleResponse(response) {
   return response.json();
 }
 
+$(document).ready(function () {
+  $('#addUserSubmit').click(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData();
+
+
+     // Create product object
+    var user = {
+      sex: $('#sex').val(),
+      username: $('#username').val(),
+      password: $('#password').val(),
+      firstName: $('#firstName').val(),
+      lastName: $('#lastName').val(),
+      email: $('#email').val(),
+      address: $('#address').val(),
+      city: $('#city').val(),
+      doornumber: $('#doornumber').val(),
+      postalCode: $('#postalCode').val(),
+      role: $('#role').val()
+    };
+
+      // Append stringified product object
+      formData.append("user", JSON.stringify(user));
+
+      fetch("http://localhost:8080/users/register", {
+        method: "POST",
+        // headers: getAuthHeaders(),
+        body: formData,
+      })
+      .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+            alert("User erfolgreich hinzugefügt");
+        } else if (response.status === 400) {
+            // Handle a 400 Bad Request status (file size exceeded)
+            response.text().then(errorMessage => {
+                alert(errorMessage);
+            });
+        } else {
+            alert("Error. Status: " + response.status);
+        }
+        })
+        .catch(error => {
+          console.error("Error adding user.", error);
+        });
+    });
+  });
+
+    // Function to display the modal (add user) when the button is clicked
+    $("#new-user-button").on("click", function () {
+      $("#addUserModal").modal("show");
+    });
+
+    //reset form after adding user
+  $("#addUserubmit").on("click", function () {
+    $("#addUserForm")[0].reset();
+  });
+
+    // closes modal
+    $("#modal-close-button").on("click", function () {
+      $("#addUserModal").modal("hide");
+      $("#addUserForm")[0].reset();
+    });
+
 // Function to create a user card
 function createUserCard(user) {
   const card = $('<div class="col-lg-3 col-md-4 col-sm-6 mb-2 mt-3"></div>');

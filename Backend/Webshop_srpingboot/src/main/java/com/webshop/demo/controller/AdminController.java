@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webshop.demo.dto.ProductDTO;
 import com.webshop.demo.dto.UserDTO;
@@ -85,17 +88,7 @@ public class AdminController {
         userService.deleteById(id);
     }
 
-    // // Endpoint to promote a user to admin
-    // @PostMapping("/users/{userId}/promote")
-    // public ResponseEntity<String> promoteToAdmin(@PathVariable Long userId) {
-    // boolean promoted = adminServiceImpl.promoteUserToAdmin(userId);
-    // if (promoted) {
-    // return ResponseEntity.ok("User promoted to admin.");
-    // } else {
-    // return ResponseEntity.notFound().build();
-    // }
-    // }
-
+    
     // ---------------------------------------------PRODUCTS---------------------------------------------
 
     // Endpoint to list all products

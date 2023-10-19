@@ -16,12 +16,16 @@
         integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/stylesheet.css" />
 </head>
+
 <body>
 
     <div id="navbar"></div>
 
     <div class="container content">
         <h2 id="admin-header" style="display: none;">Admin Panel - User List</h2>
+        <button id="new-user-button" type="button" class="btn btn-primary mb-2">User
+            hinzufügen</button>
+
         <!-- User Edit Modal -->
         <div class="modal fade" tabindex="-1" id="editUserModal">
             <div class="modal-dialog">
@@ -65,22 +69,24 @@
                                 </div>
                             </div>
                             <div class="row">
-                            <div class="form-group mb-2 col-6">
-                                <label for="editDoornumber">Hausnummer</label>
-                                <input type="text" class="form-control" id="editDoornumber" placeholder="Door Number">
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editDoornumber">Hausnummer</label>
+                                    <input type="text" class="form-control" id="editDoornumber"
+                                        placeholder="Door Number">
+                                </div>
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editPostalCode">PLZ</label>
+                                    <input type="text" class="form-control" id="editPostalCode"
+                                        placeholder="Postal Code">
+                                </div>
+                                <div class="form-group mb-2 col-6">
+                                    <label for="editRole">Role</label>
+                                    <select class="form-control" id="editRole" name="editRole">
+                                        <option>USER</option>
+                                        <option>ADMIN</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="form-group mb-2 col-6">
-                                <label for="editPostalCode">PLZ</label>
-                                <input type="text" class="form-control" id="editPostalCode" placeholder="Postal Code">
-                            </div>
-                            <div class="form-group mb-2 col-6">
-                                <label for="editRole">Role</label>
-                                <select class="form-control" id="editRole" name="editRole">
-                                    <option>USER</option>
-                                    <option>ADMIN</option>
-                                </select>
-                            </div>
-                        </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -94,13 +100,91 @@
             <!-- Initially hidden until validated -->
         </div>
 
-        <div id="error-message" style="display:none;"> 
+        <!-- Modal  to add user-->
+        <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="addUserModalLabel">User hinzufügen</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Add your form elements for product information here -->
+                        <form id="addUserForm" enctype="form-data">
+                            <div class="form-group mb-2 col-6">
+                                <label for="sex">Anrede</label>
+                                <select class="form-control" id="sex" name="sex">
+                                    <option>Herr</option>
+                                    <option>Frau</option>
+                                    <option>Keine</option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="password">Passwort</label>
+                                <input type="text" class="form-control" id="password" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="firstName">Vorname</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="lastName">Nachname</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="email">E-Mail</label>
+                                <input type="text" class="form-control" id="email"
+                                    name="email" required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="address">Adresse</label>
+                                <input type="text" class="form-control" id="address" name="address"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="city">Stadt</label>
+                                <input type="text" class="form-control" id="city" name="city"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="doornumber">Hausnummer</label>
+                                <input type="text" class="form-control" id="doornumber" name="doornumber"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label for="postalCode">PLZ</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode"
+                                    required>
+                            </div>
+                            <div class="form-group mb-2 col-6">
+                                <label for="role">Role</label>
+                                <select class="form-control" id="role" name="role">
+                                    <option>USER</option>
+                                    <option>ADMIN</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"
+                            id="modal-close-button">Schließen</button>
+                        <button type="button" class="btn btn-primary" id="addUserSubmit">User hinzufügen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="error-message" style="display:none;">
             <h4>Access Denied!</h4>
             <p> You do not have permission to view this content.</p>
         </div>
     </div>
 
-   
+
 
 
     <div id="footer"></div>

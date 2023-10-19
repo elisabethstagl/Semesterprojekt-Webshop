@@ -111,7 +111,6 @@ public class UserController {
             @Valid RegistrationRequest registrationRequest) {
 
         // Registrieren des Benutzers über den Benutzerdienst mit den bereitgestellten
-        // Registrierungsdetails und dem Profilbild
         userService.register(registrationRequest);
 
         // Erstellen einer Map, um die Antwortnachricht zu halten
