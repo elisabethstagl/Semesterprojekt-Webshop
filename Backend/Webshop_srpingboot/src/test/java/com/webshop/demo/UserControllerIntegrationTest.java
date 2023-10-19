@@ -1,127 +1,125 @@
-// package com.webshop.demo;
+package com.webshop.demo;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
-// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-// import java.util.Optional;
-// import java.util.List;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.http.MediaType;
-// import org.springframework.test.context.TestPropertySource;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.test.web.servlet.MvcResult;
+import java.util.List;
+import java.util.Optional;
 
-// import com.webshop.demo.model.User;
-// import com.webshop.demo.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.transaction.TestTransaction;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-// @TestPropertySource(locations = "classpath:application-integrationtest.properties")
-// @SpringBootTest
-// @AutoConfigureMockMvc
-// public class UserControllerIntegrationTest {
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webshop.demo.dto.LoginRequest;
+import com.webshop.demo.dto.RegistrationRequest;
+import com.webshop.demo.model.User;
+import com.webshop.demo.repository.UserRepository;
+import com.webshop.demo.service.UserService;
 
-//     @Autowired
-//     private MockMvc mockMvc;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-//     @Autowired
-//     private UserRepository userRepository;
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@SpringBootTest
+@AutoConfigureMockMvc
+public class UserControllerIntegrationTest {
 
-//     @BeforeEach
-//     public void setUp() {
-//         userRepository.deleteAll();
-//     }
+    @Autowired
+    private MockMvc mockMvc;
 
-//     @Test
-//     public void testGetUserById() throws Exception {
-//         List<User> users = userRepository.findAll();
-//         assertEquals(0, users.size());
-//         mockMvc.perform(get("/users/100")
-//                 .contentType(MediaType.APPLICATION_JSON))
-//                 .andExpect(status().isFound());
-//     }
+    @Autowired
+    private UserRepository userRepository;
 
-//     @Test
-//     public void testGetAllUsers() throws Exception {
-//         mockMvc.perform(get("/users")
-//                 .contentType(MediaType.APPLICATION_JSON))
-//                 .andExpect(status().isNotFound());
-//     }
+    @Autowired
+    private ObjectMapper objectMapper;
 
-//     @Test
-//     public void testCreateUser() throws Exception {
-//         // Create a JSON representation of the user data
-//         String newUserJson = "{"
-//                 + "\"id\":1,"
-//                 + "\"sex\":\"Male\","
-//                 + "\"firstName\":\"John\","
-//                 + "\"lastName\":\"Doe\","
-//                 + "\"address\":\"123 Main St\","
-//                 + "\"doornumber\":\"Apt 4B\","
-//                 + "\"postalCode\":\"12345\","
-//                 + "\"city\":\"Sample City\","
-//                 + "\"email\":\"john.doe@example.com\","
-//                 + "\"username\":\"johndoe\","
-//                 + "\"password\":\"password\","
-//                 + "\"role\":\"USER\","
-//                 + "\"profilePicture\":\"null\""
-//                 + "}";
+    @MockBean
+    private UserService userService;
 
-//         // Perform an HTTP POST request to create a new user
-//         MvcResult result = mockMvc.perform(post("/users")
-//                 .content(newUserJson)
-//                 .contentType(MediaType.APPLICATION_JSON))
-//                 .andExpect(status().isCreated())
-//                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                 .andReturn();
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
-//         String user = result.getResponse().getContentAsString();
-//         assertEquals(newUserJson, user);
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+    }
 
-        
-//         Optional<User> savedUser = userRepository.findByUsername("johndoe");
-//         assertTrue(savedUser.isPresent());
-//         assertEquals("password", savedUser.get().getPassword());
-//     }
+    // @Test
+    // public void testGetAllUsers() throws Exception {
+    // mockMvc.perform(get("/users")
+    // .contentType(MediaType.APPLICATION_JSON))
+    // .andExpect(status().isOk());
+    // }
 
-    
+    @Test
+    public void testCreateUser() throws Exception {
+        // Create a JSON representation of the user data
+        String newUserJson = "{"
+                + "\"sex\":\"Male\","
+                + "\"firstName\":\"John\","
+                + "\"lastName\":\"Doe\","
+                + "\"address\":\"123 Main St\","
+                + "\"doornumber\":\"Apt 4B\","
+                + "\"postalCode\":\"12345\","
+                + "\"city\":\"Sample City\","
+                + "\"email\":\"john.doe@example.com\","
+                + "\"username\":\"johndoe\","
+                + "\"password\":\"password\","
+                + "\"role\":\"USER\","
+                + "\"profilePicture\":\"null\""
+                + "}";
 
-//     // @Test
-//     // public void testCreateUser() throws Exception {
-//     // // Hier musst du ein JSON-Objekt erstellen, das einen neuen Benutzer
-//     // darstellt
-//     // // und es als Request-Body senden.
-//     // String newUserJson = "{\"username\":\"newUser\",\"password\":\"password\"}";
+        // Perform an HTTP POST request to create a new user
+        MvcResult result = mockMvc.perform(post("/users")
+                .content(newUserJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
 
-//     // mockMvc.perform(post("/users")
-//     // .content(newUserJson)
-//     // .contentType(MediaType.APPLICATION_JSON))
-//     // .andExpect(status().isCreated())
-//     // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//     // }
+        String user = result.getResponse().getContentAsString();
+        assertTrue(user.contains("johndoe"));
 
-//     @Test
-//     public void testUpdateUser() throws Exception {
-//     // Hier musst du ein JSON-Objekt erstellen, das die aktualisierten
-//     //Benutzerdaten darstellt
-//     // und es als Request-Body senden.
-//     String updatedUserJson =
-//     "{\"username\":\"updatedUser\",\"password\":\"newPassword\"}";
+        Optional<User> savedUser = userRepository.findByUsername("johndoe");
+        assertTrue(savedUser.isPresent());
+        assertEquals("password", savedUser.get().getPassword());
+    }
 
-//     mockMvc.perform(put("/users/1")
-//     .content(updatedUserJson)
-//     .contentType(MediaType.APPLICATION_JSON))
-//     .andExpect(status().isOk())
-//     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//     }
+    // @Test
+    // public void testAuthenticateUser() throws Exception {
+    // // First, register a new user
+    // RegistrationRequest registrationRequest = new RegistrationRequest();
+    // registrationRequest.setUsername("testUser");
+    // registrationRequest.setPassword("testPassword");
+    // String jsonRequest = objectMapper.writeValueAsString(registrationRequest);
+    // mockMvc.perform(post("/users/register")
+    // .content(jsonRequest)
+    // .contentType(MediaType.APPLICATION_JSON));
 
-//     @Test
-//     public void testDeleteUser() throws Exception {
-//     mockMvc.perform(delete("/users/1"))
-//     .andExpect(status().isOk());
-//     }
-// }
+    // // Now, authenticate the user and expect a token
+    // LoginRequest loginRequest = new LoginRequest();
+    // loginRequest.setUsername("testUser");
+    // loginRequest.setPassword("testPassword");
+    // String loginJson = objectMapper.writeValueAsString(loginRequest);
+
+    // mockMvc.perform(post("/users/login")
+    // .content(loginJson)
+    // .contentType(MediaType.APPLICATION_JSON))
+    // .andExpect(status().isOk())
+    // .andExpect(jsonPath("$.token", notNullValue()));
+    // }
+
+}
