@@ -104,24 +104,24 @@
 //     // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 //     // }
 
-//     // @Test
-//     // public void testUpdateUser() throws Exception {
-//     // // Hier musst du ein JSON-Objekt erstellen, das die aktualisierten
-//     // Benutzerdaten darstellt
-//     // // und es als Request-Body senden.
-//     // String updatedUserJson =
-//     // "{\"username\":\"updatedUser\",\"password\":\"newPassword\"}";
+//     @Test
+//     public void testUpdateUser() throws Exception {
+//     // Hier musst du ein JSON-Objekt erstellen, das die aktualisierten
+//     //Benutzerdaten darstellt
+//     // und es als Request-Body senden.
+//     String updatedUserJson =
+//     "{\"username\":\"updatedUser\",\"password\":\"newPassword\"}";
 
-//     // mockMvc.perform(put("/users/1")
-//     // .content(updatedUserJson)
-//     // .contentType(MediaType.APPLICATION_JSON))
-//     // .andExpect(status().isOk())
-//     // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//     // }
+//     mockMvc.perform(put("/users/1")
+//     .content(updatedUserJson)
+//     .contentType(MediaType.APPLICATION_JSON))
+//     .andExpect(status().isOk())
+//     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+//     }
 
-//     // @Test
-//     // public void testDeleteUser() throws Exception {
-//     // mockMvc.perform(delete("/users/1"))
-//     // .andExpect(status().isOk());
-//     // }
+//     @Test
+//     public void testDeleteUser() throws Exception {
+//     mockMvc.perform(delete("/users/1"))
+//     .andExpect(status().isOk());
+//     }
 // }
