@@ -69,20 +69,6 @@ public class UserService implements UserDetailsService {
         newUser.setPassword(hashedPassword); // Setzen des gehashten Passworts
         newUser.setRole(UserRole.USER); // Setzen der Benutzerrolle auf den Standardwert (USER)
 
-        // // Behandlung des Hochladens des Profilbilds
-        // try {
-        //     // Überprüfen, ob ein Profilbild bereitgestellt wurde und dieses nicht leer ist
-        //     if (profilePicture != null && !profilePicture.isEmpty()) {
-        //         // Setzen des Profilbilds durch Konvertieren des Bilds in ein Byte-Array
-        //         newUser.setProfilePicture(profilePicture.getBytes());
-        //     }
-        // } catch (IOException e) {
-        //     // Falls beim Hochladen des Bilds ein Fehler auftritt, eine Laufzeitexception
-        //     // auslösen
-        //     // mit einer entsprechenden Fehlermeldung
-        //     throw new RuntimeException("Error uploading profile picture.");
-        // }
-
         // Speichern des neuen Benutzers in der Datenbank und Rückgabe des gespeicherten
         // Benutzerobjekts
         return userRepository.save(newUser);
