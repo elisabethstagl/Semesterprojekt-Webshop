@@ -83,7 +83,12 @@ public class UserService implements UserDetailsService {
 
         shoppingCartRepository.save(newCart); // Save the shopping cart
 
+        shopping-cart
         return newUser;
+
+        // Speichern des neuen Benutzers in der Datenbank und Rückgabe des gespeicherten
+        // Benutzerobjekts
+        // return userRepository.save(newUser);
     }
 
     // Methode, um einen Benutzer zu authentifizieren und bei Erfolg einen JWT

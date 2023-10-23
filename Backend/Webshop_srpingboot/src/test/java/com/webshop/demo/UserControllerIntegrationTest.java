@@ -1,127 +1,74 @@
-// package com.webshop.demo;
+package com.webshop.demo;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
-// import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-// import java.util.Optional;
-// import java.util.List;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.http.MediaType;
-// import org.springframework.test.context.TestPropertySource;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.test.web.servlet.MvcResult;
+import java.util.Optional;
 
-// import com.webshop.demo.model.User;
-// import com.webshop.demo.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-// @TestPropertySource(locations = "classpath:application-integrationtest.properties")
-// @SpringBootTest
-// @AutoConfigureMockMvc
-// public class UserControllerIntegrationTest {
+import com.webshop.demo.model.User;
+import com.webshop.demo.repository.UserRepository;
 
-//     @Autowired
-//     private MockMvc mockMvc;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//     @Autowired
-//     private UserRepository userRepository;
+@TestPropertySource(locations = "classpath:application-integrationtest.properties")
+@SpringBootTest
+@AutoConfigureMockMvc
+public class UserControllerIntegrationTest {
 
-//     @BeforeEach
-//     public void setUp() {
-//         userRepository.deleteAll();
-//     }
+    @Autowired
+    private MockMvc mockMvc;
 
-//     @Test
-//     public void testGetUserById() throws Exception {
-//         List<User> users = userRepository.findAll();
-//         assertEquals(0, users.size());
-//         mockMvc.perform(get("/users/100")
-//                 .contentType(MediaType.APPLICATION_JSON))
-//                 .andExpect(status().isFound());
-//     }
+    @Autowired
+    private UserRepository userRepository;
 
-//     @Test
-//     public void testGetAllUsers() throws Exception {
-//         mockMvc.perform(get("/users")
-//                 .contentType(MediaType.APPLICATION_JSON))
-//                 .andExpect(status().isNotFound());
-//     }
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+    }
 
-//     @Test
-//     public void testCreateUser() throws Exception {
-//         // Create a JSON representation of the user data
-//         String newUserJson = "{"
-//                 + "\"id\":1,"
-//                 + "\"sex\":\"Male\","
-//                 + "\"firstName\":\"John\","
-//                 + "\"lastName\":\"Doe\","
-//                 + "\"address\":\"123 Main St\","
-//                 + "\"doornumber\":\"Apt 4B\","
-//                 + "\"postalCode\":\"12345\","
-//                 + "\"city\":\"Sample City\","
-//                 + "\"email\":\"john.doe@example.com\","
-//                 + "\"username\":\"johndoe\","
-//                 + "\"password\":\"password\","
-//                 + "\"role\":\"USER\","
-//                 + "\"profilePicture\":\"null\""
-//                 + "}";
+    @Test
+    public void testCreateUser() throws Exception {
+        // Create a JSON representation of the user data
+        String newUserJson = "{"
+                + "\"sex\":\"Male\","
+                + "\"firstName\":\"John\","
+                + "\"lastName\":\"Doe\","
+                + "\"address\":\"123 Main St\","
+                + "\"doornumber\":\"Apt 4B\","
+                + "\"postalCode\":\"12345\","
+                + "\"city\":\"Sample City\","
+                + "\"email\":\"john.doe@example.com\","
+                + "\"username\":\"johndoe\","
+                + "\"password\":\"password\","
+                + "\"role\":\"USER\","
+                + "\"profilePicture\":\"null\""
+                + "}";
 
-//         // Perform an HTTP POST request to create a new user
-//         MvcResult result = mockMvc.perform(post("/users")
-//                 .content(newUserJson)
-//                 .contentType(MediaType.APPLICATION_JSON))
-//                 .andExpect(status().isCreated())
-//                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                 .andReturn();
+        // Perform an HTTP POST request to create a new user
+        MvcResult result = mockMvc.perform(post("/users")
+                .content(newUserJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
 
-//         String user = result.getResponse().getContentAsString();
-//         assertEquals(newUserJson, user);
+        String user = result.getResponse().getContentAsString();
+        assertTrue(user.contains("johndoe"));
 
-        
-//         Optional<User> savedUser = userRepository.findByUsername("johndoe");
-//         assertTrue(savedUser.isPresent());
-//         assertEquals("password", savedUser.get().getPassword());
-//     }
+        Optional<User> savedUser = userRepository.findByUsername("johndoe");
+        assertTrue(savedUser.isPresent());
+        assertEquals("password", savedUser.get().getPassword());
+    }
 
-    
-
-//     // @Test
-//     // public void testCreateUser() throws Exception {
-//     // // Hier musst du ein JSON-Objekt erstellen, das einen neuen Benutzer
-//     // darstellt
-//     // // und es als Request-Body senden.
-//     // String newUserJson = "{\"username\":\"newUser\",\"password\":\"password\"}";
-
-//     // mockMvc.perform(post("/users")
-//     // .content(newUserJson)
-//     // .contentType(MediaType.APPLICATION_JSON))
-//     // .andExpect(status().isCreated())
-//     // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//     // }
-
-//     // @Test
-//     // public void testUpdateUser() throws Exception {
-//     // // Hier musst du ein JSON-Objekt erstellen, das die aktualisierten
-//     // Benutzerdaten darstellt
-//     // // und es als Request-Body senden.
-//     // String updatedUserJson =
-//     // "{\"username\":\"updatedUser\",\"password\":\"newPassword\"}";
-
-//     // mockMvc.perform(put("/users/1")
-//     // .content(updatedUserJson)
-//     // .contentType(MediaType.APPLICATION_JSON))
-//     // .andExpect(status().isOk())
-//     // .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-//     // }
-
-//     // @Test
-//     // public void testDeleteUser() throws Exception {
-//     // mockMvc.perform(delete("/users/1"))
-//     // .andExpect(status().isOk());
-//     // }
-// }
+}
