@@ -1,75 +1,65 @@
 package com.webshop.demo.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.webshop.demo.dto.ShoppingCartDto;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity(name = "shoppingCart")
 public class ShoppingCart {
-    
 
-    //  // CONSTRUCTOR
-
-    // public ShoppingCart() {
-    //     // Default constructor for JPA
-    // }
-
-
-    // public ShoppingCart(User user) {
-    //     this.user = user;
-    //     this.positions = new ArrayList<>();
-    // }
-
-    //RELATIONSHIP TABLES
-    
-
-    @Id //gibt Primärschlüssel an
-    @GeneratedValue //id wird automatisch von DB generiert
-    @Column(name ="id")
+    @Id // gibt Primärschlüssel an
+    @GeneratedValue // id wird automatisch von DB generiert
+    @Column(name = "id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name ="user_id", nullable = true)
+    @OneToOne(mappedBy = "shoppingCart")
+    @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "shoppingCart")
-    // @JsonBackReference
-    private List<Position> positions;
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Position> positions;
 
-
-    //GETTER & SETTER
+    // GETTER & SETTER
 
     // public Long getId() {
-    //     return id;
+    // return id;
     // }
 
     // public User getUser() {
-    //     return user;
+    // return user;
     // }
 
     // public void setUser(User user) {
-    //     this.user = user;
+    // this.user = user;
     // }
 
     // public List<Position> getPositions() {
-    //     return positions;
+    // return positions;
     // }
 
     // public void setPositions(List<Position> positions) {
-    //     this.positions = positions;
+    // this.positions = positions;
     // }
-
 
     public ShoppingCart() {
     }
 
-    public ShoppingCart(Long id, User user, List<Position> positions) {
+    public ShoppingCart(Long id, User user, Set<Position> positions) {
         this.id = id;
         this.user = user;
         this.positions = positions;
@@ -87,11 +77,11 @@ public class ShoppingCart {
         this.user = user;
     }
 
-    public List<Position> getPositions() {
+    public Set<Position> getPositions() {
         return this.positions;
     }
 
-    public void setPositions(List<Position> positions) {
+    public void setPositions(Set<Position> positions) {
         this.positions = positions;
     }
 
@@ -100,21 +90,36 @@ public class ShoppingCart {
         return this;
     }
 
-    public ShoppingCart positions(List<Position> positions) {
+    public ShoppingCart positions(Set<Position> positions) {
         setPositions(positions);
         return this;
     }
 
+    public ShoppingCartDto convertToDto() {
+        ShoppingCartDto dto = new ShoppingCartDto();
+        dto.setId(this.id);
+        dto.setPositions(this.getPositions().stream()
+        .map(Position::convertToDto)
+        .collect(Collectors.toList()));   return dto;
+
+    }
+
+    public void addPosition(Position position) {
+        if (this.positions == null) {
+            setPositions(new HashSet<>());
+        } 
+        if (!this.positions.contains(position)) {
+            this.positions.add(position);
+        }
+    }
 
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", user='" + getUser() + "'" +
-            ", positions='" + getPositions() + "'" +
-            "}";
+                " id='" + getId() + "'" +
+                ", user='" + getUser() + "'" +
+                ", positions='" + getPositions() + "'" +
+                "}";
     }
-
-
 
 }

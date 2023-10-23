@@ -1,5 +1,8 @@
 package com.webshop.demo.repository;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +16,6 @@ ohne dass dafür das gesamte Model oder der Service überarbeitet werden müssen
 
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Long> {
-    
+    Set<Position> findByShoppingCartId(Long shoppingCartId);
+
 }

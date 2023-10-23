@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webshop.demo.model.ShoppingCart;
+import com.webshop.demo.service.PositionService;
 import com.webshop.demo.service.ShoppingCartService;
 import com.webshop.demo.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /*Ein Controller ist eine Schicht in der Anwendungsarchitektur, 
 die als Schnittstelle zwischen der Benutzeroberfläche und dem Backend dient. 
@@ -40,6 +42,9 @@ public class ShoppingCartController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PositionService positionService;
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create/{userId}")
     public ResponseEntity<ShoppingCartDto> create(@PathVariable Long userId) {
@@ -49,7 +54,7 @@ public class ShoppingCartController {
         cartDto.setId(cart.getId());
         var positions = new ArrayList<PositionDTO>();
 
-        cart.setPositions(cart.getPositions() == null ? new ArrayList<>() : cart.getPositions());
+        cart.setPositions(cart.getPositions() == null ? new HashSet<>() : cart.getPositions());
 
         for (Position position : cart.getPositions()) {
             PositionDTO dto = new PositionDTO();
@@ -63,15 +68,6 @@ public class ShoppingCartController {
 
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
-
-
-    // @GetMapping("/viewCart/{userName}")
-    // public ResponseEntity<ShoppingCart> viewCartById(@PathVariable("userName")
-    // String userName){
-    // return new
-    // ResponseEntity<ShoppingCart>(shoppingCartService.viewCart(userName),
-    // HttpStatus.OK);
-    // }
 
     @GetMapping("/viewCart/{userId}")
     public ResponseEntity<ShoppingCartDto> viewCartById(@PathVariable("userId") Long userId) {
@@ -81,7 +77,7 @@ public class ShoppingCartController {
         cartDto.setId(cart.getId());
         var positions = new ArrayList<PositionDTO>();
 
-        cart.setPositions(cart.getPositions() == null ? new ArrayList<>() : cart.getPositions());
+        cart.setPositions(cart.getPositions() == null ? new HashSet<>() : cart.getPositions());
 
         for (Position position : cart.getPositions()) {
             PositionDTO dto = new PositionDTO();
@@ -96,17 +92,19 @@ public class ShoppingCartController {
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
 
-
-
     @PostMapping("/add/{productId}")
-    public ResponseEntity<ShoppingCartDto> addProductToCart(@RequestParam("userId") Long userId, @PathVariable("productId") Long productId) {
+    public ResponseEntity<ShoppingCartDto> addProductToCart(@RequestParam("userId") Long userId,
+            @PathVariable("productId") Long productId) {
         ShoppingCart cart = shoppingCartService.addProductToCart(userId, productId);
 
-        ShoppingCartDto cartDto = new ShoppingCartDto();
+        return new ResponseEntity<ShoppingCartDto>(cart.convertToDto(), HttpStatus.OK);
+        /*ShoppingCartDto cartDto = new ShoppingCartDto();
         cartDto.setId(cart.getId());
         var positions = new ArrayList<PositionDTO>();
 
-        cart.setPositions(cart.getPositions() == null ? new ArrayList<>() : cart.getPositions());
+
+
+        cart.setPositions(cart.getPositions() == null ? new HashSet<>() : cart.getPositions());
 
         for (Position position : cart.getPositions()) {
             PositionDTO dto = new PositionDTO();
@@ -117,23 +115,21 @@ public class ShoppingCartController {
         }
 
         cartDto.setPositions(positions);
+        
 
         return new ResponseEntity<>(cartDto, HttpStatus.OK);
+        */
     }
 
+    @DeleteMapping("/{userId}/positions")
+    public ResponseEntity<?> deleteAllPositionsFromCart(@PathVariable Long shopping_cart_id) {
 
-
-    // @PostMapping("/add/{productId}")
-    // public ResponseEntity<ShoppingCart> addProductToCart(@RequestParam("userId") Long userId,
-    //         @PathVariable("productId") Long productId) {
-    //     return new ResponseEntity<ShoppingCart>(shoppingCartService.addProductToCart(userId, productId), HttpStatus.OK);
-    // }
-
-    @DeleteMapping("/remove/{productId}")
-    public ResponseEntity<ShoppingCart> removeProductFromCart(@RequestParam("userName") String userName,
-            @PathVariable("productId") Long productId) {
-        return new ResponseEntity<ShoppingCart>(shoppingCartService.removeProductFromCart(userName, productId),
-                HttpStatus.OK);
+        try {
+            shoppingCartService.deleteAllPositionsFromCart(shopping_cart_id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/position-quantity/{productId}")

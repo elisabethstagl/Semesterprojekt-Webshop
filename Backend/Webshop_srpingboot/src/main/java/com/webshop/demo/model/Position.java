@@ -1,5 +1,8 @@
 package com.webshop.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.webshop.demo.dto.PositionDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +18,7 @@ import jakarta.persistence.SequenceGenerator;
 
 @Entity(name = "position")
 public class Position {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "position_seq_generator")
     @SequenceGenerator(name = "position_seq_generator", sequenceName = "position_seq", allocationSize = 1)
@@ -26,17 +29,19 @@ public class Position {
     private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "shoppingCart_id", nullable = false)
+    @JoinColumn(name = "shoppingCart_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private ShoppingCart shoppingCart;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JsonBackReference
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
 
-    // CONSTRUCTOR  
+    // CONSTRUCTOR
 
     public Position() {
-        //default constructor for jpa
+        // default constructor for jpa
     }
 
     public Position(Integer quantity, ShoppingCart shoppingCart, Product product) {
@@ -88,5 +93,12 @@ public class Position {
         return this;
     }
 
+    public PositionDTO convertToDto() {
+        PositionDTO dto = new PositionDTO();
+        dto.setId(getId());
+        dto.setQuantity(getQuantity());
+        dto.setProductId(getProduct().getId());
+        return dto;
+    }
 
 }

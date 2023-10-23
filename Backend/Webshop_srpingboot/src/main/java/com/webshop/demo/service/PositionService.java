@@ -1,5 +1,6 @@
 package com.webshop.demo.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import com.webshop.demo.repository.UserRepository;
 @Service
 public class PositionService {
 
-    // private final PositionRepository positionRepos;
+    // private final PositionRepository positionRepository;
     // private final UserRepository userRepository;
 
     // private final ShoppingCartService shoppingCartService;
@@ -34,9 +35,7 @@ public class PositionService {
     //     this.shoppingCartService = shoppingCartService;
     //     this.productService = productService;
     // }
-
-    // METHODEN
-
+    
 
     // public Position save(Position position, Long userId, Long productId) {
     //     ShoppingCart shoppingCart = shoppingCartService.findByUserId(userId);

@@ -1,9 +1,17 @@
 package com.webshop.demo.model;
 
+import java.util.Set;
+
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 // import jakarta.persistence.Lob;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,10 +52,13 @@ public class Product {
     @Column(name = "imageURL")
     private String imageURL;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Position> positions;
+
     // @Lob
     // @Column(name = "product_img", length = 100000)
     // private byte[] product_img;
-
 
     // Konstruktor
     public Product() {
@@ -73,7 +84,7 @@ public class Product {
     }
 
     // public byte[] getProduct_img() {
-    //     return product_img;
+    // return product_img;
     // }
 
     public String getImageURL() {
@@ -85,7 +96,7 @@ public class Product {
     }
 
     // public void setProduct_img(byte[] product_img) {
-    //     this.product_img = product_img;
+    // this.product_img = product_img;
     // }
 
     public String getName() {
@@ -128,5 +139,4 @@ public class Product {
         this.category = productCategory;
     }
 
-    
 }

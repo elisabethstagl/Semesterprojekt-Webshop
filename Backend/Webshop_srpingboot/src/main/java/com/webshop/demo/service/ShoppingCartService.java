@@ -1,10 +1,16 @@
 package com.webshop.demo.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.webshop.demo.model.Position;
 import com.webshop.demo.model.Product;
@@ -33,13 +39,13 @@ public class ShoppingCartService {
     @Autowired
     private ProductRepository productRepository;
 
-
     public ShoppingCart saveShoppingCart(Long userId) {
 
-        // User userOpt = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        // User userOpt =
+        // userRepository.findById(userId).orElseThrow(RuntimeException::new);
         // Long userId = userOpt.getId();
         ShoppingCart cartOpt = shoppingCartRepos.findByUserId(userId);
-        if(!(cartOpt == null)){
+        if (!(cartOpt == null)) {
             return cartOpt;
         }
 
@@ -58,27 +64,34 @@ public class ShoppingCartService {
         return cartOpt;
     }
 
-
     public ShoppingCart addProductToCart(Long userId, Long productId) {
         // Retrieve the user and product
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
-    
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
         ShoppingCart shoppingCart = user.getShoppingCart();
-        List<Position> positions = shoppingCart.getPositions();
-    
+        if (shoppingCart == null) {
+            shoppingCart = new ShoppingCart();
+            shoppingCart.setUser(user);
+            user.setShoppingCart(shoppingCart);
+        }
+        Set<Position> positions = shoppingCart.getPositions();
+        if (positions == null) {
+            positions = new HashSet<>();
+            shoppingCart.setPositions(positions);
+        }
+
         boolean productFoundInCart = false;
-    
         // Check if the product is in the cart
         for (Position position : positions) {
             if (position.getProduct().equals(product)) {
                 position.setQuantity(position.getQuantity() + 1);
                 productFoundInCart = true;
-                positionRepository.save(position);
                 break;
             }
         }
-    
+
         if (!productFoundInCart) {
             // Create a new position if the product is not in the cart
             Position newPosition = new Position();
@@ -86,35 +99,38 @@ public class ShoppingCartService {
             newPosition.setProduct(product);
             newPosition.setQuantity(1);
             positions.add(newPosition);
-            positionRepository.save(newPosition);
         }
-    
+
         // Save the updated shopping cart
         shoppingCart.setPositions(positions);
         shoppingCartRepos.save(shoppingCart);
         return shoppingCart;
     }
-    
 
-    public ShoppingCart removeProductFromCart(String userName, Long productId){
+    public void deleteAllPositionsFromCart(Long cartId) {
+        Set<Position> positions = positionRepository.findByShoppingCartId(cartId);
+        positionRepository.deleteAll(positions);
+    }
+
+    public ShoppingCart removeProductFromCart(String userName, Long productId) {
         User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
 
         Optional<Product> productOpt = productRepository.findById(productId);
-        if(productOpt.isEmpty()){
+        if (productOpt.isEmpty()) {
             throw new RuntimeException("Product not found");
-            }
+        }
 
         Long userId = userOpt.getId();
         ShoppingCart shoppingCart = shoppingCartRepos.findByUserId(userId);
-        List<Position> positions = shoppingCart.getPositions();
+        Set<Position> positions = shoppingCart.getPositions();
 
         boolean productFoundInCart = false;
         Position positionToRemove = null;
 
-        //Find position to remove
-        for (Position position : positions){
-            if (position.getProduct().equals(productOpt.get())){
-                if (position.getQuantity() > 1){
+        // Find position to remove
+        for (Position position : positions) {
+            if (position.getProduct().equals(productOpt.get())) {
+                if (position.getQuantity() > 1) {
                     position.setQuantity(position.getQuantity() - 1);
                 } else {
                     positionToRemove = position;
@@ -124,37 +140,36 @@ public class ShoppingCartService {
             }
         }
 
-        if(positionToRemove != null){
-            if(productFoundInCart){
-            positions.remove(positionToRemove);
-            positionRepository.delete(positionToRemove);
-        } else{
-            throw new RuntimeException("Product not found in cart");
+        if (positionToRemove != null) {
+            if (productFoundInCart) {
+                positions.remove(positionToRemove);
+                positionRepository.delete(positionToRemove);
+            } else {
+                throw new RuntimeException("Product not found in cart");
+            }
         }
-    }
         shoppingCart.setPositions(positions);
         shoppingCartRepos.save(shoppingCart);
         return shoppingCart;
-    
 
     }
 
-    public Integer viewQuantity(String username, Long productId){
+    public Integer viewQuantity(String username, Long productId) {
         Integer quantity = 0;
 
         Optional<Product> productOpt = productRepository.findById(productId);
-        if(productOpt.isEmpty()){
+        if (productOpt.isEmpty()) {
             throw new RuntimeException("Product not found");
         }
 
         User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
         Long userId = userOpt.getId();
         ShoppingCart cartOpt = shoppingCartRepos.findByUserId(userId);
-        List<Position> positions = cartOpt.getPositions();
-        
-        for(Position position : positions){
+        Set<Position> positions = cartOpt.getPositions();
+
+        for (Position position : positions) {
             System.out.println("position" + position.getProduct().getId());
-            if (position.getProduct().getId().equals(productOpt.get().getId())){
+            if (position.getProduct().getId().equals(productOpt.get().getId())) {
                 quantity += position.getQuantity();
                 System.out.println("Quantity increased: " + quantity);
             }
@@ -164,162 +179,160 @@ public class ShoppingCartService {
 
     }
 
+    // public ShoppingCart increaseQuantity (Long userId, Long productId){
+    // Optional<User> userOptional = userRepository.findById(userId);
+    // if (userOptional.isEmpty()){
+    // throw new RuntimeException("User not found");
+    // }
 
-        // public ShoppingCart increaseQuantity (Long userId, Long productId){
-        // Optional<User> userOptional = userRepository.findById(userId);
-        // if (userOptional.isEmpty()){
-        //     throw new RuntimeException("User not found");
-        // }
+    // Optional<Product> productOpt = productRepository.findById(productId);
+    // if(productOpt.isEmpty()){
+    // throw new RuntimeException("Product not found");
+    // }
 
-        // Optional<Product> productOpt = productRepository.findById(productId);
-        // if(productOpt.isEmpty()){
-        //     throw new RuntimeException("Product not found");
-        //     }
+    // User user = userOptional.get();
+    // ShoppingCart shoppingCart = user.getShoppingCart();
+    // Set<Position> positions = shoppingCart.getPositions();
 
-        // User user = userOptional.get();
-        // ShoppingCart shoppingCart = user.getShoppingCart();
-        // List<Position> positions = shoppingCart.getPositions();
+    // boolean productFoundInCart = false;
 
-        // boolean productFoundInCart = false;
+    // //Find position to increase quantity
+    // for(Position position : positions){
+    // if(position.getProduct().equals(productOpt.get())){
+    // position.setQuantity(position.getQuantity() + 1);
+    // productFoundInCart = true;
+    // break;
+    // }
+    // }
 
-        // //Find position to increase quantity
-        // for(Position position : positions){
-        //     if(position.getProduct().equals(productOpt.get())){
-        //         position.setQuantity(position.getQuantity() + 1);
-        //         productFoundInCart = true;
-        //         break;
-        //     }
-        // }
+    // if(!productFoundInCart){
+    // throw new RuntimeException("Product not found in cart");
+    // }
 
-        // if(!productFoundInCart){
-        //     throw new RuntimeException("Product not found in cart");
-        // }
+    // shoppingCart.setPositions(positions);
+    // shoppingCartRepos.save(shoppingCart);
+    // return shoppingCart;
+    // }
 
-        // shoppingCart.setPositions(positions);
-        // shoppingCartRepos.save(shoppingCart);
-        // return shoppingCart;
-        // }
+    // public ShoppingCart decreaseQuantity (Long userId, Long productId){
 
+    // Optional<User> userOptional = userRepository.findById(userId);
+    // if (userOptional.isEmpty()){
+    // throw new RuntimeException("User not found");
+    // }
 
-        // public ShoppingCart decreaseQuantity (Long userId, Long productId){
-        
-        //     Optional<User> userOptional = userRepository.findById(userId);
-        // if (userOptional.isEmpty()){
-        //     throw new RuntimeException("User not found");
-        // }
+    // Optional<Product> productOpt = productRepository.findById(productId);
+    // if(productOpt.isEmpty()){
+    // throw new RuntimeException("Product not found");
+    // }
 
-        // Optional<Product> productOpt = productRepository.findById(productId);
-        // if(productOpt.isEmpty()){
-        //     throw new RuntimeException("Product not found");
-        //     }
+    // User user = userOptional.get();
+    // ShoppingCart shoppingCart = user.getShoppingCart();
+    // List<Position> positions = shoppingCart.getPositions();
 
-        // User user = userOptional.get();
-        // ShoppingCart shoppingCart = user.getShoppingCart();
-        // List<Position> positions = shoppingCart.getPositions();
+    // boolean productFoundInCart = false;
 
-        // boolean productFoundInCart = false;
+    // //Find position to decrease quantity
+    // for(Position position : positions){
+    // if(position.getProduct().equals(productOpt.get())){
+    // if (position.getQuantity() > 1){
+    // position.setQuantity(position.getQuantity() - 1);
+    // } else {
+    // positions.remove(position);
+    // }
+    // productFoundInCart = true;
+    // break;
+    // }
+    // }
 
-        // //Find position to decrease quantity
-        // for(Position position : positions){
-        //     if(position.getProduct().equals(productOpt.get())){
-        //         if (position.getQuantity() > 1){
-        //             position.setQuantity(position.getQuantity() - 1);
-        //         } else {
-        //             positions.remove(position);
-        //         }
-        //         productFoundInCart = true;
-        //         break;
-        //     }
-        // }
+    // if(!productFoundInCart){
+    // throw new RuntimeException("Product not found in cart");
+    // }
 
-        // if(!productFoundInCart){
-        //     throw new RuntimeException("Product not found in cart");
-        // }
+    // shoppingCart.setPositions(positions);
+    // shoppingCartRepos.save(shoppingCart);
+    // return shoppingCart;
+    // }
 
-        // shoppingCart.setPositions(positions);
-        // shoppingCartRepos.save(shoppingCart);
-        // return shoppingCart;
-        // }
-
-
-    // public ShoppingCartService(ShoppingCartRepository shoppingCartRepos, PositionRepository positionRepository, ProductRepository productRepository){
-    //     this.shoppingCartRepos = shoppingCartRepos;
-    //     this.positionRepository = positionRepository;
-    //     this.productRepository = productRepository;
-    // }   
+    // public ShoppingCartService(ShoppingCartRepository shoppingCartRepos,
+    // PositionRepository positionRepository, ProductRepository productRepository){
+    // this.shoppingCartRepos = shoppingCartRepos;
+    // this.positionRepository = positionRepository;
+    // this.productRepository = productRepository;
+    // }
 
     // METHODEN
 
     // public ShoppingCart save(ShoppingCart shoppingCart){
-    //     return shoppingCartRepos.save(shoppingCart);
+    // return shoppingCartRepos.save(shoppingCart);
     // }
 
     // public ShoppingCart findByUserId(Long userId) {
-    //     return shoppingCartRepos.findByUserId(userId);
+    // return shoppingCartRepos.findByUserId(userId);
     // }
 
+    // public ShoppingCart addProductToCart(Long cartId, Long productId, int
+    // quantity) {
+    // ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
+    // .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
-    // public ShoppingCart addProductToCart(Long cartId, Long productId, int quantity) {
-    //     ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
-    //             .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
+    // Product product = productRepository.findById(productId)
+    // .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    //     Product product = productRepository.findById(productId)
-    //             .orElseThrow(() -> new RuntimeException("Product not found"));
+    // // Check if the product is already in the shopping cart
+    // Optional<Position> existingPosition = shoppingCart.getPositions().stream()
+    // .filter(position -> position.getProduct().equals(product))
+    // .findFirst();
 
-    //     // Check if the product is already in the shopping cart
-    //     Optional<Position> existingPosition = shoppingCart.getPositions().stream()
-    //             .filter(position -> position.getProduct().equals(product))
-    //             .findFirst();
+    // if (existingPosition.isPresent()) {
+    // // Update the quantity if the product is already in the cart
+    // Position position = existingPosition.get();
+    // position.setQuantity(position.getQuantity() + quantity);
+    // } else {
+    // // Create a new position if the product is not in the cart
+    // Position newPosition = new Position(product, quantity);
+    // newPosition.setShoppingCart(shoppingCart);
+    // positionRepository.save(newPosition);
+    // shoppingCart.getPositions().add(newPosition);
+    // }
 
-    //     if (existingPosition.isPresent()) {
-    //         // Update the quantity if the product is already in the cart
-    //         Position position = existingPosition.get();
-    //         position.setQuantity(position.getQuantity() + quantity);
-    //     } else {
-    //         // Create a new position if the product is not in the cart
-    //         Position newPosition = new Position(product, quantity);
-    //         newPosition.setShoppingCart(shoppingCart);
-    //         positionRepository.save(newPosition);
-    //         shoppingCart.getPositions().add(newPosition);
-    //     }
-
-    //     return shoppingCartRepos.save(shoppingCart);
+    // return shoppingCartRepos.save(shoppingCart);
     // }
 
     // public ShoppingCart removeProductFromCart(Long cartId, Long positionId) {
-    //     ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
-    //             .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
+    // ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
+    // .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
-    //     Position positionToRemove = shoppingCart.getPositions().stream()
-    //             .filter(position -> position.getId().equals(positionId))
-    //             .findFirst()
-    //             .orElse(null);
+    // Position positionToRemove = shoppingCart.getPositions().stream()
+    // .filter(position -> position.getId().equals(positionId))
+    // .findFirst()
+    // .orElse(null);
 
-    //     if (positionToRemove != null) {
-    //         shoppingCart.getPositions().remove(positionToRemove);
-    //         positionRepository.delete(positionToRemove);
-    //         return shoppingCartRepos.save(shoppingCart);
-    //     }
-
-    //     return shoppingCart;
+    // if (positionToRemove != null) {
+    // shoppingCart.getPositions().remove(positionToRemove);
+    // positionRepository.delete(positionToRemove);
+    // return shoppingCartRepos.save(shoppingCart);
     // }
 
-    // public ShoppingCart updateProductQuantityInCart(Long cartId, Long positionId, int newQuantity) {
-    //     ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
-    //             .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
+    // return shoppingCart;
+    // }
 
-    //     Position positionToUpdate = shoppingCart.getPositions().stream()
-    //             .filter(position -> position.getId().equals(positionId))
-    //             .findFirst()
-    //             .orElse(null);
+    // public ShoppingCart updateProductQuantityInCart(Long cartId, Long positionId,
+    // int newQuantity) {
+    // ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
+    // .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
-    //     if (positionToUpdate != null) {
-    //         positionToUpdate.setQuantity(newQuantity);
-    //         return shoppingCartRepos.save(shoppingCart);
-    //     }
+    // Position positionToUpdate = shoppingCart.getPositions().stream()
+    // .filter(position -> position.getId().equals(positionId))
+    // .findFirst()
+    // .orElse(null);
 
-    //     return shoppingCart;
+    // if (positionToUpdate != null) {
+    // positionToUpdate.setQuantity(newQuantity);
+    // return shoppingCartRepos.save(shoppingCart);
+    // }
+
+    // return shoppingCart;
     // }
 
 }
-
