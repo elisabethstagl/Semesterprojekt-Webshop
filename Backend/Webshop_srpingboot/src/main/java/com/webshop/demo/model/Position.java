@@ -1,11 +1,16 @@
 package com.webshop.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.webshop.demo.dto.PositionDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 
 /*  Model ist verantwortlich für die Daten.
     Verbundstabelle. 
@@ -13,9 +18,10 @@ import jakarta.persistence.ManyToOne;
 
 @Entity(name = "position")
 public class Position {
-    
-    @Id //gibt Primärschlüssel an
-    @GeneratedValue //id wird automatisch von DB generiert
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "position_seq_generator")
+    @SequenceGenerator(name = "position_seq_generator", sequenceName = "position_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -23,26 +29,26 @@ public class Position {
     private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "shoppingCart_id", nullable = false)
+    @JoinColumn(name = "shoppingCart_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private ShoppingCart shoppingCart;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JsonBackReference
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
 
-    // CONSTRUCTOR  
+    // CONSTRUCTOR
 
     public Position() {
-        //default constructor for jpa
+        // default constructor for jpa
     }
 
-    public Position(Long id, Integer quantity){
-        this.id = id;
+    public Position(Integer quantity, ShoppingCart shoppingCart, Product product) {
         this.quantity = quantity;
+        this.shoppingCart = shoppingCart;
+        this.product = product;
     }
-
-    // GETTERS & SETTERS
-
 
     public Long getId() {
         return this.id;
@@ -70,6 +76,29 @@ public class Position {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Position quantity(Integer quantity) {
+        setQuantity(quantity);
+        return this;
+    }
+
+    public Position shoppingCart(ShoppingCart shoppingCart) {
+        setShoppingCart(shoppingCart);
+        return this;
+    }
+
+    public Position product(Product product) {
+        setProduct(product);
+        return this;
+    }
+
+    public PositionDTO convertToDto() {
+        PositionDTO dto = new PositionDTO();
+        dto.setId(getId());
+        dto.setQuantity(getQuantity());
+        dto.setProductId(getProduct().getId());
+        return dto;
     }
 
 }

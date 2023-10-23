@@ -36,6 +36,7 @@ public class JwtUtil {
                 .withIssuedAt(issuedAt) // Setzen des Ausstellungszeitpunkts des Tokens
                 .withExpiresAt(expiresAt) // Setzen des Ablaufzeitpunkts des Tokens
                 .withClaim("role", user.getRole().toString()) // Hinzufügen einer Rolle als benutzerdefinierten Anspruch
+                .withClaim("userId", user.getId())
                 // Signieren des Tokens mit dem HMAC512-Algorithmus unter Verwendung des in der
                 // Konfiguration festgelegten "secret"
                 .sign(Algorithm.HMAC512(secret));

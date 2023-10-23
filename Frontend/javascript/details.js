@@ -41,6 +41,71 @@ function createProductRow(product) {
     const price = $(`<h2>${product.price}€</h2>`);
     const warenkorbButton = $(`<button type="button" class="btn btn-light" style="color: rgb(184, 107, 82); margin-top: 20px; margin-bottom: 40px;">In den Warenkorb</button></button>`);
 
+    // Event handler for the "In den Warenkorb" button click
+    warenkorbButton.on("click", (e) => {
+    e.stopPropagation(); // Prevents any parent click event from firing
+    const token = sessionStorage.getItem("jwtToken");
+    console.log("das ist der token: " + token);
+    if (!token){
+        alert ("Please log in to add products to your shopping cart.")
+        return;
+    }
+    const productId = getProductIdFromURL();
+    console.log("added to cart:" + productId);
+    addToShoppingCart(productId, token);
+    });
+
+
+    function addToShoppingCart(productId, token) {
+        // Get the user's cart ID from the token (you may need to decode the token)
+        const userId = getUserId();
+        console.log("user id: " + userId);
+        if (!userId) {
+            alert("Unable to get user information from the token.");
+            return;
+        }
+    
+        // Make an AJAX request to add the product to the shopping cart
+        $.ajax({
+            url: `http://localhost:8080/shoppingCart/add/${productId}`,
+            type: "POST",
+            data: {
+                userId: userId,
+            },
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            success: function (response) {
+                alert("Product added to the shopping cart.");
+            },
+            error: function (error) {
+                console.error("Error adding the product to the shopping cart:", error);
+            }
+        });
+    }
+    
+
+    // Function to get the user's cart ID
+function getUserId() {
+    const token = sessionStorage.getItem("jwtToken");
+    if (!token) {
+        alert("User is not authenticated. Please log in.");
+        window.location.href = "login.html"; // Redirect to the login page        
+        return null;
+    }
+
+    // Decode the JWT token to get user data
+    const tokenPayload = token.split(".")[1];
+    const decodedPayload = atob(tokenPayload);
+    const userData = JSON.parse(decodedPayload);
+
+    // Extract the userId from the decoded user data
+    const userId = userData.userId;
+
+    return userId;
+}
+
+
     // Füge die HTML-Elemente zur Zeile hinzu
     imageCol.append(image);
     infoCol.append(title);

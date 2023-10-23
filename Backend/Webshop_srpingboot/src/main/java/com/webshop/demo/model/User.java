@@ -1,14 +1,19 @@
 package com.webshop.demo.model;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-// import jakarta.persistence.Lob;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -70,6 +75,11 @@ public class User {
                                  // enum value (e.g., 'USER' or 'ADMIN'), rather than an ordinal integer.
     private UserRole role;
 
+    // RELATIONSHIP TABLE
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
+    @JsonManagedReference
+    private ShoppingCart shoppingCart;
 
     // CONSTRUCTOR
 
@@ -189,5 +199,17 @@ public class User {
         this.role = role;
     }
 
+    public User shoppingCart(ShoppingCart shoppingCart) {
+        setShoppingCart(shoppingCart);
+        return this;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return this.shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 
 }

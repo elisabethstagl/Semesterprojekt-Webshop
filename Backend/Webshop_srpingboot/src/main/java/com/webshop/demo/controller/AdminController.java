@@ -34,10 +34,12 @@ import com.webshop.demo.model.User;
 import com.webshop.demo.service.UserService;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 import com.webshop.demo.service.ProductService;
 
 @RestController
+@RequiredArgsConstructor
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin")
 public class AdminController {
@@ -48,8 +50,8 @@ public class AdminController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private UserService userService;
+    
+    private final UserService userService;
 
     // Endpoint to list all registered users
     @GetMapping("/users")

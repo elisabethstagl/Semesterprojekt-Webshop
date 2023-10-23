@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.webshop.demo.repository.ShoppingCartRepository;
 import com.webshop.demo.repository.UserRepository;
 import com.webshop.demo.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,13 +21,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.webshop.demo.dto.RegistrationRequest;
 import com.webshop.demo.dto.UserDTO;
+import com.webshop.demo.model.ShoppingCart;
 import com.webshop.demo.model.User;
 import com.webshop.demo.model.UserRole;
-
 /* Service ist für die Logik und Funktionalität verantwortlich.  */
 
 @Service
 public class UserService implements UserDetailsService {
+
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -41,9 +46,11 @@ public class UserService implements UserDetailsService {
     }
 
     // Methode zur Registrierung eines neuen Benutzers
+    @Transactional
     public User register(RegistrationRequest registrationRequest) {
 
-        // Überprüfen, ob bereits ein Benutzer mit dem gewünschten Benutzernamen existiert
+        // Überprüfen, ob bereits ein Benutzer mit dem gewünschten Benutzernamen
+        // existiert
         if (userRepository.existsByUsername(registrationRequest.getUsername())) {
             // Falls ja, eine Laufzeitexception auslösen mit einer entsprechenden
             // Fehlermeldung
@@ -68,10 +75,20 @@ public class UserService implements UserDetailsService {
         newUser.setUsername(registrationRequest.getUsername());
         newUser.setPassword(hashedPassword); // Setzen des gehashten Passworts
         newUser.setRole(UserRole.USER); // Setzen der Benutzerrolle auf den Standardwert (USER)
+        newUser = userRepository.save(newUser); // Save the user and obtain the persisted object with its ID.
+        // Create a new ShoppingCart for the user
+        ShoppingCart newCart = new ShoppingCart();
+        newCart.setUser(newUser); // Associate the ShoppingCart with the User
+        newUser.setShoppingCart(newCart); // Set the shopping cart to the user for bi-directionality
+
+        shoppingCartRepository.save(newCart); // Save the shopping cart
+
+        shopping-cart
+        return newUser;
 
         // Speichern des neuen Benutzers in der Datenbank und Rückgabe des gespeicherten
         // Benutzerobjekts
-        return userRepository.save(newUser);
+        // return userRepository.save(newUser);
     }
 
     // Methode, um einen Benutzer zu authentifizieren und bei Erfolg einen JWT
