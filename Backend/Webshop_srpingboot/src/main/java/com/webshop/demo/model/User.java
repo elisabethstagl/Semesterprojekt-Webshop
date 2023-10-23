@@ -2,6 +2,7 @@ package com.webshop.demo.model;
 
 import org.hibernate.validator.constraints.Length;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -69,6 +70,11 @@ public class User {
     @Enumerated(EnumType.STRING) // Specifies that the 'role' field should be persisted as the String name of the
                                  // enum value (e.g., 'USER' or 'ADMIN'), rather than an ordinal integer.
     private UserRole role;
+
+    //RELATIONSHIP TABLE
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ShoppingCart shoppingCart;
 
 
     // CONSTRUCTOR
@@ -198,9 +204,6 @@ public class User {
         this.shoppingCart = shoppingCart;
     }
 
-    //RELATIONSHIP TABLE
-
-    @OneToOne
-    private ShoppingCart shoppingCart;
+    
 
 }

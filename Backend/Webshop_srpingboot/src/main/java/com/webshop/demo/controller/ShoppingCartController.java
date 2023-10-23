@@ -42,7 +42,7 @@ public class ShoppingCartController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create/{userId}")
-    public ResponseEntity<ShoppingCart> create(@PathVariable Long userId) {
+    public ResponseEntity<ShoppingCartDto> create(@PathVariable Long userId) {
         var cart = shoppingCartService.saveShoppingCart(userId);
 
         var cartDto = new ShoppingCartDto();
@@ -52,9 +52,8 @@ public class ShoppingCartController {
         cart.setPositions(cart.getPositions() == null ? new ArrayList<>() : cart.getPositions());
 
         for (Position position : cart.getPositions()) {
-
             PositionDTO dto = new PositionDTO();
-            dto.setId(position.getPositionId());
+            dto.setId(position.getId()); // <-- Change here
             dto.setProductId(position.getProduct().getId());
             dto.setQuantity(position.getQuantity());
             positions.add(dto);
@@ -62,8 +61,9 @@ public class ShoppingCartController {
 
         cartDto.setPositions(positions);
 
-        return new ResponseEntity(cartDto, HttpStatus.OK);
+        return new ResponseEntity<>(cartDto, HttpStatus.OK);
     }
+
 
     // @GetMapping("/viewCart/{userName}")
     // public ResponseEntity<ShoppingCart> viewCartById(@PathVariable("userName")
@@ -81,12 +81,11 @@ public class ShoppingCartController {
         cartDto.setId(cart.getId());
         var positions = new ArrayList<PositionDTO>();
 
-        // Populate cartDto with positions here
         cart.setPositions(cart.getPositions() == null ? new ArrayList<>() : cart.getPositions());
 
         for (Position position : cart.getPositions()) {
             PositionDTO dto = new PositionDTO();
-            dto.setId(position.getPositionId());
+            dto.setId(position.getId()); // <-- Change here
             dto.setProductId(position.getProduct().getId());
             dto.setQuantity(position.getQuantity());
             positions.add(dto);
@@ -98,20 +97,20 @@ public class ShoppingCartController {
     }
 
 
-    @PostMapping("/add/{productId}")
-public ResponseEntity<ShoppingCartDto> addProductToCart(@RequestParam("userId") Long userId, @PathVariable("productId") Long productId) {
-    ShoppingCart cart = shoppingCartService.addProductToCart(userId, productId);
 
-    ShoppingCartDto cartDto = new ShoppingCartDto();
+    @PostMapping("/add/{productId}")
+    public ResponseEntity<ShoppingCartDto> addProductToCart(@RequestParam("userId") Long userId, @PathVariable("productId") Long productId) {
+        ShoppingCart cart = shoppingCartService.addProductToCart(userId, productId);
+
+        ShoppingCartDto cartDto = new ShoppingCartDto();
         cartDto.setId(cart.getId());
         var positions = new ArrayList<PositionDTO>();
 
-        // Populate cartDto with positions here
         cart.setPositions(cart.getPositions() == null ? new ArrayList<>() : cart.getPositions());
 
         for (Position position : cart.getPositions()) {
             PositionDTO dto = new PositionDTO();
-            dto.setId(position.getPositionId());
+            dto.setId(position.getId()); // <-- Change here
             dto.setProductId(position.getProduct().getId());
             dto.setQuantity(position.getQuantity());
             positions.add(dto);
@@ -119,8 +118,9 @@ public ResponseEntity<ShoppingCartDto> addProductToCart(@RequestParam("userId") 
 
         cartDto.setPositions(positions);
 
-    return new ResponseEntity<>(cartDto, HttpStatus.OK);
-}
+        return new ResponseEntity<>(cartDto, HttpStatus.OK);
+    }
+
 
 
     // @PostMapping("/add/{productId}")
