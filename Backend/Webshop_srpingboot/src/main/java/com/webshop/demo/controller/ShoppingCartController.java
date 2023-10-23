@@ -2,7 +2,6 @@ package com.webshop.demo.controller;
 
 import com.webshop.demo.dto.PositionDTO;
 import com.webshop.demo.dto.ShoppingCartDto;
-import com.webshop.demo.dto.UserDTO;
 import com.webshop.demo.model.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -98,30 +95,43 @@ public class ShoppingCartController {
         ShoppingCart cart = shoppingCartService.addProductToCart(userId, productId);
 
         return new ResponseEntity<ShoppingCartDto>(cart.convertToDto(), HttpStatus.OK);
-        /*ShoppingCartDto cartDto = new ShoppingCartDto();
-        cartDto.setId(cart.getId());
-        var positions = new ArrayList<PositionDTO>();
-
-
-
-        cart.setPositions(cart.getPositions() == null ? new HashSet<>() : cart.getPositions());
-
-        for (Position position : cart.getPositions()) {
-            PositionDTO dto = new PositionDTO();
-            dto.setId(position.getId()); // <-- Change here
-            dto.setProductId(position.getProduct().getId());
-            dto.setQuantity(position.getQuantity());
-            positions.add(dto);
-        }
-
-        cartDto.setPositions(positions);
-        
-
-        return new ResponseEntity<>(cartDto, HttpStatus.OK);
-        */
+        /*
+         * ShoppingCartDto cartDto = new ShoppingCartDto();
+         * cartDto.setId(cart.getId());
+         * var positions = new ArrayList<PositionDTO>();
+         * cart.setPositions(cart.getPositions() == null ? new HashSet<>() :
+         * cart.getPositions());
+         * 
+         * for (Position position : cart.getPositions()) {
+         * PositionDTO dto = new PositionDTO();
+         * dto.setId(position.getId()); // <-- Change here
+         * dto.setProductId(position.getProduct().getId());
+         * dto.setQuantity(position.getQuantity());
+         * positions.add(dto);
+         * }
+         * 
+         * cartDto.setPositions(positions);
+         * 
+         * 
+         * return new ResponseEntity<>(cartDto, HttpStatus.OK);
+         */
     }
 
-    @DeleteMapping("/{userId}/positions")
+    @DeleteMapping("/{cartId}/positions/{productId}")
+    public ResponseEntity<?> removeProductFromCart(
+            @PathVariable Long cartId,
+            @PathVariable Long productId) {
+        try {
+            shoppingCartService.removeProductFromCart(cartId, productId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/{shopping_cart_id}/positions")
     public ResponseEntity<?> deleteAllPositionsFromCart(@PathVariable Long shopping_cart_id) {
 
         try {

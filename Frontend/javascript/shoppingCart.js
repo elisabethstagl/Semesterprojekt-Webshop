@@ -1,203 +1,218 @@
-
 function getAuthHeaders() {
-    const token = sessionStorage.getItem("jwtToken");
-    if (!token) {
-      alert("Not authenticated!");
-      window.location.href = "login.html"; // Redirect to login or other appropriate page
-      return {};
-    }
-    return {
-      Authorization: "Bearer " + token,
-    };
+  const token = sessionStorage.getItem("jwtToken");
+  if (!token) {
+    alert("Not authenticated!");
+    window.location.href = "login.html"; // Redirect to login or other appropriate page
+    return {};
+  }
+  return {
+    Authorization: "Bearer " + token,
+  };
 }
-
 
 function loadShoppingCart() {
-    const userId = getUserId(); // Get the user's cart ID
-    if(!userId) return; // Stop execution if no user ID
-    
-    const cartUrl = `http://localhost:8080/shoppingCart/viewCart/${userId}`;
-    
-    $.ajax({
-        url: cartUrl,
-        type: "GET",
-        headers: getAuthHeaders(), // Set authentication headers
-        success: function (cart) {
-            sessionStorage.setItem("cartId", cart.id);
-            console.log("Received cart:", cart.id);
-            if (cart.positions && cart.positions.length > 0) {
-                console.log("First position in cart:", cart.positions[0]);
-            }
-            // For each position, fetch the associated product details
-            const promises = cart.positions.map(position => 
-                fetchProductDetails(position.productId).then(product => 
-                    ({...product, quantity: position.quantity})
-                )
-            );
-            
-            Promise.all(promises)
-                .then(products => displayCartProducts(products))
-                .catch(error => {
-                    console.error("Error while fetching product details:", error);
-                });
-        },
-        error: function (error) {
-            console.error("Fehler beim Laden des Warenkorbs:", error);
-        }
-    });
-}
+  const userId = getUserId(); // Get the user's cart ID
+  if (!userId) return; // Stop execution if no user ID
 
+  const cartUrl = `http://localhost:8080/shoppingCart/viewCart/${userId}`;
+
+  $.ajax({
+    url: cartUrl,
+    type: "GET",
+    headers: getAuthHeaders(), // Set authentication headers
+    success: function (cart) {
+      sessionStorage.setItem("cartId", cart.id);
+      console.log("Received cart:", cart.id);
+      if (cart.positions && cart.positions.length > 0) {
+        console.log("First position in cart:", cart.positions[0]);
+      }
+      // For each position, fetch the associated product details
+      const promises = cart.positions.map((position) =>
+        fetchProductDetails(position.productId).then((product) => ({
+          ...product,
+          quantity: position.quantity,
+        }))
+      );
+
+      Promise.all(promises)
+        .then((products) => displayCartProducts(products))
+        .catch((error) => {
+          console.error("Error while fetching product details:", error);
+        });
+    },
+    error: function (error) {
+      console.error("Fehler beim Laden des Warenkorbs:", error);
+    },
+  });
+}
 
 function fetchProductDetails(productId) {
-    return new Promise((resolve, reject) => {
-        // Make sure productId is defined
-        if(!productId) {
-            reject("ProductId is undefined");
-            return;
-        }
+  return new Promise((resolve, reject) => {
+    // Make sure productId is defined
+    if (!productId) {
+      reject("ProductId is undefined");
+      return;
+    }
 
-        const productUrl = `http://localhost:8080/products/${productId}`;
-        $.ajax({
-            url: productUrl,
-            type: "GET",
-            headers: getAuthHeaders(),
-            success: function (product) {
-                resolve(product);
-            },
-            error: function (error) {
-                console.error(`Error fetching product with ID ${productId}:`, error);
-                reject(error);
-            }
-        });
+    const productUrl = `http://localhost:8080/products/${productId}`;
+    $.ajax({
+      url: productUrl,
+      type: "GET",
+      headers: getAuthHeaders(),
+      success: function (product) {
+        resolve(product);
+      },
+      error: function (error) {
+        console.error(`Error fetching product with ID ${productId}:`, error);
+        reject(error);
+      },
     });
+  });
 }
-
-
 
 function displayCartProducts(products) {
-    const shoppingCartContainer = $('#shoppingCartContainer');
+  const shoppingCartContainer = $("#shoppingCartContainer");
 
-    // Loop through the products and create product cards
-    products.forEach(function (product) {
-        const productCard = createProductCard(product);
-        shoppingCartContainer.append(productCard);
+  // Clear the container first
+  shoppingCartContainer.empty();
+
+  // Loop through the products and create product cards
+  products.forEach(function (product) {
+    const productCard = createProductCard(product);
+    shoppingCartContainer.append(productCard);
+  });
+
+  // If there are products in the cart, append the "Empty Cart" button
+  if (products.length > 0) {
+    const buttonContainer = $('<div class="text-center mt-3 mb-3"></div>');
+    const emptyCartButton = $(
+      '<button class="btn btn-warning">Empty Cart</button>'
+    );
+    emptyCartButton.on("click", function () {
+      const userId = getUserId();
+      if (userId) {
+        emptyShoppingCart(userId);
+      }
     });
+    buttonContainer.append(emptyCartButton);
+    shoppingCartContainer.append(buttonContainer);
+  }
 }
 
-// Function to create a simplified product card for the cart
 function createProductCard(product) {
-    // Create the HTML structure for a product card in the cart
-    const card = $('<div class="card card-products mb-5 mx-auto" style="max-width: 740px; background-color: transparent;"></div>');
-    const row = $('<div class="row g-0"></div>');
-    const imageCol = $('<div class="col-md-4"></div>');
-    const image = $(`<img src="${product.imageURL}" alt="${product.id}" class="img-fluid rounded-start rounded-end card-image">`);
-    const infoCol = $('<div class="col-md-8"></div>');
-    const cardBody = $('<div class="card-body"></div>');
-    const title = $(`<h4 class="card-title">${product.name}</h4>`);
-    const quantity = $(`<p class="card-quantity">Quantity: ${product.quantity}</p>`); // Add the quantity
-    const price = $(`<h5 class="card-price">${product.price}€</h5>`);
-    const deleteButton = $('<button class="btn btn-danger mt-3">Remove</button>');
-    deleteButton.on("click", function() {
-        // Call a function to handle the product removal from cart
-        removeProductFromCart(product.id);
-    });
-    const emptyCartButton = $('<button class="btn btn-warning mt-3 mb-3">Empty Cart</button>');
-    emptyCartButton.on("click", function() {
-        const userId = getUserId();
-        if (userId) {
-            emptyShoppingCart(userId);
-        }
-    });
-    $('#shoppingCartContainer').append(emptyCartButton);
+  // Create the HTML structure for a product card in the cart
+  const card = $(
+    '<div class="card card-products mb-5 mx-auto" style="max-width: 740px; background-color: transparent;"></div>'
+  );
+  const row = $('<div class="row g-0"></div>');
+  const imageCol = $('<div class="col-md-4"></div>');
+  const image = $(
+    `<img src="${product.imageURL}" alt="${product.id}" class="img-fluid rounded-start rounded-end card-image">`
+  );
+  const infoCol = $('<div class="col-md-8"></div>');
+  const cardBody = $('<div class="card-body"></div>');
+  const title = $(`<h4 class="card-title">${product.name}</h4>`);
+  const quantity = $(
+    `<p class="card-quantity">Quantity: ${product.quantity}</p>`
+  );
+  const price = $(`<h5 class="card-price">${product.price}€</h5>`);
+  const deleteButton = $('<button class="btn btn-danger mt-3">Remove</button>');
 
-    infoCol.append(deleteButton);
-    
-    // Add the elements to the card
-    imageCol.append(image);
-    infoCol.append(title);
-    infoCol.append(quantity);
-    infoCol.append(price);
-    row.append(imageCol);
-    row.append(infoCol);
-    cardBody.append(row);
-    card.append(cardBody);
+  deleteButton.on("click", function () {
+    // Call a function to handle the product removal from cart
+    removeProductFromCart(product.id);
+  });
 
-    return card;
+  infoCol.append(deleteButton);
+
+  // Add the elements to the card
+  imageCol.append(image);
+  infoCol.append(title);
+  infoCol.append(quantity);
+  infoCol.append(price);
+  row.append(imageCol);
+  row.append(infoCol);
+  cardBody.append(row);
+  card.append(cardBody);
+
+  // Adjusted structure to ensure proper layout
+  const cardContainer = $('<div class="mb-5"></div>');
+  cardContainer.append(card);
+
+  return cardContainer;
 }
 
 // Function to get the user's cart ID
 function getUserId() {
-    const token = sessionStorage.getItem("jwtToken");
-    if (!token) {
-        alert("User is not authenticated. Please log in.");
-        window.location.href = "login.html"; // Redirect to the login page        
-        return null;
-    }
+  const token = sessionStorage.getItem("jwtToken");
+  if (!token) {
+    alert("User is not authenticated. Please log in.");
+    window.location.href = "login.html"; // Redirect to the login page
+    return null;
+  }
 
-    // Decode the JWT token to get user data
-    const tokenPayload = token.split(".")[1];
-    const decodedPayload = atob(tokenPayload);
-    const userData = JSON.parse(decodedPayload);
+  // Decode the JWT token to get user data
+  const tokenPayload = token.split(".")[1];
+  const decodedPayload = atob(tokenPayload);
+  const userData = JSON.parse(decodedPayload);
 
-    // Extract and return the userId from the decoded user data
-    return userData.userId;
+  // Extract and return the userId from the decoded user data
+  return userData.userId;
 }
 
 function removeProductFromCart(productId) {
-    const userId = getUserId(); // Assuming each user has a unique cart
-    const url = `http://localhost:8080/shoppingCart/${userId}/positions/${productId}`;
+  const cartId = sessionStorage.getItem("cartId");
+  // const productId = product.id;
+  const url = `http://localhost:8080/shoppingCart/${cartId}/positions/${productId}`;
 
-    $.ajax({
-        url: url,
-        type: "DELETE",
-        headers: getAuthHeaders(),
-        success: function() {
-            alert("Product removed successfully from cart!");
-            loadShoppingCart(); // Refresh the cart
-        },
-        error: function(error) {
-            console.error("Error removing product from shopping cart:", error);
-            alert("Failed to remove the product. Please try again.");
-        }
-    });
+  $.ajax({
+    url: url,
+    type: "DELETE",
+    headers: getAuthHeaders(),
+    success: function () {
+      alert("Product removed successfully from cart!");
+      loadShoppingCart(); // Refresh the cart
+      location.reload(); // Reload the page
+    },
+    error: function (error) {
+      console.error("Error removing product from shopping cart:", error);
+      alert("Failed to remove the product. Please try again.");
+    },
+  });
 }
-
 
 function emptyShoppingCart() {
-    const cartId = sessionStorage.getItem("cartId");
-    if (!cartId) {
-        console.error("Cart ID is not available in session storage.");
-        alert("Failed to empty the shopping cart. Cart ID is missing.");
-        return;
-    }
+  const cartId = sessionStorage.getItem("cartId");
+  if (!cartId) {
+    console.error("Cart ID is not available in session storage.");
+    alert("Failed to empty the shopping cart. Cart ID is missing.");
+    return;
+  }
 
-    console.log('Shopping cart ID:', cartId);
-    const url = `http://localhost:8080/shoppingCart/${cartId}/positions`;
+  console.log("Shopping cart ID:", cartId);
+  const url = `http://localhost:8080/shoppingCart/${cartId}/positions`;
 
-    $.ajax({
-        url: url,
-        type: "DELETE",
-        headers: getAuthHeaders(),
-        success: function() {
-            console.log('Sending DELETE request to:', url);
-            alert("Shopping cart emptied successfully!");
-            loadShoppingCart(); // Refresh the cart to show it's empty
-        },
-        error: function(error) {
-            console.error("Error emptying shopping cart:", error);
-            alert("Failed to empty the shopping cart. Please try again.");
-        }
-    });
+  $.ajax({
+    url: url,
+    type: "DELETE",
+    headers: getAuthHeaders(),
+    success: function () {
+      console.log("Sending DELETE request to:", url);
+      alert("Shopping cart emptied successfully!");
+      loadShoppingCart(); // Refresh the cart to show it's empty
+      location.reload(); // Reload the page
+    },
+    error: function (error) {
+      console.error("Error emptying shopping cart:", error);
+      alert("Failed to empty the shopping cart. Please try again.");
+    },
+  });
 }
-
-
-
 
 // Load the shopping cart when the page is ready
 $(document).ready(function () {
-    loadShoppingCart();
+  loadShoppingCart();
 });
-
 
 // function getAuthHeaders() {
 //     const token = sessionStorage.getItem("jwtToken");
@@ -210,8 +225,6 @@ $(document).ready(function () {
 //     Authorization: "Bearer " + token,
 //     };
 // }
-
-
 
 // // Function to fetch and display shopping cart items
 // function fetchShoppingCart(userId) {
@@ -293,7 +306,7 @@ $(document).ready(function () {
 //         window.location.href = "login.html"; // Redirect to login or other appropriate page
 //         return null;
 //     }
-    
+
 //     // Decode the token (assuming it's a JWT) to get the user ID
 //     const tokenData = JSON.parse(atob(token.split('.')[1])); // Assuming the user ID is in the token payload
 

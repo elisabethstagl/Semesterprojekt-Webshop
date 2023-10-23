@@ -22,6 +22,8 @@ import com.webshop.demo.repository.ProductRepository;
 import com.webshop.demo.repository.ShoppingCartRepository;
 import com.webshop.demo.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 /* Service ist für die Logik und Funktionalität verantwortlich.  */
 
 @Service
@@ -107,23 +109,23 @@ public class ShoppingCartService {
         return shoppingCart;
     }
 
+    @Transactional
     public void deleteAllPositionsFromCart(Long cartId) {
         Set<Position> positions = positionRepository.findByShoppingCartId(cartId);
         positionRepository.deleteAll(positions);
     }
 
-    public ShoppingCart removeProductFromCart(String userName, Long productId) {
-        User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
+    public ShoppingCart removeProductFromCart(Long cartId, Long productId) {
+        // Load the ShoppingCart directly using the cartId
+        ShoppingCart shoppingCart = shoppingCartRepos.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         Optional<Product> productOpt = productRepository.findById(productId);
         if (productOpt.isEmpty()) {
             throw new RuntimeException("Product not found");
         }
 
-        Long userId = userOpt.getId();
-        ShoppingCart shoppingCart = shoppingCartRepos.findByUserId(userId);
         Set<Position> positions = shoppingCart.getPositions();
-
         boolean productFoundInCart = false;
         Position positionToRemove = null;
 
@@ -151,7 +153,6 @@ public class ShoppingCartService {
         shoppingCart.setPositions(positions);
         shoppingCartRepos.save(shoppingCart);
         return shoppingCart;
-
     }
 
     public Integer viewQuantity(String username, Long productId) {
