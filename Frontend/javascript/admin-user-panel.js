@@ -36,7 +36,7 @@ function createUserCard(user) {
   const cardBody = $(
     '<div class="card-body collapse" id="collapse' + user.id + '"></div>'
   );
-  const id = $(`<p class="card-text">Email: ${user.id}</p>`);
+  const id = $(`<p class="card-text">Email: ${user.email}</p>`);
   const sex = $(`<p class="card-text">Sex: ${user.sex}</p>`);
   const firstName = $(
     `<p class="card-text">First Name: ${user.firstName} </p>`
