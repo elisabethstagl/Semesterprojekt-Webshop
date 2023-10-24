@@ -34,7 +34,7 @@ $(document).ready(function () {
     // Append image file
     formData.append("productImage", imageFile);
 
-    fetch("http://localhost:8080/admin/products/add", {
+    fetch("http://localhost:8080/admin/products", {
       method: "POST",
       headers: getAuthHeaders(),
       body: formData,
@@ -76,7 +76,7 @@ function createProductCard(product) {
   const description = $(`<p class="card-text">Beschreibung: ${product.description}</p>`);
   const quantity = $(`<p class="card-text">Menge: ${product.quantity}</p>`);
   const category = $(`<p class="card-text">Kategorie: ${product.category}</p>`);
-  const imageFile = $(`<p class="card-text">Bild: ${product.imageURL}</p>`);
+  const imageFile = $(`<p class="card-text" style="display:none">Bild: ${product.imageURL}</p>`);
   const editProductButton = $('<button class="btn btn-primary me-3">Edit</button>');
   const deleteProductButton = $('<button class="btn btn-primary">Delete Product</button>');
 

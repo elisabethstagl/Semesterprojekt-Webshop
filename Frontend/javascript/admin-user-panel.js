@@ -42,7 +42,7 @@ function createUserCard(user) {
     `<p class="card-text">First Name: ${user.firstName} </p>`
   );
   const lastName = $(`<p class="card-text">Last Name: ${user.lastName}</p>`);
-  const password = $(`<p class="card-text">Passwort: ${user.password}</p>`);
+  const password = $(`<p class="card-text" style="display:none">Passwort: ${user.password}</p>`);
 
   const address = $(`<p class="card-text">Adress: ${user.address}</p>`);
   const doornumber = $(
