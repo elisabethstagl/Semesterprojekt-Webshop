@@ -104,14 +104,14 @@ function createProductCard(product) {
   const card = $(
     '<div class="card card-products mb-5 mx-auto" style="max-width: 740px; background-color: transparent;"></div>'
   );
-  const row = $('<div class="row g-0"></div>');
+  const row = $('<div class="row g-4"></div>');
   const imageCol = $('<div class="col-md-4"></div>');
   const image = $(
     `<img src="${product.imageURL}" alt="${product.id}" class="img-fluid rounded-start rounded-end card-image">`
   );
-  const infoCol = $('<div class="col-md-8"></div>');
-  const cardBody = $('<div class="card-body"></div>');
-  const title = $(`<h4 class="card-title">${product.name}</h4>`);
+  const infoCol = $('<div class="col-md-8 "></div>');
+  const cardBody = $('<div class="card-body p-0"></div>');
+  const title = $(`<h4 class="card-title mt-3">${product.name}</h4>`);
   const quantity = $(
     `<p class="card-quantity">Quantity: ${product.quantity}</p>`
   );
@@ -123,13 +123,12 @@ function createProductCard(product) {
     removeProductFromCart(product.id);
   });
 
-  infoCol.append(deleteButton);
-
   // Add the elements to the card
   imageCol.append(image);
   infoCol.append(title);
   infoCol.append(quantity);
   infoCol.append(price);
+  infoCol.append(deleteButton);
   row.append(imageCol);
   row.append(infoCol);
   cardBody.append(row);
