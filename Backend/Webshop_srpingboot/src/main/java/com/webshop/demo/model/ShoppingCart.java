@@ -69,6 +69,10 @@ public class ShoppingCart {
         return this.id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public User getUser() {
         return this.user;
     }

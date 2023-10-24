@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,7 +50,7 @@ public class UserController {
     public CurrentUserDTO getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Entering getCurrentUser()");
-        
+
         Object principal = auth.getPrincipal();
         System.out.println("Principal Type: " + principal.getClass().getName());
         if (principal instanceof UserDetails) {
@@ -94,7 +95,7 @@ public class UserController {
 
     // CREATE
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
         return userService.save(user);
@@ -123,7 +124,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-
     // Erlauben von Cross-Origin-Anfragen von der spezifizierten Herkunft
     @CrossOrigin(origins = "http://127.0.0.1:5500")
     // Zuordnen von HTTP POST-Anfragen auf den Endpunkt '/login'
@@ -140,7 +140,6 @@ public class UserController {
         // und Speicherung des zurückgegebenen Tokens (falls vorhanden) in einer
         // Optional-Variable
         Optional<String> token = userService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
-
 
         // Rückgabe des Antwortobjekts:
         // Wenn ein Token vorhanden ist, wird es in ein TokenResponse-Objekt gewrappt

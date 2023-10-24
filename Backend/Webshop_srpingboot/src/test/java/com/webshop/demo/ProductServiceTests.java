@@ -20,7 +20,6 @@ import com.webshop.demo.service.ProductService;
 
 
 //Unit Tests for ProductService
-@SpringBootTest
 public class ProductServiceTests {
     
 

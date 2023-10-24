@@ -8,7 +8,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.webshop.demo.dto.RegistrationRequest;
+import com.webshop.demo.model.ShoppingCart;
 import com.webshop.demo.model.User;
+import com.webshop.demo.repository.ShoppingCartRepository;
 import com.webshop.demo.repository.UserRepository;
 import com.webshop.demo.security.JwtUtil;
 import com.webshop.demo.service.UserService;
@@ -19,9 +21,13 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class UserServiceUnitTest {
+
+    @Mock
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -96,13 +102,23 @@ public class UserServiceUnitTest {
         registrationRequest.setUsername("newuser");
         registrationRequest.setPassword("password");
 
-        // Mock the repository's behavior
+        // Mock the userRepository's behavior
         when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User savedUser = invocation.getArgument(0);
             savedUser.setId(1L); // Simulate an ID assigned by the repository
             return savedUser;
         });
+
+        // Mock the shoppingCartRepository's behavior
+        when(shoppingCartRepository.save(any(ShoppingCart.class))).thenAnswer(invocation -> {
+            ShoppingCart savedCart = invocation.getArgument(0);
+            savedCart.setId(1L); // Simulate an ID assigned by the repository
+            return savedCart;
+        });
+
+        // Mock the passwordEncoder's behavior
+        when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword");
 
         // Register a new user
         User registeredUser = userService.register(registrationRequest);
@@ -178,7 +194,6 @@ public class UserServiceUnitTest {
         assertEquals(username, foundUser.getUsername());
     }
 
-    
     @Test
     public void testSaveUser() {
         User user = new User();

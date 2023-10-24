@@ -29,40 +29,39 @@ import com.webshop.demo.model.UserRole;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
-
+    private final ShoppingCartRepository shoppingCartRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final JwtUtil JwtUtil; // Inject JwtUtil
+    private final JwtUtil JwtUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtil JwtUtil) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtUtil JwtUtil,
+            ShoppingCartRepository shoppingCartRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.JwtUtil = JwtUtil;
+        this.shoppingCartRepository = shoppingCartRepository; // Add this line
     }
 
     // Methode zur Registrierung eines neuen Benutzers
     @Transactional
     public User register(RegistrationRequest registrationRequest) {
 
-        // Überprüfen, ob bereits ein Benutzer mit dem gewünschten Benutzernamen
-        // existiert
+        // Log the registration request details
+        logger.info("Registering user with details: {}", registrationRequest);
+
+        // Check if a user with the desired username already exists
         if (userRepository.existsByUsername(registrationRequest.getUsername())) {
-            // Falls ja, eine Laufzeitexception auslösen mit einer entsprechenden
-            // Fehlermeldung
             throw new RuntimeException("Username already exists.");
         }
 
-        // Das Klartextpasswort aus dem Registrierungsantrag mit einem Passwort-Encoder
-        // hashen
+        // Hash the plain-text password from the registration request
         String hashedPassword = passwordEncoder.encode(registrationRequest.getPassword());
 
-        // Erstellen einer neuen Benutzerinstanz und Setzen der entsprechenden Felder
-        // mit den Werten aus dem Registrierungsantrag
+        // Create a new user instance and set the corresponding fields with values from
+        // the registration request
         User newUser = new User();
         newUser.setSex(registrationRequest.getSex());
         newUser.setFirstName(registrationRequest.getFirstName());
@@ -73,22 +72,22 @@ public class UserService implements UserDetailsService {
         newUser.setCity(registrationRequest.getCity());
         newUser.setEmail(registrationRequest.getEmail());
         newUser.setUsername(registrationRequest.getUsername());
-        newUser.setPassword(hashedPassword); // Setzen des gehashten Passworts
-        newUser.setRole(UserRole.USER); // Setzen der Benutzerrolle auf den Standardwert (USER)
-        newUser = userRepository.save(newUser); // Save the user and obtain the persisted object with its ID.
+        newUser.setPassword(hashedPassword); // Set the hashed password
+        newUser.setRole(UserRole.USER); // Set the user role to the default value (USER)
+
+        User savedUser = userRepository.save(newUser);
+
+        // Log the saved user details
+        logger.info("Successfully registered user with details: {}", savedUser);
+
         // Create a new ShoppingCart for the user
         ShoppingCart newCart = new ShoppingCart();
-        newCart.setUser(newUser); // Associate the ShoppingCart with the User
-        newUser.setShoppingCart(newCart); // Set the shopping cart to the user for bi-directionality
+        newCart.setUser(savedUser); // Associate the ShoppingCart with the User
+        savedUser.setShoppingCart(newCart); // Set the shopping cart to the user for bi-directionality
 
         shoppingCartRepository.save(newCart); // Save the shopping cart
 
-        shopping-cart
-        return newUser;
-
-        // Speichern des neuen Benutzers in der Datenbank und Rückgabe des gespeicherten
-        // Benutzerobjekts
-        // return userRepository.save(newUser);
+        return savedUser;
     }
 
     // Methode, um einen Benutzer zu authentifizieren und bei Erfolg einen JWT
