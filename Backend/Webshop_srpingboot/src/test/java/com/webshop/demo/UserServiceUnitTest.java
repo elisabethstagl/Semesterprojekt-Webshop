@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.webshop.demo.dto.RegistrationRequest;
@@ -13,9 +14,11 @@ import com.webshop.demo.model.User;
 import com.webshop.demo.repository.ShoppingCartRepository;
 import com.webshop.demo.repository.UserRepository;
 import com.webshop.demo.security.JwtUtil;
+import com.webshop.demo.service.EntityNotFoundException;
 import com.webshop.demo.service.UserService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+
 
 public class UserServiceUnitTest {
 
@@ -36,8 +40,8 @@ public class UserServiceUnitTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private JwtUtil jwtUtil; // Assuming JwtUtil is a bean with a non-static generateToken method
-
+    private JwtUtil jwtUtil; 
+    
     @InjectMocks
     private UserService userService;
 
@@ -202,6 +206,106 @@ public class UserServiceUnitTest {
         User savedUser = userService.save(user);
 
         assertEquals(user, savedUser);
+    }
+
+    // Testfälle für authenticateUser(String username, String password)
+    @Test
+    void testAuthenticateUserWithEmptyCredentials() {
+        Optional<String> tokenOptional = userService.authenticateUser("", "");
+        assertFalse(tokenOptional.isPresent());
+    }
+
+    @Test
+    void testAuthenticateUserWithInvalidCredentials() {
+        when(userRepository.findByUsername("invalidUser")).thenReturn(Optional.empty());
+        Optional<String> tokenOptional = userService.authenticateUser("invalidUser", "invalidPassword");
+        assertFalse(tokenOptional.isPresent());
+    }
+
+    @Test
+    void testAuthenticateUserWithNullCredentials() {
+        Optional<String> tokenOptional = userService.authenticateUser(null, null);
+        assertFalse(tokenOptional.isPresent());
+    }
+
+    // Testfälle für register(RegistrationRequest registrationRequest)
+    @Test
+    void testRegisterDuplicateUser() {
+        RegistrationRequest registrationRequest = new RegistrationRequest();
+        registrationRequest.setUsername("existingUser");
+        registrationRequest.setPassword("password");
+        when(userRepository.existsByUsername("existingUser")).thenReturn(true);
+        // Implementieren Sie Logik, um eine erwartete Exception zu handhaben, wenn Ihre
+        // Anwendung eine solche wirft
+    }
+
+    @Test
+    void testRegisterUserWithInvalidData() {
+        RegistrationRequest invalidRequest = new RegistrationRequest();
+        invalidRequest.setUsername(""); // Ungültiger Benutzername
+        invalidRequest.setPassword(""); // Ungültiges Passwort
+        // Implementieren Sie Logik, um eine erwartete Exception zu handhaben, wenn Ihre
+        // Anwendung eine solche wirft
+    }
+
+    // Testfälle für deleteById(Long userId)
+    @Test
+    void testDeleteNonExistentUser() {
+        Long nonExistentUserId = 999L;
+        userService.deleteById(nonExistentUserId);
+        verify(userRepository, times(1)).deleteById(nonExistentUserId);
+    }
+
+    @Test
+    void testDeleteUserByNullId() {
+        Long nullId = null;
+        userService.deleteById(nullId);
+        verify(userRepository, times(1)).deleteById(nullId);
+    }
+
+    // Testfälle für findAll()
+    @Test
+    void testFindAllUsersInEmptyDatabase() {
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+        List<User> foundUsers = userService.findAll();
+        assertTrue(foundUsers.isEmpty());
+    }
+
+    // Testfälle für findById(Long userId) und findByUsername(String username)
+    @Test
+    void testFindUserByInvalidId() {
+        Long invalidId = -1L;
+        when(userRepository.findById(invalidId)).thenReturn(Optional.empty());
+        Optional<User> foundUser = userService.findById(invalidId);
+        assertFalse(foundUser.isPresent());
+    }
+
+    @Test
+    void testFindUserByInvalidUsername() {
+        String invalidUsername = "nonExistentUser";
+        when(userRepository.findByUsername(invalidUsername)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userService.findByUsername(invalidUsername);
+        });
+    }
+
+    @Test
+    void testFindUserByNullId() {
+        Long nullId = null;
+        when(userRepository.findById(nullId)).thenReturn(Optional.empty());
+        Optional<User> foundUser = userService.findById(nullId);
+        assertFalse(foundUser.isPresent());
+    }
+
+    @Test
+    void testFindUserByNullUsername() {
+        String nullUsername = null;
+        when(userRepository.findByUsername(nullUsername)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> {
+            userService.findByUsername(nullUsername);
+        });
     }
 
 }

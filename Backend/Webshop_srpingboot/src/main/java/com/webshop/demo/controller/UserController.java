@@ -153,18 +153,4 @@ public class UserController {
 
     }
 
-    // UPDATE
-
-    // @PutMapping("/{id}")
-    // public User update(@PathVariable Long id, @RequestBody User user) {
-    // return userService.update(id, user);
-    // }
-
-    // DELETE
-
-    // @DeleteMapping("/{id}")
-    // public void deleteUser(@PathVariable Long id) {
-    // userService.deleteById(id);
-    // }
-
 }
