@@ -132,7 +132,7 @@ public class AdminController {
 
     // Endpoint to create a product
     @CrossOrigin(origins = "http://127.0.0.1:5500")
-    @PostMapping(path = "/products/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Product create(
             @RequestPart("product") @Valid String productJson,
